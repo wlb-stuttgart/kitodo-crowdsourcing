@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+use Wlb\Crowdsourcing\Controller\Backend\CampaignController;
+
+defined('TYPO3') or die();
+
+// Module System > Backend Users
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+    'Crowdsourcing',
+    'tx_crowdsourcing',
+    '',
+    '',
+    [],
+    [
+        'access' => 'admin',
+        'iconIdentifier' => 'module-crowdsourcing',
+        'labels' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_mod_main.xlf',
+        'navigationComponentId' => 'TYPO3/CMS/Backend/PageTree/PageTreeElement',
+        'inheritNavigationComponentFromMainModule' => false,
+    ]
+);
+
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+    'Crowdsourcing',
+    'tx_crowdsourcing',
+    'tx_crowdsourcing_campaign',
+    '',
+    [
+        CampaignController::class => 'index'
+    ],
+    [
+        'access' => 'admin',
+        'iconIdentifier' => 'module-crowdsourcing-campaign',
+        'labels' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_mod_campaign.xlf'
+    ]
+);

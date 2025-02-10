@@ -1,0 +1,37 @@
+{
+    "name": "wlb/crowdsourcing",
+    "description": "Extension for the WLB crowdsourcing digitization project",
+    "type": "typo3-cms-extension",
+    "license": [
+        "GPL-2.0-or-later"
+    ],
+    "require": {
+        "php": "~8.3.0",
+        "typo3/cms-backend": "^11.5",
+        "typo3/cms-core": "^11.5"
+    },
+    "authors": [
+        {
+            "name": "effective Webwork GmbH",
+            "email": "info@effective-webwork.de",
+            "homepage": "https://effective-webwork.de",
+            "role": "Developer"
+        }
+    ],
+    "funding": [
+        {
+            "type": "other",
+            "url:": "https://www.wlb-stuttgart.de/"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Wlb\\Crowdsourcing\\": "Classes/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "crowdsourcing"
+        }
+    }
+}
