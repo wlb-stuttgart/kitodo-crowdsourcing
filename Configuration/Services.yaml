@@ -6,3 +6,10 @@ services:
   Wlb\Crowdsourcing\:
     resource: '../Classes/*'
     exclude: '../Classes/Domain/Model/*'
+  Wlb\Crowdsourcing\Command\Import:
+    tags:
+      -
+        name: console.command
+        command: 'crowdsourcing:import'
+        description: 'A command to import processes with their data.'
+        schedulable: true

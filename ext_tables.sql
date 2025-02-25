@@ -5,16 +5,10 @@ CREATE TABLE tx_crowdsourcing_domain_model_campaign (
 
 CREATE TABLE tx_crowdsourcing_domain_model_process (
     title       varchar(255)    DEFAULT ''  NOT NULL,
-    identifier  int,
+    identifier  varchar(255),
     images      text,
     state       varchar(255),
-    metadata    int(11)         DEFAULT '0' NOT NULL
-);
-
-CREATE TABLE tx_crowdsourcing_domain_model_metadata (
-    name        varchar(255)    DEFAULT ''  NOT NULL,
-    value       text,
-    process     int(11)         DEFAULT '0' NOT NULL
+    metadata    MEDIUMTEXT      DEFAULT '0' NOT NULL
 );
 
 CREATE TABLE tx_crowdsourcing_domain_model_metadataconfiguration (

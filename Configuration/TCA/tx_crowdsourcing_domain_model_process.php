@@ -167,9 +167,11 @@ $tca = [
         'metadata' => [
             'label' => 'LLL:EXT:my_extension/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.metadata',
             'config' => [
-                'type' => 'inline',
-                'foreign_table' => 'tx_crowdsourcing_domain_model_metadata',
-                'foreign_field' => 'process'
+                'type' => 'text',
+                'enableRichtext' => false,
+                'rows' => 8,
+                'cols' => 40,
+                'eval' => 'trim',
             ],
         ],
         'fe_group' => [

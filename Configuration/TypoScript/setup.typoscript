@@ -16,7 +16,6 @@ plugin.tx_crowdsourcing {
   persistence {
     storagePid = {$plugin.tx_crowdsourcing.persistence.storagePid}
   }
-
-  settings {
-  }
 }
+
+
