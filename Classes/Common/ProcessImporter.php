@@ -9,39 +9,43 @@ use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 
 class ProcessImporter
 {
-    private ?ResourceFactory $resourceFactory = null;
+    /**
+     * @var ResourceFactory|null
+     */
+    private ResourceFactory $resourceFactory;
 
+    /**
+     * @var ProcessRepository
+     */
     private ProcessRepository $processRepository;
 
+    /**
+     * @var PersistenceManager
+     */
     private PersistenceManager $persistenceManager;
 
+    /**
+     * @var Indexer
+     */
+    private Indexer $indexer;
 
     /**
      * @param ResourceFactory $resourceFactory
-     * @return void
+     * @param ProcessRepository $processRepository
+     * @param PersistenceManager $persistenceManager
+     * @param Indexer $indexer
      */
-    public function injectResourceFactory(ResourceFactory $resourceFactory)
+    public function __construct(
+        ResourceFactory $resourceFactory,
+        ProcessRepository $processRepository,
+        PersistenceManager $persistenceManager,
+        Indexer $indexer
+    )
     {
         $this->resourceFactory = $resourceFactory;
-    }
-
-    /**
-     * @param ProcessRepository $processRepository
-     * @return void
-     */
-    public function injectProcessRepository(ProcessRepository $processRepository)
-    {
         $this->processRepository = $processRepository;
-    }
-
-
-    /**
-     * @param PersistenceManager $persistenceManager
-     * @return void
-     */
-    public function injectPersistenceManager(PersistenceManager $persistenceManager)
-    {
         $this->persistenceManager = $persistenceManager;
+        $this->indexer = $indexer;
     }
 
     /**
@@ -51,13 +55,13 @@ class ProcessImporter
      */
     public function import(string $importDirectoryPath)
     {
-        if (!is_dir($this->directoryPath)) {
+        if (!is_dir($importDirectoryPath)) {
             throw new \Exception("The directory does not exist.");
             return;
         }
 
-        // Root directory
-        $dirIterator = new \DirectoryIterator($this->directoryPath);
+        // The import root directory
+        $dirIterator = new \DirectoryIterator($importDirectoryPath);
 
         foreach ($dirIterator as $item) {
             if ($item->isDot()) {
@@ -91,6 +95,7 @@ class ProcessImporter
                     $json = file_get_contents($metadataFile);
                     $metadata = json_decode($json, true);
 
+                    // TODO: Make it configurable where the ID is in the data or perhaps find a completely different way to do it.
                     if (isset($metadata['signature']) && !empty($metadata['signature']) && is_string($metadata['signature'])) {
                         // Avoid importing a process twice
                         if (!$this->processRepository->findOneByIdentifier(trim($metadata['signature']))) {
@@ -100,9 +105,11 @@ class ProcessImporter
                             $process->setState(Process::STATE_NEW);
                             $process->setImages(serialize($images));
                             $this->processRepository->add($process);
+                            $this->indexer->indexDocument($json);
+
+                            // TODO move files to imported folder.
                         }
                     }
-
                 } else {
                    // TODO: No metadata found -> no process. Logger? Exception?
                 }

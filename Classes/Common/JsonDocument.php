@@ -28,16 +28,24 @@ class JsonDocument
         $jsonDocuments = [];
 
         if (isset($result[0]) && !empty($result[0])) {
-
             if (is_array($result[0])) {
-            foreach ($result[0] as $value) {
-                if (!empty($value)) {
-                    $value = json_encode($value);
-                    if ($value !== false) {
-                        $jsonDocuments[] = new JsonDocument($value);
+                if (is_array($result[0]) && array_key_exists(0, $result[0])) {
+                    foreach ($result[0] as $value) {
+                        if (!empty($value)) {
+                            $value = json_encode($value);
+                            if ($value !== false) {
+                                $jsonDocuments[] = new JsonDocument($value);
+                            }
+                        }
+                    }
+                } else {
+                    if (!empty($result[0])) {
+                        $value = json_encode($result[0]);
+                        if ($value !== false) {
+                            $jsonDocuments[] = new JsonDocument($value);
+                        }
                     }
                 }
-            }
             } else {
                 if (!empty($result[0])) {
                     $value = json_encode($result[0]);
@@ -77,6 +85,6 @@ class JsonDocument
                 $flattened[] = $value;
             }
         }
-        return implode(',', $flattened);
+        return implode(' ', $flattened);
     }
 }

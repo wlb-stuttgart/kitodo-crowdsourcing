@@ -12,9 +12,13 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use Wlb\Crowdsourcing\Common\Indexer;
 use Wlb\Crowdsourcing\Common\ProcessImporter;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 
+/**
+ * Command to import the meta data exported from Kitodo-Publication.
+ */
 class Import extends Command
 {
     /**
@@ -44,7 +48,13 @@ class Import extends Command
     /**
      * @var ResourceFactory
      */
-    private ?ResourceFactory $resourceFactory;
+    private ResourceFactory $resourceFactory;
+
+
+    /**
+     * @var Indexer
+     */
+    protected Indexer $indexer;
 
 
     /**
@@ -59,15 +69,16 @@ class Import extends Command
         ProcessRepository $processRepository,
         ConfigurationManager $configurationManager,
         PersistenceManager $persistenceManager,
-        ResourceFactory $resourceFactory
+        ResourceFactory $resourceFactory,
+        Indexer $indexer
     ) {
         parent::__construct();
-
         $this->processImporter = $processImporter;
         $this->processRepository = $processRepository;
         $this->configurationManager = $configurationManager;
         $this->persistenceManager = $persistenceManager;
         $this->resourceFactory = $resourceFactory;
+        $this->indexer = $indexer;
     }
 
     protected function configure(): void
@@ -76,8 +87,6 @@ class Import extends Command
     }
 
     /**
-     * Call from cli: vendor/bin/typo3 crowdsourcing:import
-     *
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
@@ -86,7 +95,7 @@ class Import extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // TODO: How to set the storage pid?
+        // TODO: How and where to configure the storage pid?
         $storagePid = 2;
         $frameworkConfiguration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
         $frameworkConfiguration['persistence']['storagePid'] = MathUtility::forceIntegerInRange($storagePid, 0);

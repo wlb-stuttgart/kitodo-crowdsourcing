@@ -1,0 +1,20 @@
+fields:
+  - indexField: 'id'
+    path: '$.signature'
+    subpaths: ''
+    multivalue: false
+
+  - indexField: 'author_tsi'
+    path: '$.person'
+    subpaths: '$.firstname,$.lastname'
+    multivalue: true
+
+  - indexField: 'authorRole_tsi'
+    path: '$.person'
+    subpaths: '$.role'
+    multivalue: true
+
+  - indexField: 'publicationPlace_tsi'
+    path: '$.publicationPlace'
+    subpaths: ''
+    multivalue: true

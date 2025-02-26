@@ -2,7 +2,7 @@
 
 namespace Wlb\Crowdsourcing\Common;
 
-class IndexFieldMapping
+class IndexField
 {
 
     /**
@@ -34,16 +34,25 @@ class IndexFieldMapping
         $this->multivalue = $multivalue;
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return trim($this->name);
     }
 
+    /**
+     * @return string
+     */
     public function getPath(): string
     {
         return trim($this->path);
     }
 
+    /**
+     * @return array
+     */
     public function getSubpaths(): array
     {
         $subpaths = trim(trim($this->subpaths));
@@ -55,6 +64,9 @@ class IndexFieldMapping
         return [];
     }
 
+    /**
+     * @return bool
+     */
     public function isMultivalue(): bool
     {
         return $this->multivalue;

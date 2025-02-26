@@ -2,45 +2,38 @@
 
 namespace Wlb\Crowdsourcing\Common;
 
-class IndexMapping implements \Iterator
+class IndexFields implements \Iterator
 {
-    private $array = [
-        [
-            'indexField' => 'id',
-            'path' => '$.signature',
-            'subpaths' => '',
-            'multivalue' => false
-        ],
-        [
-            'indexField' => 'author_tsi',
-            'path' => '$.person',
-            'subpaths' => '',
-            'multivalue' => true
-        ],
-        [
-        'indexField' => 'publicationPlace_tsi',
-        'path' => '$.publicationPlace',
-        'subpaths' => '',
-        'multivalue' => true
-        ]
-    ];
+    /**
+     * @var array The index field configuration data
+     */
+    private $array;
 
+    /**
+     * @var int The current data pointer position.
+     */
     private $position = 0;
 
-    public function __construct() {
-        $this->array = $this->array;
+    /**
+     * @param array $configData
+     */
+    public function __construct(array $configData) {
+        $this->array = $configData;
         $this->position = 0;
     }
 
+    /**
+     * @return void
+     */
     public function rewind() {
         $this->position = 0;
     }
 
     /**
-     * @return IndexFieldMapping
+     * @return IndexField
      */
-    public function current(): IndexFieldMapping {
-        $indexFeldMapping = new IndexFieldMapping(
+    public function current(): IndexField {
+        $indexFeldMapping = new IndexField(
             ($this->array[$this->position]['indexField'] ?? ""),
             ($this->array[$this->position]['path'] ?? ""),
             ($this->array[$this->position]['subpaths'] ?? ""),
@@ -50,14 +43,23 @@ class IndexMapping implements \Iterator
         return $indexFeldMapping;
     }
 
+    /**
+     * @return int|mixed|string|null
+     */
     public function key() {
         return array_keys($this->array)[$this->position];
     }
 
+    /**
+     * @return void
+     */
     public function next() {
         ++$this->position;
     }
 
+    /**
+     * @return bool
+     */
     public function valid() {
         return isset($this->array[array_keys($this->array)[$this->position]]);
     }
