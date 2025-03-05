@@ -1,0 +1,113 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+<div class="container-fluid mt-4">
+    <f:comment>Show removed ruleset metadata</f:comment>
+    <div class="bg-danger">
+        <f:for each="{rulesetRemoved}" as="removedMetadata" key="docType">
+            <f:if condition="{removedMetadata}">
+                <f:then>
+                    <h3>{docType}</h3>
+                    <span>Es wurden die folgenden Metadaten aus dem Regelsatz entfernt, beim Speichern der Configuration geht das Metadatum verloren:</span>
+                    <f:for each="{removedMetadata}" as="removedData" key="metadataId">
+                        <div class="row">
+                            {removedData.label}
+                            {removedData.active}
+                            {removedData.minOccurs}
+                            {removedData.maxOccurs}
+                            {removedData.regex}
+                        </div>
+                    </f:for>
+                </f:then>
+            </f:if>
+        </f:for>
+    </div>
+
+
+    <f:form action="save" name="configuration">
+        <h2>Metadaten-Konfiguration</h2>
+        <f:for each="{rulesetConfig}" as="documentTypeConfig" key="docType">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_{docType}" aria-expanded="true" aria-controls="collapse_{docType}">
+                <h2>{docType}</h2>
+            </a>
+            <div id="collapse_{docType}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body">
+                    <!-- Metadaten-Konfiguration -->
+                    <div id="metadataContainer">
+                        <f:for each="{documentTypeConfig}" as="metadata" key="metadataId">
+                            <f:if condition="{rulesetAdded.{docType}.{metadataId}}">
+                                <f:then>
+                                    <f:variable name="metadataInfo">bg-success</f:variable>
+                                </f:then>
+                            </f:if>
+                            <f:if condition="{rulesetRemoved.{docType}.{metadataId}}">
+                                <f:then>
+                                    <f:variable name="metadataInfo">rulesetRemoved</f:variable>
+                                </f:then>
+                            </f:if>
+                            <div class="{metadataInfo}">
+                                <div class="row">
+                                    <h4>{metadata.label}</h4>
+                                    <f:form.hidden name="metadata[{docType}][{metadataId}][label]" value="{metadata.label}"/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <div class="form-check form-switch">
+                                            <f:form.checkbox
+                                                    id="meta-{metadataId}-active"
+                                                    class="form-check-input"
+                                                    name="metadata[{docType}][{metadataId}][active]"
+                                                    value="1"
+                                                    checked="{metadata.active}" />
+                                            <label class="form-check-label" for="meta-{metadataId}-active">Aktiv</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label for="meta-{metadataId}-minOccurs" class="form-label">Minimales Vorkommen</label>
+                                        <f:form.textfield
+                                                id="meta-{metadataId}-minOccurs"
+                                                class="form-control"
+                                                name="metadata[{docType}][{metadataId}][minOccurs]"
+                                                value="{metadata.minOccurs}"
+                                                type="number"
+                                                min="0" />
+                                    </div>
+                                    <!-- Anzahl des Vorkommens -->
+                                    <div class="col-md-1">
+                                        <label for="meta-{metadataId}-maxOccurs" class="form-label">Maximales Vorkommen</label>
+                                        <f:form.textfield
+                                                id="meta-{metadataId}-maxOccurs"
+                                                class="form-control"
+                                                name="metadata[{docType}][{metadataId}][maxOccurs]"
+                                                value="{metadata.maxOccurs}"
+                                                type="number"
+                                                min="1" />
+                                    </div>
+
+                                    <!-- Regulärer Ausdruck -->
+                                    <div class="col-xs-6">
+                                        <label for="meta-{metadataId}-regex" class="form-label">Validierung (RegEx)</label>
+                                        <f:form.textfield
+                                                id="meta-{metadataId}-regex"
+                                                class="form-control"
+                                                name="metadata[{docType}][{metadataId}][regex]"
+                                                value="{metadata.regex}"
+                                                placeholder="z.B. ^[A-Za-z]+$" />
+                                    </div>
+                                </div>
+                            </div>
+                        </f:for>
+                    </div>
+                </div>
+            </div>
+
+        </f:for>
+        <!-- Speichern -->
+        <f:form.submit class="btn btn-primary" value="Speichern" />
+    </f:form>
+</div>

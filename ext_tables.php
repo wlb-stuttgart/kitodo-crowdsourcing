@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Wlb\Crowdsourcing\Controller\Backend\CampaignController;
+use Wlb\Crowdsourcing\Controller\Backend\ConfigurationController;
 
 defined('TYPO3') or die();
 
@@ -34,5 +35,21 @@ defined('TYPO3') or die();
         'access' => 'admin',
         'iconIdentifier' => 'module-crowdsourcing-campaign',
         'labels' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_mod_campaign.xlf'
+    ]
+);
+
+// Configuration
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+    'Crowdsourcing',
+    'tx_crowdsourcing',
+    'tx_crowdsourcing_configuration',
+    '',
+    [
+        ConfigurationController::class => 'index, save'
+    ],
+    [
+        'access' => 'admin',
+        'iconIdentifier' => 'module-crowdsourcing-campaign',
+        'labels' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_mod_configuration.xlf'
     ]
 );

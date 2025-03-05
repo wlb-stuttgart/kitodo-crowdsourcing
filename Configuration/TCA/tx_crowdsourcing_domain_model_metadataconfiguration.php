@@ -25,7 +25,7 @@ $tca = [
         '1' => [
             'showitem' =>
                 '--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
-                    data,
+                    name,json,
                  --div--;LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaign.tabs.access,
                     --palette--;;hidden,
                     --palette--;;access,',
@@ -125,15 +125,17 @@ $tca = [
                 'default' => '',
             ],
         ],
-        'data' => [
-            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_metadataconfiguration.data',
+        'name' => [
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_metadataconfiguration.name',
             'config' => [
-                'type' => 'text',
-                'enableRichtext' => true,
-                'rows' => 8,
-                'cols' => 40,
-                'max' => 2000,
+                'type' => 'input',
                 'eval' => 'trim',
+            ],
+        ],
+        'json' => [
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_metadataconfiguration.json',
+            'config' => [
+                'type' => 'json',
             ],
         ],
         'fe_group' => [
@@ -175,15 +177,15 @@ if ($typo3Version->getMajorVersion() < 12) {
                 'cruser_id' => 'cruser_id',
             ],
             'columns' => [
-                'data' => [
+                'json' => [
                     'config' => [
-                        'eval' => 'trim,required',
+                        'type' => 'none',
                     ],
                 ],
             ],
         ]
     );
-    unset($tca['columns']['data']['required']);
+//    unset($tca['columns']['name']['required']);
 
     $tca['columns']['l18n_parent']['config']['items'] = [
         [

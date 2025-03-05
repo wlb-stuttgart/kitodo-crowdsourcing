@@ -12,5 +12,6 @@ CREATE TABLE tx_crowdsourcing_domain_model_process (
 );
 
 CREATE TABLE tx_crowdsourcing_domain_model_metadataconfiguration (
-    data        text
+    name        varchar(255)    DEFAULT '',
+    json        JSON
 );
