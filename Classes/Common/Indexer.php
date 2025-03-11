@@ -36,23 +36,24 @@ class Indexer
      * @return void
      * @throws \Exception
      */
-    public function indexDocument(string $jsonData)
+    public function indexDocument(string $identifier, string $jsonData)
     {
-        $this->addDocument($this->getDocument($jsonData));
+        $this->addDocument($identifier, $this->getDocument($jsonData));
     }
 
     /**
+     * @param string $identifier
      * @param array $indexDocument
      * @return void
      * @throws \Exception
      */
-    public function addDocument(array $indexDocument)
+    public function addDocument(string $identifier, array $indexDocument)
     {
         $solr   = Solr::getInstance();
         $update = $solr->getClient()->createUpdate();
         $doc    = $update->createDocument();
 
-        if (!isset($indexDocument['id']) || empty($indexDocument['id'])) {
+        if (!isset($identifier) || empty($identifier)) {
             throw new \Exception('Error while indexing: Document with no ID.');
         }
 

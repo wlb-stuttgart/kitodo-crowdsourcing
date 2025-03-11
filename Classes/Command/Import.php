@@ -13,8 +13,9 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use Wlb\Crowdsourcing\Common\Indexer;
-use Wlb\Crowdsourcing\Common\ProcessImporter;
-use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
+use Wlb\Crowdsourcing\Domain\Repository\CampaignTaskRepository;
+use Wlb\Crowdsourcing\Services\CampaignTaskImportService;
+use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 
 /**
  * Command to import the meta data exported from Kitodo-Publication.
@@ -22,63 +23,20 @@ use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 class Import extends Command
 {
     /**
-     * @var ProcessRepository
-     */
-    protected ProcessRepository $processRepository;
-
-
-    /**
-     * @var ProcessImporter
-     */
-    protected ProcessImporter $processImporter;
-
-
-    /**
-     * @var PersistenceManager
-     */
-    protected PersistenceManager $persistenceManager;
-
-
-    /**
-     * @var ConfigurationManager
-     */
-    protected ConfigurationManager $configurationManager;
-
-
-    /**
-     * @var ResourceFactory
-     */
-    private ResourceFactory $resourceFactory;
-
-
-    /**
-     * @var Indexer
-     */
-    protected Indexer $indexer;
-
-
-    /**
-     * @param ProcessImporter $processImporter
-     * @param ProcessRepository $processRepository
+     * @param CampaignTaskRepository $processRepository
      * @param ConfigurationManager $configurationManager
      * @param PersistenceManager $persistenceManager
      * @param ResourceFactory $resourceFactory
      */
     public function __construct(
-        ProcessImporter $processImporter,
-        ProcessRepository $processRepository,
-        ConfigurationManager $configurationManager,
-        PersistenceManager $persistenceManager,
-        ResourceFactory $resourceFactory,
-        Indexer $indexer
+        private readonly CampaignTaskRepository    $processRepository,
+        private readonly ConfigurationManager      $configurationManager,
+        private readonly PersistenceManager        $persistenceManager,
+        private readonly ResourceFactory           $resourceFactory,
+        private readonly Indexer                   $indexer,
+        private readonly CampaignTaskImportService $campaignTaskImportService
     ) {
         parent::__construct();
-        $this->processImporter = $processImporter;
-        $this->processRepository = $processRepository;
-        $this->configurationManager = $configurationManager;
-        $this->persistenceManager = $persistenceManager;
-        $this->resourceFactory = $resourceFactory;
-        $this->indexer = $indexer;
     }
 
     protected function configure(): void
@@ -95,14 +53,26 @@ class Import extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // TODO: How and where to configure the storage pid?
-        $storagePid = 2;
+        $storagePid = ExtensionConfigurationService::getInstance()->getConfigurationValue('storagePid');
+        if (!is_numeric($storagePid) || $storagePid <= 0) {
+            return Command::FAILURE;
+        }
+
         $frameworkConfiguration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
         $frameworkConfiguration['persistence']['storagePid'] = MathUtility::forceIntegerInRange($storagePid, 0);
         $this->configurationManager->setConfiguration($frameworkConfiguration);
 
-        $this->processImporter->import('/var/www/html/public/export');
+        // TODO error logging.
+        // TODO optimize exception handling.
+        try {
+            if ($this->campaignTaskImportService->processTaskQueue()) {
+                return Command::SUCCESS;
+            }
+        } catch( \Throwable $throwable) {
+            throw $throwable;
+            return Command::FAILURE;
+        }
 
-        return Command::SUCCESS;
+        return Command::FAILURE;
     }
 }

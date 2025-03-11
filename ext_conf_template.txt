@@ -1,0 +1,14 @@
+# cat=Import/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.import.importedDirectoryPath
+importedDirectoryPath = /opt/import/export
+
+# cat=Import/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.import.failedDirectoryPath
+failedDirectoryPath = /opt/import/failed
+
+# cat=Import/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.import.toImportDirectoryPath
+toImportDirectoryPath = /opt/import/toimport
+
+# cat=Import/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.import.processDirectoryPath
+processDirectoryPath = /opt/import/process
+
+# cat=Storage/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.storage.storagePid
+storagePid =

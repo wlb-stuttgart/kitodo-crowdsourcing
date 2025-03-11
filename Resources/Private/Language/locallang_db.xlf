@@ -14,22 +14,22 @@
 		<trans-unit id="tx_crowdsourcing_domain_model_campaign.description">
         	<source>Description</source>
         </trans-unit>
-		<trans-unit id="tx_crowdsourcing_domain_model_process">
+		<trans-unit id="tx_crowdsourcing_domain_model_campaigntask">
 			<source>Process</source>
 		</trans-unit>
-		<trans-unit id="tx_crowdsourcing_domain_model_process.title">
+		<trans-unit id="tx_crowdsourcing_domain_model_campaigntask.title">
 			<source>Title</source>
 		</trans-unit>
-		<trans-unit id="tx_crowdsourcing_domain_model_process.identifier">
+		<trans-unit id="tx_crowdsourcing_domain_model_campaigntask.identifier">
 			<source>Identifier</source>
 		</trans-unit>
-		<trans-unit id="tx_crowdsourcing_domain_model_process.images">
+		<trans-unit id="tx_crowdsourcing_domain_model_campaigntask.images">
 			<source>Images</source>
 		</trans-unit>
-		<trans-unit id="tx_crowdsourcing_domain_model_process.state">
+		<trans-unit id="tx_crowdsourcing_domain_model_campaigntask.state">
 			<source>State</source>
 		</trans-unit>
-		<trans-unit id="tx_crowdsourcing_domain_model_process.metadata">
+		<trans-unit id="tx_crowdsourcing_domain_model_campaigntask.metadata">
 			<source>Metadata</source>
 		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_metadata">
@@ -41,8 +41,8 @@
 		<trans-unit id="tx_crowdsourcing_domain_model_metadata.value">
 			<source>Value</source>
 		</trans-unit>
-        <trans-unit id="tx_crowdsourcing_domain_model_metadata.process">
-            <source>Process</source>
+        <trans-unit id="tx_crowdsourcing_domain_model_metadata.campaigntask">
+            <source>Campaign task</source>
         </trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_metadataconfiguration">
 			<source>Metadata configuration</source>

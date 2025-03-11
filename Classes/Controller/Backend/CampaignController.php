@@ -3,29 +3,22 @@
 namespace Wlb\Crowdsourcing\Controller\Backend;
 
 use TYPO3\CMS\Extensionmanager\Controller\ActionController;
-use Wlb\Crowdsourcing\Common\ProcessImporter;
-use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
+use Wlb\Crowdsourcing\Domain\Repository\CampaignTaskRepository;
 
 class CampaignController extends ActionController
 {
     /**
-     * @var ProcessImporter
-     */
-    protected $processImporter;
-
-    /**
-     * @var ProcessRepository
+     * @var CampaignTaskRepository
      */
     protected $processRepository;
 
-    public function injectProcessRepository(ProcessRepository $processRepository)
+    public function injectProcessRepository(CampaignTaskRepository $processRepository)
     {
         $this->processRepository = $processRepository;
     }
 
-    public function __construct(ProcessImporter $processImporter)
+    public function __construct()
     {
-        $this->processImporter = $processImporter;
     }
 
     public function indexAction()

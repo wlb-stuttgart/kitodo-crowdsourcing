@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2025-03-06T16:19:00Z">
+		<header>
+			<generator>LFEditor</generator>
+		</header>
+		<body>
+			<trans-unit id="config.import.importedDirectoryPath">
+				<source>Path to the imported data directory</source>
+			</trans-unit>
+			<trans-unit id="config.import.failedDirectoryPath">
+				<source>Path to the import failed directory</source>
+			</trans-unit>
+			<trans-unit id="config.import.toImportDirectoryPath">
+				<source>Path to the import toindex directory</source>
+			</trans-unit>
+			<trans-unit id="config.import.processDirectoryPath">
+				<source>Path to the import process directory</source>
+			</trans-unit>
+			<trans-unit id="config.storage.storagePid">
+				<source>UID of the system folder to store datasets</source>
+			</trans-unit>
+		</body>
+  </file>
+</xliff>
