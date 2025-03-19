@@ -4,7 +4,9 @@ namespace Wlb\Crowdsourcing\Controller\Backend;
 
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Mvc\Exception\StopActionException;
 use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
@@ -40,7 +42,7 @@ class ConfigurationController extends ActionController
         $sxe = null;
         $sxe = simplexml_load_file($ruleset);
 
-        $configurationSet = [];
+        $configurationRuleset = [];
         $metadataDefinitions = [];
 
         // load metadata to array
@@ -52,7 +54,7 @@ class ConfigurationController extends ActionController
         foreach ($sxe->declaration->division as $division) {
             if ($division->attributes()->{'processTitle'}) {
                 $documentType = (string) $division->attributes()->{'id'};
-                $configurationSet[$documentType] = [];
+                $configurationRuleset[$documentType] = [];
 
             }
         }
@@ -60,16 +62,16 @@ class ConfigurationController extends ActionController
         foreach ($sxe->correlation->restriction as $restriction) {
             // Each restriction defines a doc type
             $divisionName = (string)$restriction->attributes()->{'division'};
-            if (array_key_exists($divisionName, $configurationSet)) {
+            if (array_key_exists($divisionName, $configurationRuleset)) {
                 foreach ($restriction as $permit) {
                     if ((string) $permit->attributes()->{'key'}) {
                         $permitKey = (string) $permit->attributes()->{'key'};
-                        $configurationSet[$divisionName][$permitKey]['label'] = $metadataDefinitions[$permitKey];
+                        $configurationRuleset[$divisionName][$permitKey]['label'] = $metadataDefinitions[$permitKey];
                         if ($minOccurs = (string) $permit->attributes()->{'minOccurs'}) {
-                            $configurationSet[$divisionName][$permitKey]['minOccurs'] = $minOccurs;
+                            $configurationRuleset[$divisionName][$permitKey]['minOccurs'] = $minOccurs;
                         }
                         if ($maxOccurs = (string) $permit->attributes()->{'maxOccurs'}) {
-                            $configurationSet[$divisionName][$permitKey]['maxOccurs'] = $maxOccurs;
+                            $configurationRuleset[$divisionName][$permitKey]['maxOccurs'] = $maxOccurs;
                         }
                     }
                 }
@@ -79,17 +81,18 @@ class ConfigurationController extends ActionController
         // compare db with ruleset in both directions
         $rulesetAdded = [];
         $rulesetRemoved = [];
+        $config = $configurationRuleset;
 
         // get db saved config
         $queryResult = $this->metadataConfigurationRepository->findAll();
         if ($queryResult->count() !== 0) {
             /** @var MetadataConfiguration $dbConfiguration */
             $dbConfiguration = $queryResult->getFirst();
-            $config = json_decode($dbConfiguration->getJson(), true);
+            $dbConfigArray = json_decode($dbConfiguration->getJson(), true);
 
-            foreach ($config as $key => $dbDocumentConfiguration) {
-                $rulesetAdded[$key] = array_diff_key($configurationSet[$key], $dbDocumentConfiguration);
-                $rulesetRemoved[$key] = array_diff_key($dbDocumentConfiguration, $configurationSet[$key]);
+            foreach ($dbConfigArray as $key => $dbDocumentConfiguration) {
+                $rulesetAdded[$key] = array_diff_key($configurationRuleset[$key], $dbDocumentConfiguration);
+                $rulesetRemoved[$key] = array_diff_key($dbDocumentConfiguration, $configurationRuleset[$key]);
             }
 
             foreach ($rulesetRemoved as $docType => $metadataRemoved) {
@@ -100,10 +103,29 @@ class ConfigurationController extends ActionController
 
             $this->view->assign('rulesetAdded', $rulesetAdded);
             $this->view->assign('rulesetRemoved', $rulesetRemoved);
+            $this->view->assign('dbConfig', $dbConfigArray);
+            $config = $dbConfigArray;
+            /** demo only -- should be moved to frontend if process/campaign is available */
+//            $this->view->assign('jsonConfig', $dbConfiguration->getJson());
+            /** demo only */
         }
 
-        $this->view->assign('rulesetConfig', $configurationSet);
+        $this->view->assign('rulesetConfig', $configurationRuleset);
+        $this->view->assign('config', $config);
         return $this->htmlResponse();
+    }
+
+    public function saveDemoFormAction(): ResponseInterface
+    {
+        $untrustedMetadata = $this->request->getParsedBody()['metadata'];
+        $trustedMetadata = $this->request->getArgument('metadata');
+
+        debug($trustedMetadata);
+        debug($untrustedMetadata);
+
+        exit;
+
+        return (new ForwardResponse('index'));
     }
 
 

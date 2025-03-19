@@ -45,7 +45,7 @@ defined('TYPO3') or die();
     'tx_crowdsourcing_configuration',
     '',
     [
-        ConfigurationController::class => 'index, save'
+        ConfigurationController::class => 'index, save, saveDemoForm'
     ],
     [
         'access' => 'admin',
