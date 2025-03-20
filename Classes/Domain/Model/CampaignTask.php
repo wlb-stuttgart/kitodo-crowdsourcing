@@ -56,14 +56,14 @@ class CampaignTask extends AbstractEntity
         $this->identifier = $identifier;
     }
 
-    public function getImages(): string
+    public function getImages(): array
     {
-        return $this->images;
+        return unserialize($this->images);
     }
 
-    public function setImages(string $images): void
+    public function setImages(array $images): void
     {
-        $this->images = $images;
+        $this->images = serialize($images);
     }
 
     public function getState(): string

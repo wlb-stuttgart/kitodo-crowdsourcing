@@ -1,18 +1,18 @@
 <?php
 
-namespace Wlb\Crowdsourcing\Common;
+namespace Wlb\Crowdsourcing\Common\Solr;
 
-use Wlb\Crowdsourcing\Common\Solr\Solr;
+use Wlb\Crowdsourcing\Common\JsonDocument;
 use Wlb\Crowdsourcing\Services\IndexFieldsService;
 
-class Indexer
+class SolrIndexer
 {
     /**
      * @access protected
      * @static
-     * @var Solr Instance of Solr class
+     * @var SolrClient Instance of Solr class
      */
-    protected static Solr $solr;
+    protected static SolrClient $solr;
 
 
     /**
@@ -49,13 +49,15 @@ class Indexer
      */
     public function addDocument(string $identifier, array $indexDocument)
     {
-        $solr   = Solr::getInstance();
+        $solr   = SolrClient::getInstance();
         $update = $solr->getClient()->createUpdate();
         $doc    = $update->createDocument();
 
         if (!isset($identifier) || empty($identifier)) {
             throw new \Exception('Error while indexing: Document with no ID.');
         }
+
+        $doc->setField('id', $identifier);
 
         foreach ($indexDocument as $key => $value) {
             $doc->setField($key, $value);

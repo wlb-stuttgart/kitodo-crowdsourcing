@@ -6,7 +6,7 @@ use Solarium\Client;
 use Solarium\Core\Client\Adapter\Curl;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class Solr
+class SolrClient
 {
     /**
      * @var Client The Solr client service object
@@ -15,9 +15,9 @@ class Solr
 
 
     /**
-     * @var Solr
+     * @var SolrClient
      */
-    protected static Solr $instance;
+    protected static SolrClient $instance;
 
 
     protected function __construct()
@@ -29,12 +29,12 @@ class Solr
     }
 
     /**
-     * @return Solr
+     * @return SolrClient
      */
-    public static function getInstance(): Solr
+    public static function getInstance(): SolrClient
     {
         if (empty(self::$instance)) {
-            self::$instance = new Solr();
+            self::$instance = new SolrClient();
         }
 
         return self::$instance;

@@ -1,5 +1,5 @@
 fields:
-  - indexField: 'id'
+  - indexField: 'signature_tsi'
     path: '$.signature'
     subpaths: ''
     multivalue: false

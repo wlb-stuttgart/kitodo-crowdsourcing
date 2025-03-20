@@ -3,7 +3,7 @@
 namespace Wlb\Crowdsourcing\Services;
 
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
-use Wlb\Crowdsourcing\Common\Indexer;
+use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Domain\Model\CampaignTask;
 use Wlb\Crowdsourcing\Domain\Repository\CampaignTaskRepository;
 
@@ -42,14 +42,14 @@ class CampaignTaskImportService
     /**
      * @param CampaignTaskRepository $campaignTaskRepository
      * @param PersistenceManager $persistenceManager
-     * @param Indexer $indexer
+     * @param SolrIndexer $indexer
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
      */
     public function __construct(
         private readonly CampaignTaskRepository $campaignTaskRepository,
         private readonly PersistenceManager     $persistenceManager,
-        private readonly Indexer                $indexer
+        private readonly SolrIndexer $indexer
     )
     {
         $this->importedDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
@@ -102,7 +102,7 @@ class CampaignTaskImportService
                 $campaignTask->setIdentifier($identifier);
                 $campaignTask->setMetadata(json_encode($jsonData));
                 $campaignTask->setState(CampaignTask::STATE_NEW);
-                $campaignTask->setImages(serialize($imageNames));
+                $campaignTask->setImages($imageNames);
                 $this->campaignTaskRepository->add($campaignTask);
 
                 $this->indexer->indexDocument($campaignTask->getIdentifier(), $campaignTask->getMetadata());

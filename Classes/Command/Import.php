@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
-use Wlb\Crowdsourcing\Common\Indexer;
+use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Domain\Repository\CampaignTaskRepository;
 use Wlb\Crowdsourcing\Services\CampaignTaskImportService;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
@@ -33,7 +33,7 @@ class Import extends Command
         private readonly ConfigurationManager      $configurationManager,
         private readonly PersistenceManager        $persistenceManager,
         private readonly ResourceFactory           $resourceFactory,
-        private readonly Indexer                   $indexer,
+        private readonly SolrIndexer               $indexer,
         private readonly CampaignTaskImportService $campaignTaskImportService
     ) {
         parent::__construct();
@@ -69,7 +69,6 @@ class Import extends Command
                 return Command::SUCCESS;
             }
         } catch( \Throwable $throwable) {
-            throw $throwable;
             return Command::FAILURE;
         }
 
