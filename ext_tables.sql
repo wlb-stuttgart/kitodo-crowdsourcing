@@ -3,7 +3,7 @@ CREATE TABLE tx_crowdsourcing_domain_model_campaign (
     description text             DEFAULT ''
 );
 
-CREATE TABLE tx_crowdsourcing_domain_model_campaigntask (
+CREATE TABLE tx_crowdsourcing_domain_model_process (
     title       varchar(255)    DEFAULT ''  NOT NULL,
     identifier  varchar(255),
     images      text,

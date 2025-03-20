@@ -2,7 +2,7 @@
 
 $tca = [
     'ctrl' => [
-        'title' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaigntask',
+        'title' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process',
         'label' => 'title',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
@@ -26,7 +26,7 @@ $tca = [
             'showitem' =>
                 '--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
                     title, identifier, images, state, metadata,
-                 --div--;LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaigntask.tabs.access,
+                 --div--;LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.tabs.access,
                     --palette--;;hidden,
                     --palette--;;access,',
         ],
@@ -34,11 +34,11 @@ $tca = [
     'palettes' => [
         'hidden' => [
             'showitem' => '
-                hidden;LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaigntask.hidden
+                hidden;LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.hidden
             ',
         ],
         'access' => [
-            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaigntask.palettes.access',
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.palettes.access',
             'showitem' => '
                 starttime;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:starttime_formlabel,
                 endtime;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:endtime_formlabel,
@@ -50,7 +50,7 @@ $tca = [
     'columns' => [
         'hidden' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaigntask.hidden',
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.hidden',
             'config' => [
                 'type' => 'check',
                 'renderType' => 'checkboxToggle',
@@ -107,10 +107,10 @@ $tca = [
                         'value' => 0,
                     ],
                 ],
-                'foreign_table' => 'tx_crowdsourcing_domain_model_campaigntask',
+                'foreign_table' => 'tx_crowdsourcing_domain_model_process',
                 'foreign_table_where' =>
-                    'AND {#tx_crowdsourcing_domain_model_campaigntask}.{#pid}=###CURRENT_PID###
-                     AND {#tx_crowdsourcing_domain_model_campaigntask}.{#sys_language_uid} IN (-1,0)',
+                    'AND {#tx_crowdsourcing_domain_model_process}.{#pid}=###CURRENT_PID###
+                     AND {#tx_crowdsourcing_domain_model_process}.{#sys_language_uid} IN (-1,0)',
                 'default' => 0,
             ],
         ],
@@ -126,7 +126,7 @@ $tca = [
             ],
         ],
         'title' => [
-            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaigntask.title',
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.title',
             'config' => [
                 'type' => 'input',
                 'size' => 40,
@@ -136,7 +136,7 @@ $tca = [
             ],
         ],
         'identifier' => [
-            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaigntask.identifier',
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.identifier',
             'config' => [
                 'type' => 'input',
                 'size' => 20,
@@ -144,7 +144,7 @@ $tca = [
             ],
         ],
         'images' => [
-            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaigntask.images',
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.images',
             'config' => [
                 'type' => 'text',
                 'enableRichtext' => false,
@@ -155,7 +155,7 @@ $tca = [
             ],
         ],
         'state' => [
-            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaigntask.state',
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.state',
             'config' => [
                 'type' => 'input',
                 'size' => 40,
@@ -165,7 +165,7 @@ $tca = [
             ],
         ],
         'metadata' => [
-            'label' => 'LLL:EXT:my_extension/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaigntask.metadata',
+            'label' => 'LLL:EXT:my_extension/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.metadata',
             'config' => [
                 'type' => 'text',
                 'enableRichtext' => false,
@@ -177,7 +177,7 @@ $tca = [
         'fe_group' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaigntask.fe_group',
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.fe_group',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
@@ -231,7 +231,7 @@ if ($typo3Version->getMajorVersion() < 12) {
     ];
     $tca['columns']['hidden']['config'] = [
         'type' => 'check',
-        'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaigntask.hidden',
+        'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.hidden',
         'items' => [
             [
                 0 => '',

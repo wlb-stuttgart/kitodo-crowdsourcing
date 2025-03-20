@@ -13,8 +13,8 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
-use Wlb\Crowdsourcing\Domain\Repository\CampaignTaskRepository;
-use Wlb\Crowdsourcing\Services\CampaignTaskImportService;
+use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
+use Wlb\Crowdsourcing\Services\ProcessImportService;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 
 /**
@@ -23,18 +23,18 @@ use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 class Import extends Command
 {
     /**
-     * @param CampaignTaskRepository $processRepository
+     * @param ProcessRepository $processRepository
      * @param ConfigurationManager $configurationManager
      * @param PersistenceManager $persistenceManager
      * @param ResourceFactory $resourceFactory
      */
     public function __construct(
-        private readonly CampaignTaskRepository    $processRepository,
-        private readonly ConfigurationManager      $configurationManager,
-        private readonly PersistenceManager        $persistenceManager,
-        private readonly ResourceFactory           $resourceFactory,
-        private readonly SolrIndexer               $indexer,
-        private readonly CampaignTaskImportService $campaignTaskImportService
+        private readonly ProcessRepository    $processRepository,
+        private readonly ConfigurationManager $configurationManager,
+        private readonly PersistenceManager   $persistenceManager,
+        private readonly ResourceFactory      $resourceFactory,
+        private readonly SolrIndexer          $indexer,
+        private readonly ProcessImportService $processImportService
     ) {
         parent::__construct();
     }
@@ -65,7 +65,7 @@ class Import extends Command
         // TODO error logging.
         // TODO optimize exception handling.
         try {
-            if ($this->campaignTaskImportService->processTaskQueue()) {
+            if ($this->processImportService->processProcessQueue()) {
                 return Command::SUCCESS;
             }
         } catch( \Throwable $throwable) {

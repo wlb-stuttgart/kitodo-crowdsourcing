@@ -4,10 +4,10 @@ namespace Wlb\Crowdsourcing\Services;
 
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
-use Wlb\Crowdsourcing\Domain\Model\CampaignTask;
-use Wlb\Crowdsourcing\Domain\Repository\CampaignTaskRepository;
+use Wlb\Crowdsourcing\Domain\Model\Process;
+use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 
-class CampaignTaskImportService
+class ProcessImportService
 {
     /**
      * The path to the directory where the data is moved after a single import is successfully completed.
@@ -32,7 +32,7 @@ class CampaignTaskImportService
     private $toImportDir;
 
     /**
-     * The path to the directory holding the data for the next campaign task to be imported.
+     * The path to the directory holding the data for the next process to be imported.
      *
      * @var string
      */
@@ -40,16 +40,16 @@ class CampaignTaskImportService
 
 
     /**
-     * @param CampaignTaskRepository $campaignTaskRepository
+     * @param ProcessRepository $processRepository
      * @param PersistenceManager $persistenceManager
      * @param SolrIndexer $indexer
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
      */
     public function __construct(
-        private readonly CampaignTaskRepository $campaignTaskRepository,
-        private readonly PersistenceManager     $persistenceManager,
-        private readonly SolrIndexer $indexer
+        private readonly ProcessRepository  $processRepository,
+        private readonly PersistenceManager $persistenceManager,
+        private readonly SolrIndexer        $indexer
     )
     {
         $this->importedDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
@@ -59,13 +59,13 @@ class CampaignTaskImportService
     }
 
     /**
-     * Imports the file data for a single campaign task specified by its identifier.
+     * Imports the file data for a single process specified by its identifier.
      *
      * @param string $identifier
      * @return bool
      * @throws \Exception
      */
-    protected function processTask(string $identifier): bool
+    protected function processProcess(string $identifier): bool
     {
         // Check if process folder is ready for the next file import.
         if (count(array_diff(scandir($this->processDir), ['.', '..'])) != 0) {
@@ -97,15 +97,15 @@ class CampaignTaskImportService
         try {
             $imageNames = $this->getImageNames($identifier);
 
-            if (!$this->campaignTaskRepository->findOneByIdentifier($identifier)) {
-                $campaignTask = new CampaignTask();
-                $campaignTask->setIdentifier($identifier);
-                $campaignTask->setMetadata(json_encode($jsonData));
-                $campaignTask->setState(CampaignTask::STATE_NEW);
-                $campaignTask->setImages($imageNames);
-                $this->campaignTaskRepository->add($campaignTask);
+            if (!$this->processRepository->findOneByIdentifier($identifier)) {
+                $process = new Process();
+                $process->setIdentifier($identifier);
+                $process->setMetadata(json_encode($jsonData));
+                $process->setState(Process::STATE_NEW);
+                $process->setImages($imageNames);
+                $this->processRepository->add($process);
 
-                $this->indexer->indexDocument($campaignTask->getIdentifier(), $campaignTask->getMetadata());
+                $this->indexer->indexDocument($process->getIdentifier(), $process->getMetadata());
             }
             $this->persistenceManager->persistAll();
         } catch (\Throwable $throwable) {
@@ -119,12 +119,12 @@ class CampaignTaskImportService
     }
 
     /**
-     * Imports alle campaign tasks from the configured "toImport" directory.
+     * Imports all processes from the configured "toImport" directory.
      *
      * @return void
      * @throws \Exception
      */
-    public function processTaskQueue()
+    public function processProcessQueue()
     {
         if (!is_dir($this->importedDir) || !is_dir($this->failedDir) || !is_dir($this->toImportDir) ||!is_dir($this->processDir)) {
             throw new \Exception("Missing import directories. Check extension configuration.");
@@ -138,7 +138,7 @@ class CampaignTaskImportService
             }
 
             // Filename has to be an identifier.
-            $this->processTask($fileName->getFilename());
+            $this->processProcess($fileName->getFilename());
         }
     }
 
@@ -162,7 +162,7 @@ class CampaignTaskImportService
     }
 
     /**
-     * Moves all files of a campaign task to the failed directory.
+     * Moves all files of a processes to the failed directory.
      *
      * @param string $identifier
      * @return void
@@ -176,7 +176,7 @@ class CampaignTaskImportService
     }
 
     /**
-     * Moves all files of a campaign task to the process directory.
+     * Moves all files of a processes to the process directory.
      *
      * @param string $identifier
      * @return void
@@ -190,7 +190,7 @@ class CampaignTaskImportService
     }
 
     /**
-     * Moves all files of a campaign task to the imported directory.
+     * Moves all files of a processes to the imported directory.
      *
      * @param string $identifier
      * @return void

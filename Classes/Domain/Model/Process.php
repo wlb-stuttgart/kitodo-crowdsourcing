@@ -4,7 +4,7 @@ namespace Wlb\Crowdsourcing\Domain\Model;
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
-class CampaignTask extends AbstractEntity
+class Process extends AbstractEntity
 {
     const STATE_NEW = 'NEW';
     const STATE_ENTRY = 'ENTRY';
