@@ -2,52 +2,46 @@
 
 namespace Wlb\Crowdsourcing\Common\Solr;
 
-use Wlb\Crowdsourcing\Common\JsonDocument;
-use Wlb\Crowdsourcing\Services\IndexFieldsService;
+use Wlb\Crowdsourcing\Common\XMLExtractor;
+use Wlb\Crowdsourcing\Services\IndexFieldConfigReader;
 
 class SolrIndexer
 {
     /**
-     * @access protected
-     * @static
-     * @var SolrClient Instance of Solr class
+     * Holds the configuration of the index fields
+     *
+     * @var array
      */
-    protected static SolrClient $solr;
-
+    private $config;
 
     /**
-     * @var IndexFieldsService
+     * @param IndexFieldConfigReader $indexFieldConfigReader
      */
-    protected $indexFieldsService;
-
-
-    /**
-     * @param IndexFieldsService $indexFieldsService
-     * @return void
-     */
-    public function __construct(IndexFieldsService $indexFieldsService)
+    public function __construct(
+        private readonly IndexFieldConfigReader $indexFieldConfigReader,
+        private readonly XMLExtractor $xmlExtractor
+    )
     {
-        $this->indexFieldsService = $indexFieldsService;
+        $this->config = $this->indexFieldConfigReader->getConfig();
     }
 
-
     /**
-     * @param string $jsonData The JSON metadata to be indexed
+     * @param string $xmlData The XML metadata to be indexed
      * @return void
      * @throws \Exception
      */
-    public function indexDocument(string $identifier, string $jsonData)
+    public function indexDocument(string $identifier, string $xmlData)
     {
-        $this->addDocument($identifier, $this->getDocument($jsonData));
+        $this->addDocument($identifier, $this->getDocument($xmlData));
     }
 
     /**
      * @param string $identifier
-     * @param array $indexDocument
+     * @param array $indexData
      * @return void
      * @throws \Exception
      */
-    public function addDocument(string $identifier, array $indexDocument)
+    public function addDocument(string $identifier, array $indexData)
     {
         $solr   = SolrClient::getInstance();
         $update = $solr->getClient()->createUpdate();
@@ -59,67 +53,46 @@ class SolrIndexer
 
         $doc->setField('id', $identifier);
 
-        foreach ($indexDocument as $key => $value) {
+        foreach ($indexData as $key => $value) {
             $doc->setField($key, $value);
         }
 
         $update->addDocument($doc);
+
         $update->addCommit();
 
-
         $solr->getClient()->update($update);
+
     }
 
 
     /**
      * Extracts the index relevant data (due to the index field configuration) from the given json data.
      *
-     * @param string $jsonData
+     * @param string $xmlData
      * @return array
      * @throws \JsonPath\InvalidJsonException
      */
-    public function getDocument(string $jsonData)
+    public function getDocument(string $xmlData)
     {
-        $jsonDoc = new JsonDocument($jsonData);
+        $xml = simplexml_load_string($xmlData);
+        $xml->registerXPathNamespace('kitodo', 'http://meta.kitodo.org/v1/');
 
-        $indexFields = $this->indexFieldsService->load();
+        $result = [];
 
-        $indexDocument = [];
-
-        // Extract the data from the first level
-        foreach ($indexFields as $fieldMapping) {
-            $fieldJsonList = $jsonDoc->findByJsonPath($fieldMapping->getPath());
-
-            if ($fieldJsonList) {
-                foreach ($fieldJsonList as $fieldJson) {
-                    $subPaths = $fieldMapping->getSubpaths();
-                    if ($subPaths && is_array($subPaths)) {
-                        $subfieldValues = [];
-                        foreach ($subPaths as $subPath) {
-                            $subFieldList = $fieldJson->findByJsonPath($subPath);
-                            foreach ($subFieldList as $subFieldJson) {
-                                $subfieldValues[] = $subFieldJson->toString();
-                            }
-                        }
-                        $indexDocument[$fieldMapping->getName()][] = implode(" ", $subfieldValues);
-                    } else {
-                        $indexDocument[$fieldMapping->getName()][] = $fieldJson->toString();
-                    }
-                }
-            }
+        foreach ($this->config as $indexField => $indexFieldConfig) {
+            $result[$indexField] = $this->xmlExtractor->extractData($indexFieldConfig, $xml);
         }
 
         // Convert values of a field (key) to string if the index field is not a multi value field.
-        foreach ($indexFields as $fieldMapping) {
-            $key = $fieldMapping->getName();
-            if (array_key_exists($key, $indexDocument)) {
-                if (!$fieldMapping->isMultivalue()) {
-                    $indexDocument[$key] = implode(", ", $indexDocument[$key]);
+        foreach ($this->config as $indexField => $indexFieldConfig) {
+            if (array_key_exists($indexField, $result)) {
+                if ($indexFieldConfig['_multivalue'] === false) {
+                    $result[$indexField] = implode(", ", $result[$indexField]);
                 }
             }
         }
 
-
-        return $indexDocument;
+        return $result;
     }
 }

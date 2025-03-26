@@ -4,7 +4,6 @@ namespace Wlb\Crowdsourcing\Common\Solr;
 
 use Solarium\Core\Query\Result\ResultInterface;
 use Wlb\Crowdsourcing\Common\IndexFields;
-use Wlb\Crowdsourcing\Services\IndexFieldsService;
 
 class SolrSearcher
 {
@@ -13,16 +12,9 @@ class SolrSearcher
      */
     private $client;
 
-    /**
-     * @var IndexFields
-     */
-    private $indexFields;
-
-
-    public function __construct(IndexFieldsService $indexFieldsService)
+    public function __construct()
     {
         $this->client = SolrClient::getInstance()->getClient();
-        $this->indexFields = $indexFieldsService->load();
     }
 
     /**

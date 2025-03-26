@@ -1,20 +1,23 @@
-fields:
-  - indexField: 'signature_tsi'
-    path: '$.signature'
-    subpaths: ''
-    multivalue: false
-
-  - indexField: 'author_tsi'
-    path: '$.person'
-    subpaths: '$.firstname,$.lastname'
-    multivalue: true
-
-  - indexField: 'authorRole_tsi'
-    path: '$.person'
-    subpaths: '$.role'
-    multivalue: true
-
-  - indexField: 'publicationPlace_tsi'
-    path: '$.publicationPlace'
-    subpaths: ''
-    multivalue: true
+author_tsi:
+  _multivalue: false
+  _delimiter: ' '
+  _fields:
+    person:
+      _delimiter: ' '
+      _fields:
+        firstname: true
+        lastname: true
+        address:
+          _delimiter: ' '
+          _fields:
+            street:
+              _delimiter: ' '
+              _fields:
+                name: 1
+                number: 1
+            city: true
+signature_tsi:
+  _multivalue: false
+  _delimiter: ' '
+  _fields:
+    signature: true

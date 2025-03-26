@@ -73,26 +73,49 @@ class ProcessImportService
             throw new \Exception('Process is not empty');
         }
 
-        $this->moveFilesFromToImpotToProcess($identifier);
+        $this->moveFilesFromToImportToProcess($identifier);
 
-        // Check for necessary subdirectories and JSON file
+        // Check for necessary subdirectories and XML file
         $dataDir = $this->processDir . '/' . $identifier;
         $imagesDir = $dataDir . '/images';
-        $jsonFilePath = $dataDir . '/' . $identifier . '.json';
+        $xmlFilePath = $dataDir . '/meta.xml';
 
-        if (!is_dir($dataDir) || !is_dir($imagesDir) || !file_exists($jsonFilePath)) {
+        if (!is_dir($dataDir) || !is_dir($imagesDir) || !file_exists($xmlFilePath)) {
             $this->moveFilesFromProcessToFailed($identifier);
             // TODO logging "Invalid data for " . $identifier
             return false;
         }
 
-        // Read the JSON file
-        $jsonData = json_decode(file_get_contents($jsonFilePath), true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
+        // Read the XML file
+        libxml_use_internal_errors(true);
+
+        $xmlDoc = new \DOMDocument();
+
+        if (!$xmlDoc->load($xmlFilePath)) {
             $this->moveFilesFromProcessToFailed($identifier);
-            // TODO logging "Invalid json file."
+            // TODO logging "Invalid xml file."
+            // $errors = libxml_get_errors();
             return false;
         }
+
+        $xpathDoc = new \DOMXPath($xmlDoc);
+        //$xpathDoc->registerNamespace('kitodo', 'http://meta.kitodo.org/v1/');
+        $nodes = $xpathDoc->query('//kitodo:kitodo');
+
+        if ($nodes->count() <= 0) {
+            $this->moveFilesFromProcessToFailed($identifier);
+            // TODO logging "Invalid xml file."
+
+            return false;
+        }
+
+        $xmlData = new \DOMDocument();
+        $xmlData->preserveWhiteSpace = true;
+        $xmlData->formatOutput = true;
+        $importedNode = $xmlData->importNode($nodes->item(0), true);
+        $xmlData->appendChild($importedNode);
+
+        $xpathData = new \DOMXPath($xmlData);
 
         try {
             $imageNames = $this->getImageNames($identifier);
@@ -100,7 +123,7 @@ class ProcessImportService
             if (!$this->processRepository->findOneByIdentifier($identifier)) {
                 $process = new Process();
                 $process->setIdentifier($identifier);
-                $process->setMetadata(json_encode($jsonData));
+                $process->setMetadata($xmlData->saveXML());
                 $process->setState(Process::STATE_NEW);
                 $process->setImages($imageNames);
                 $this->processRepository->add($process);
@@ -182,7 +205,7 @@ class ProcessImportService
      * @return void
      * @throws \Exception
      */
-    protected function moveFilesFromToImpotToProcess($identifier)
+    protected function moveFilesFromToImportToProcess($identifier)
     {
         if (!rename($this->toImportDir . '/' . $identifier, $this->processDir . '/' . $identifier)) {
             throw new \Exception('Could not move data from toImport to process folder');
