@@ -1,0 +1,64 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+
+<f:layout name="Backend/Campaign"/>
+
+<f:section name="main">
+
+    <div class="container" style="padding-top: 50px; padding-bottom: 50px;">
+        <div class="row text-center">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Create a New Campaign</h4>
+                        <p>Fill in the details below to create a new campaign</p>
+                    </div>
+                    <div class="panel-body">
+                        <f:form action="update" object="{campaign}" objectName="campaign" method="post">
+                            <!-- Campaign Name -->
+                            <div class="form-group">
+                                <label for="campaignName">Campaign Name</label>
+                                <f:form.textfield
+                                        property="title"
+                                        class="form-control"
+                                        id="campaignName"
+                                        placeholder="Enter Campaign Name"
+                                        required = "1" />
+                            </div>
+
+                            <!-- Campaign Description -->
+                            <div class="form-group">
+                                <label for="campaignDescription">Campaign Description</label>
+
+                                <f:form.textarea
+                                        property="description"
+                                        class="form-control"
+                                        id="campaignDescription"
+                                        placeholder="Describe the campaign"
+                                        rows="4"
+                                        required = "1" />
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <f:form.submit name="createCampaign" value="Update Campaign" class="btn btn-primary btn-block" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </f:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</f:section>
+
+</html>

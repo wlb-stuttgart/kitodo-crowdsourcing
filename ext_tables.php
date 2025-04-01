@@ -29,10 +29,11 @@ defined('TYPO3') or die();
     'tx_crowdsourcing_campaign',
     '',
     [
-        CampaignController::class => 'index'
+        CampaignController::class =>
+            'list, index, new, create, edit, update, editProcesses, listProcesses, addProcessToCampaign, removeProcessFromCampaign'
     ],
     [
-        'access' => 'admin',
+        'access' => 'user,group',
         'iconIdentifier' => 'module-crowdsourcing-campaign',
         'labels' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_mod_campaign.xlf'
     ]
@@ -48,7 +49,7 @@ defined('TYPO3') or die();
         ConfigurationController::class => 'index, save, saveDemoForm'
     ],
     [
-        'access' => 'admin',
+        'access' => 'user,group',
         'iconIdentifier' => 'module-crowdsourcing-campaign',
         'labels' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_mod_configuration.xlf'
     ]

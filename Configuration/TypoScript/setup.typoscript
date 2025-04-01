@@ -19,3 +19,9 @@ plugin.tx_crowdsourcing {
 }
 
 
+module.tx_crowdsourcing {
+    settings {
+        # Add the remote CSS file
+        bootstrapCss = https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css
+    }
+}

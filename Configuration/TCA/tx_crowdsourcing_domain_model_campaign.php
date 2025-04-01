@@ -173,6 +173,16 @@ $tca = [
                 'foreign_table' => 'fe_groups',
             ],
         ],
+        'processes' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:my_extension/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaign.processes',
+            'config' => [
+                'type' => 'inline',
+                'foreign_table' => 'tx_crowdsourcing_domain_model_process',
+                'foreign_field' => 'campaign'
+            ],
+
+        ],
     ],
 ];
 

@@ -1,0 +1,95 @@
+
+<f:layout name="Backend/Campaign"/>
+
+<f:section name="main">
+    <div class="container" style="padding-top: 50px; padding-bottom: 50px;">
+        <div class="row text-center">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Manage Your Campaigns</h4>
+                        <p>Here is a list of your existing campaigns. You can search, assign processes, edit, or delete them.</p>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="searchCampaign">Search Campaigns</label>
+                                    <input type="text" class="form-control" id="searchCampaign" placeholder="Search by name..." onkeyup="filterCampaigns()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-striped" id="campaignTable">
+                            <colgroup>
+                                <col style="width: 70%;">
+                                <col style="width: 30%;">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <f:for each="{campaigns}" as="campaign">
+                                <tr class="campaign" data-name="{campaign.title}">
+                                    <td>{campaign.title}</td>
+                                    <td>
+                                        <f:link.action action="listProcesses" arguments="{campaign: campaign}" class="btn btn-primary btn-sm">
+                                            Processes
+                                        </f:link.action>
+
+                                        <f:link.action action="edit" arguments="{campaign: campaign}" class="btn btn-warning btn-sm">
+                                            Edit
+                                        </f:link.action>
+
+                                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
+                            </f:for>
+
+                            </tbody>
+                        </table>
+
+                        <div class="alert alert-info" role="alert" style="display:none;" id="noCampaignsAlert">
+                            <strong>Info!</strong> You have no campaigns to manage at the moment.
+                        </div>
+
+                        <f:link.action action="new" class="btn btn-primary btn-block">+</f:link.action>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        function filterCampaigns() {
+            var searchInput = document.getElementById('searchCampaign').value.toLowerCase();
+            var campaigns = document.querySelectorAll('.campaign');
+            var noCampaigns = true;
+
+            campaigns.forEach(function(campaign) {
+                var name = campaign.getAttribute('data-name').toLowerCase();
+                // Check if campaign matches search and filters
+                var matchesSearch = name.includes(searchInput);
+                if (matchesSearch) {
+                    campaign.style.display = '';
+                    noCampaigns = false;
+                } else {
+                    campaign.style.display = 'none';
+                }
+            });
+
+            if (noCampaigns) {
+                document.getElementById('noCampaignsAlert').style.display = 'block';
+            } else {
+                document.getElementById('noCampaignsAlert').style.display = 'none';
+            }
+        }
+    </script>
+
+</f:section>

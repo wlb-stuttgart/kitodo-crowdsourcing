@@ -10,7 +10,8 @@
         "typo3/cms-backend": "^11.5",
         "typo3/cms-core": "^11.5",
         "solarium/solarium": "^6.3",
-        "galbar/jsonpath": "^3.0"
+        "galbar/jsonpath": "^3.0",
+        "fluidtypo3/vhs": "^7.0"
     },
     "authors": [
         {

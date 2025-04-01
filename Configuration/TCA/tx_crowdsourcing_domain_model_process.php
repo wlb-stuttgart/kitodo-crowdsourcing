@@ -25,7 +25,7 @@ $tca = [
         '1' => [
             'showitem' =>
                 '--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
-                    title, identifier, images, state, metadata,
+                    title, identifier, images, state, metadata, campaign,
                  --div--;LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.tabs.access,
                     --palette--;;hidden,
                     --palette--;;access,',
@@ -199,6 +199,18 @@ $tca = [
                 ],
                 'exclusiveKeys' => '-1,-2',
                 'foreign_table' => 'fe_groups',
+            ],
+        ],
+        'campaign' => [
+            'exclude' => 1,
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.campaign',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'foreign_table' => 'tx_crowdsourcing_domain_model_campaign',
+                'foreign_table_where' => 'AND tx_crowdsourcing_domain_model_campaign.pid = ###CURRENT_PID### AND tx_crowdsourcing_domain_model_campaign.deleted = 0 ORDER BY tx_crowdsourcing_domain_model_campaign.title',
+                'minitems' => 0,
+                'maxitems' => 1,
             ],
         ],
     ],

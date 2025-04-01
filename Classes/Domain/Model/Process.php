@@ -36,6 +36,31 @@ class Process extends AbstractEntity
      */
     protected $metadata;
 
+    /**
+     * @var \Wlb\Crowdsourcing\Domain\Model\Campaign
+     */
+    protected $campaign;
+
+    /**
+     * Get the campaign associated with this process.
+     *
+     * @return \Wlb\Crowdsourcing\Domain\Model\Campaign
+     */
+    public function getCampaign(): ?\Wlb\Crowdsourcing\Domain\Model\Campaign
+    {
+        return $this->campaign;
+    }
+
+    /**
+     * Set the campaign for this process.
+     *
+     * @param \Wlb\Crowdsourcing\Domain\Model\Campaign $campaign
+     */
+    public function setCampaign(\Wlb\Crowdsourcing\Domain\Model\Campaign $campaign): void
+    {
+        $this->campaign = $campaign;
+    }
+
     public function getTitle(): string
     {
         return $this->title;
@@ -86,4 +111,11 @@ class Process extends AbstractEntity
         $this->metadata = $metadata;
     }
 
+    public function getMetadataForDisplay()
+    {
+        $xml = simplexml_load_string($this->metadata);
+        $xml->registerXPathNamespace('kitodo', 'http://meta.kitodo.org/v1/');
+        $values = $xml->xpath("//kitodo:metadata[@name='signature']");
+        return ['signature' => (string)$values[0]];
+    }
 }
