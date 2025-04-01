@@ -30,7 +30,7 @@ defined('TYPO3') or die();
     '',
     [
         CampaignController::class =>
-            'list, index, new, create, edit, update, editProcesses, listProcesses, addProcessToCampaign, removeProcessFromCampaign'
+            'list, new, create, edit, update, editProcesses, listProcesses, addProcessToCampaign, removeProcessFromCampaign'
     ],
     [
         'access' => 'user,group',

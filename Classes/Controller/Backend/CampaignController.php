@@ -25,11 +25,6 @@ class CampaignController extends ActionController
     {
     }
 
-    public function indexAction()
-    {
-    }
-
-
     /**
      * Shows the form to edit an existing campaign.
      *
@@ -50,7 +45,7 @@ class CampaignController extends ActionController
     public function updateAction(Campaign $campaign)
     {
         $this->campaignRepository->update($campaign);
-        $this->redirect('index');
+        $this->redirect('list');
     }
 
     /**
@@ -73,7 +68,7 @@ class CampaignController extends ActionController
     public function createAction(Campaign $campaign)
     {
         $this->campaignRepository->add($campaign);
-        $this->redirect('index');
+        $this->redirect('list');
     }
 
     public function listAction()
