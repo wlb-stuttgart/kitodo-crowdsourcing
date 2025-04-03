@@ -5,32 +5,53 @@ $( document ).ready(function() {
 
 function clickEvents() {
 
+    // Hide all empty input fields which are not required
+    $('input.processForm:not([required])').parent().hide();
+
+    // Hide all from groups
+    $('div.metadata-group div[data-required="0"]').parent().hide();
+
     // Click event for adding new form fields
     $('button.addFormField').on('click', function (evt) {
+        // get next hidden field and show it
         evt.preventDefault();
-        var configElement = $(this).closest('.form-group');
 
-        var elementId = configElement.attr('id');
+        var configElement = $(this).closest('.metadata-group');
+        var nextHidden = $(configElement).find('div:hidden').first();
+        nextHidden.show();
+    });
 
-        var inputtype = configElement.data('formconfig')['inputtype'];
-        var maxOccurs = configElement.data('formconfig')['maxOccurs'];
-        var minOccurs = configElement.data('formconfig')['minOccurs'];
+    // Click event for adding new group
+    $('button.addGroup').on('click', function (evt) {
+        // get next hidden field and show it
+        evt.preventDefault();
 
-        if($('input[name*="metadata[' + elementId + ']"]').length < maxOccurs) {
+        var configElement = $(this).closest('.metadata-group');
+        var nextHidden = $(configElement).find('div.metadata-group:hidden').first();
+        nextHidden.show();
+    });
 
-            var inputGroup = $('<div class="input-group pb-2"><input class="form-control" type="' + inputtype + '" name="metadata[' + elementId + '][]">' +
-                '</div>').insertBefore($(this));
+    // Click event for hiding form field and empty this field
+    $('.deleteField').on('click', function (evt) {
+        $(this).closest('.input-group').hide();
+        $(this).siblings('input').val('');
+    });
 
-            var deleteButton = $('<div class="input-group-text deleteField" style="cursor: pointer;"><span class="fa-solid fa-trash"></div>');
+    // Click event for adding new groups
+    $('button.addFormGroupField').on('click', function (evt) {
+        // get next hidden field and show it
+        evt.preventDefault();
 
-            // click event delete field
-            $(deleteButton).on('click', function (evt) {
-                $(this).closest('.input-group').remove();
-            });
+        var configElement = $(this).parent().prev('.metadataChildField');
+        var nextHidden = $(configElement).find('div:hidden').first();
+        nextHidden.show();
+    });
 
-            $(inputGroup).append(deleteButton);
-        }
-
+    // Click event for hiding form groups
+    $('.deleteGroup').on('click', function (evt) {
+        var metadataGroup = $(this).closest('.metadata-group').hide();
+        // find all input fields and try to clear them
+        $(metadataGroup).find(':input').val('');
     });
 
 }

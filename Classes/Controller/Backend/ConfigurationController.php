@@ -49,6 +49,14 @@ class ConfigurationController extends ActionController
         foreach ($sxe->declaration->key as $key) {
             $metadataId = (string) $key->attributes()->{'id'};
             $metadataDefinitions[$metadataId] = (string) $key->label;
+            foreach ($key->key as $secondKey) {
+                $metadataId = (string) $secondKey->attributes()->{'id'};
+                $metadataDefinitions[$metadataId] = (string) $secondKey->label;
+                foreach ($secondKey->key as $thirdKey) {
+                    $metadataId = (string) $thirdKey->attributes()->{'id'};
+                    $metadataDefinitions[$metadataId] = (string) $thirdKey->label;
+                }
+            }
         }
 
         foreach ($sxe->declaration->division as $division) {
@@ -61,7 +69,7 @@ class ConfigurationController extends ActionController
 
         foreach ($sxe->correlation->restriction as $restriction) {
             // Each restriction defines a doc type
-            $divisionName = (string)$restriction->attributes()->{'division'};
+            $divisionName = (string) $restriction->attributes()->{'division'};
             if (array_key_exists($divisionName, $configurationRuleset)) {
                 foreach ($restriction as $permit) {
                     if ((string) $permit->attributes()->{'key'}) {
@@ -74,6 +82,32 @@ class ConfigurationController extends ActionController
                             $configurationRuleset[$divisionName][$permitKey]['maxOccurs'] = $maxOccurs;
                         }
                     }
+                    foreach ($permit->permit as $secondPermit) {
+                        if ((string) $secondPermit->attributes()->{'key'}) {
+                            $secondPermitKey = (string) $secondPermit->attributes()->{'key'};
+                            $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['label'] = $metadataDefinitions[$secondPermitKey];
+                            if ($minOccurs = (string) $secondPermit->attributes()->{'minOccurs'}) {
+                                $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['minOccurs'] = $minOccurs;
+                            }
+                            if ($maxOccurs = (string) $secondPermit->attributes()->{'maxOccurs'}) {
+                                $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['maxOccurs'] = $maxOccurs;
+                            }
+                        }
+
+                        foreach ($secondPermit->permit as $thirdPermit) {
+                            if ((string) $thirdPermit->attributes()->{'key'}) {
+                                $thirdPermitKey = (string) $thirdPermit->attributes()->{'key'};
+                                $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['label'] = $metadataDefinitions[$thirdPermitKey];
+                                if ($minOccurs = (string) $thirdPermit->attributes()->{'minOccurs'}) {
+                                    $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['minOccurs'] = $minOccurs;
+                                }
+                                if ($maxOccurs = (string) $thirdPermit->attributes()->{'maxOccurs'}) {
+                                    $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['maxOccurs'] = $maxOccurs;
+                                }
+                            }
+
+                        }
+                    }
                 }
             }
         }
@@ -82,6 +116,7 @@ class ConfigurationController extends ActionController
         $rulesetAdded = [];
         $rulesetRemoved = [];
         $config = $configurationRuleset;
+        $missingDocType = [];
 
         // get db saved config
         $queryResult = $this->metadataConfigurationRepository->findAll();
@@ -91,8 +126,14 @@ class ConfigurationController extends ActionController
             $dbConfigArray = json_decode($dbConfiguration->getJson(), true);
 
             foreach ($dbConfigArray as $key => $dbDocumentConfiguration) {
-                $rulesetAdded[$key] = array_diff_key($configurationRuleset[$key], $dbDocumentConfiguration);
-                $rulesetRemoved[$key] = array_diff_key($dbDocumentConfiguration, $configurationRuleset[$key]);
+                if (array_key_exists($key, $configurationRuleset)) {
+                    $rulesetAdded[$key] = array_diff_key($configurationRuleset[$key], $dbDocumentConfiguration);
+                    $rulesetRemoved[$key] = array_diff_key($dbDocumentConfiguration, $configurationRuleset[$key]);
+                } else {
+                    $missingDocType[$key] = $key;
+//                    // TODO: Remove dbDocumentConfiguration for the given key, if its not existing anymore??
+//                    var_dump('Key not found: ' . $key);
+                }
             }
 
             foreach ($rulesetRemoved as $docType => $metadataRemoved) {
@@ -101,10 +142,18 @@ class ConfigurationController extends ActionController
                 }
             }
 
+
+            $this->view->assign('missingDocType', $missingDocType);
             $this->view->assign('rulesetAdded', $rulesetAdded);
             $this->view->assign('rulesetRemoved', $rulesetRemoved);
             $this->view->assign('dbConfig', $dbConfigArray);
-            $config = $dbConfigArray;
+
+            if (!empty($rulesetAdded)) {
+                $config = array_replace_recursive($dbConfigArray, $configurationRuleset);
+            } else {
+                $config = $dbConfigArray;
+            }
+
             /** demo only -- should be moved to frontend if process/campaign is available */
 //            $this->view->assign('jsonConfig', $dbConfiguration->getJson());
             /** demo only */
@@ -112,6 +161,7 @@ class ConfigurationController extends ActionController
 
         $this->view->assign('rulesetConfig', $configurationRuleset);
         $this->view->assign('config', $config);
+
         return $this->htmlResponse();
     }
 

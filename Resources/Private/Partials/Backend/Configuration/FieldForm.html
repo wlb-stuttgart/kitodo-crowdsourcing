@@ -1,0 +1,133 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:variable name="metadataInfo"></f:variable>
+<f:if condition="{rulesetAdded.{docType}.{metadataId}}">
+    <f:then>
+        <f:variable name="metadataInfo">rulesetAdded</f:variable>
+    </f:then>
+</f:if>
+<f:if condition="{rulesetRemoved.{docType}.{metadataId}}">
+    <f:then>
+        <f:variable name="metadataInfo">rulesetRemoved</f:variable>
+    </f:then>
+</f:if>
+
+<div class="{metadataInfo} card p-2">
+    <div class="row card-body">
+        <h4>
+            {metadata.label}
+
+            <f:if condition="{rulesetAdded.{docType}.{metadataId}}">
+                <f:then>
+                    <span class="badge badge-info">New</span>
+                </f:then>
+            </f:if>
+            <f:if condition="{rulesetRemoved.{docType}.{metadataId}}">
+                <f:then>
+                    <span class="badge badge-danger">Removed</span>
+                </f:then>
+            </f:if>
+        </h4>
+    </div>
+    <f:if condition="!{rulesetRemoved.{docType}.{metadataId}}">
+        <f:then>
+            <f:form.hidden name="metadata[{docType}][{metadataId}][label]" value="{metadata.label}"/>
+            <div class="row mb-3">
+                <div class="col-md-1">
+                    <div class="form-check form-switch">
+                        <f:if condition="!{childItem}">
+                            <f:then>
+                                <f:form.checkbox
+                                        id="meta-{metadataId}-active"
+                                        class="form-check-input"
+                                        name="metadata[{docType}][{metadataId}][active]"
+                                        value="1"
+                                        checked="{metadata.active}" />
+                                <label class="form-check-label" for="meta-{metadataId}-active">Aktiv</label>
+                            </f:then>
+                        </f:if>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <label for="meta-{metadataId}-inputtype" class="form-label">Feldtyp</label>
+                    <f:form.select id="meta-{metadataId}-inputtype"
+                                   class="form-control"
+                                   name="metadata[{docType}][{metadataId}][inputtype]"
+                                   value="{metadata.inputtype}">
+                        <f:form.select.option value="text">Text</f:form.select.option>
+                        <f:form.select.option value="textarea">Textarea</f:form.select.option>
+                    </f:form.select>
+                </div>
+                <div class="col-md-1">
+                    <label for="meta-{metadataId}-minOccurs" class="form-label">Min</label>
+                    <f:form.textfield
+                            id="meta-{metadataId}-minOccurs"
+                            class="form-control"
+                            name="metadata[{docType}][{metadataId}][minOccurs]"
+                            value="{metadata.minOccurs}"
+                            type="number"
+                            min="0" />
+                </div>
+                <!-- Anzahl des Vorkommens -->
+                <div class="col-md-1">
+                    <label for="meta-{metadataId}-maxOccurs" class="form-label">Max</label>
+                    <f:form.textfield
+                            id="meta-{metadataId}-maxOccurs"
+                            class="form-control"
+                            name="metadata[{docType}][{metadataId}][maxOccurs]"
+                            value="{metadata.maxOccurs}"
+                            type="number"
+                            min="1" />
+                </div>
+
+                <!-- Regulärer Ausdruck -->
+                <div class="col-xs-6">
+                    <label for="meta-{metadataId}-validation" class="form-label">Validierung (HTML5)</label>
+                    <f:form.textfield
+                            id="meta-{metadataId}-validation"
+                            class="form-control"
+                            name="metadata[{docType}][{metadataId}][validation]"
+                            value="{metadata.validation}"
+                            placeholder="z.B. ^[A-Za-z]+$" />
+                </div>
+
+                <f:comment>Text to help user</f:comment>
+                <div class="col-xs-6">
+                    <label for="meta-{metadataId}-helptext" class="form-label">Hilfetext</label>
+                    <f:form.textarea
+                            id="meta-{metadataId}-helptext"
+                            class="form-control"
+                            name="metadata[{docType}][{metadataId}][helptext]"
+                            value="{metadata.helptext}"
+                            placeholder="Hilfetext" />
+                </div>
+            </div>
+        </f:then>
+    </f:if>
+
+    <f:if condition="{metadata.children}">
+        <h4>Untergeordnete Metadatenkonfiguration</h4>
+        <div class="accordion mb-2" id="metadataChildAccordion">
+            <f:for each="{metadata.children}" as="metadataChild" key="metadataChildId">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{metadataChildId}" aria-expanded="true" aria-controls="collapse_{metadataChildId}">
+                            {metadataChild.label}
+                        </button>
+                    </h2>
+                    <div id="collapse_{metadataChildId}" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <!-- Metadaten-Konfiguration -->
+                            <div id="metadataContainer">
+                                <f:render partial="Backend/Configuration/ChildForm" arguments="{_all}"></f:render>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </f:for>
+        </div>
+    </f:if>
+
+</div>

@@ -1,0 +1,93 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:variable name="metadataInfo"></f:variable>
+<f:if condition="{rulesetAdded.{docType}.{metadataId}}">
+    <f:then>
+        <f:variable name="metadataInfo">rulesetAdded</f:variable>
+    </f:then>
+</f:if>
+<f:if condition="{rulesetRemoved.{docType}.{metadataId}}">
+    <f:then>
+        <f:variable name="metadataInfo">rulesetRemoved</f:variable>
+    </f:then>
+</f:if>
+
+<div class="{metadataInfo} card p-2">
+    <div class="row card-body">
+        <h4>
+            {metadataChild.label}
+
+            <f:if condition="{rulesetAdded.{docType}.{metadataId}}">
+                <f:then>
+                    <span class="badge badge-info">New</span>
+                </f:then>
+            </f:if>
+            <f:if condition="{rulesetRemoved.{docType}.{metadataId}}">
+                <f:then>
+                    <span class="badge badge-danger">Removed</span>
+                </f:then>
+            </f:if>
+        </h4>
+        <f:form.hidden name="metadata[{docType}][{metadataId}][children][{metadataChildId}][label]" value="{metadataChild.label}"/>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1">
+            <div class="form-check form-switch">
+            </div>
+        </div>
+        <div class="col-md-1">
+            <label for="meta-{metadataId}-{metadataChildId}-inputtype" class="form-label">Feldtyp</label>
+            <f:form.select id="meta-{metadataId}-{metadataChildId}-inputtype"
+                           class="form-control"
+                           name="metadata[{docType}][{metadataId}][children][{metadataChildId}][inputtype]">
+                <f:form.select.option value="text">Text</f:form.select.option>
+                <f:form.select.option value="textarea">Textarea</f:form.select.option>
+            </f:form.select>
+        </div>
+        <div class="col-md-1">
+            <label for="meta-{metadataId}-{metadataChildId}-minOccurs" class="form-label">Min</label>
+            <f:form.textfield
+                    id="meta-{metadataId}-{metadataChildId}-minOccurs"
+                    class="form-control"
+                    name="metadata[{docType}][{metadataId}][children][{metadataChildId}][minOccurs]"
+                    value="{metadataChild.minOccurs}"
+                    type="number"
+                    min="0" />
+        </div>
+        <!-- Anzahl des Vorkommens -->
+        <div class="col-md-1">
+            <label for="meta-{metadataId}-{metadataChildId}-maxOccurs" class="form-label">Max</label>
+            <f:form.textfield
+                    id="meta-{metadataId}-{metadataChildId}-maxOccurs"
+                    class="form-control"
+                    name="metadata[{docType}][{metadataId}][children][{metadataChildId}][maxOccurs]"
+                    value="{metadataChild.maxOccurs}"
+                    type="number"
+                    min="1" />
+        </div>
+
+        <!-- Regulärer Ausdruck -->
+        <div class="col-xs-6">
+            <label for="meta-{metadataId}-{metadataChildId}-validation" class="form-label">Validierung (HTML5)</label>
+            <f:form.textfield
+                    id="meta-{metadataId}-{metadataChildId}-validation"
+                    class="form-control"
+                    name="metadata[{docType}][{metadataId}][children][{metadataChildId}][validation]"
+                    value="{metadataChild.validation}"
+                    placeholder="z.B. ^[A-Za-z]+$" />
+        </div>
+
+        <f:comment>Text to help user</f:comment>
+        <div class="col-xs-6">
+            <label for="meta-{metadataId}-{metadataChildId}-helptext" class="form-label">Hilfetext</label>
+            <f:form.textarea
+                    id="meta-{metadataId}-{metadataChildId}-helptext"
+                    class="form-control"
+                    name="metadata[{docType}][{metadataId}][children][{metadataChildId}][helptext]"
+                    value="{metadataChild.helptext}"
+                    placeholder="Hilfetext" />
+        </div>
+    </div>
+</div>
