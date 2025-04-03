@@ -1,0 +1,34 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:layout name="Frontend"/>
+
+<f:section name="main">
+
+
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <f:link.action action="listCampaigns" class="card shadow-sm border-0 rounded-3 bg-primary text-white text-decoration-none">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Kampagnen</h5>
+                            <p class="card-text">Klicken Sie, um Kampagnen zu suchen und deren Details sowie Plakate anzusehen.</p>
+                        </div>
+                    </f:link.action>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <f:link.action action="listProcesses" class="card shadow-sm border-0 rounded-3 bg-success text-white text-decoration-none">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Plakate</h5>
+                            <p class="card-text">Klicken Sie, um nach Plakaten zu suchen und diese anzusehen.</p>
+                        </div>
+                    </f:link.action>
+                </div>
+            </div>
+        </div>
+
+
+</f:section>
+
+</html>

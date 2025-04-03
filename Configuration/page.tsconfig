@@ -1,0 +1,16 @@
+mod.wizards.newContentElement.wizardItems {
+  plugins {
+    elements {
+      crowdsourcing_campaigns {
+        iconIdentifier = crowdsourcing_campaigns
+        title = Crowdsourcing Campaigns
+        description = Adds the frontend crowdsourcing campaign module.
+        tt_content_defValues {
+          CType = list
+          list_type = crowdsourcing_campaigns
+        }
+      }
+    }
+    show := addToList(crowdsourcing_campaigns)
+  }
+}
