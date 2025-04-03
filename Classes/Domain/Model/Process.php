@@ -6,10 +6,9 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 class Process extends AbstractEntity
 {
-    const STATE_NEW = 'NEW';
-    const STATE_ENTRY = 'ENTRY';
-    const STATE_FIRST_CORRECTION  = 'FIRST_CORRECTION';
-    const STATE_SECOND_CORRECTION = 'SECOND_CORRECTION';
+    const WORKFLOW_STATE_NEW = 'NEW';
+    const WORKFLOW_STATE_CORRECTION  = 'CORRECTION';
+    const WORKFLOW_STATE_FINAL_CORRECTION= 'FINAL_CORRECTION';
 
     /**
      * @var string

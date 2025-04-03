@@ -11,8 +11,17 @@
 		<trans-unit id="tx_crowdsourcing_domain_model_campaign.title">
 			<source>Title</source>
 		</trans-unit>
+		<trans-unit id="tx_crowdsourcing_domain_model_campaign.subtitle">
+        	<source>Subtitle</source>
+        </trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_campaign.description">
         	<source>Description</source>
+        </trans-unit>
+		<trans-unit id="tx_crowdsourcing_domain_model_campaign.shortDescription">
+        	<source>Short description</source>
+        </trans-unit>
+		<trans-unit id="tx_crowdsourcing_domain_model_campaign.workflow_state">
+        	<source>Workflow state</source>
         </trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_process">
 			<source>Process</source>

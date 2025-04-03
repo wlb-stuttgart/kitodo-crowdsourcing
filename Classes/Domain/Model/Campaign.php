@@ -6,15 +6,34 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 class Campaign extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
-    /**
-     * @var string
-     */
-    protected $title;
+    const WORKFLOW_STATE_NEW = 'NEW';
+    const WORKFLOW_STATE_PUBLISHED = 'PUBLISHED';
+    const WORKFLOW_STATE_CLOSED = 'CLOSED';
 
     /**
      * @var string
      */
-    protected $description;
+    protected string $title;
+
+    /**
+     * @var string
+     */
+    protected string $subtitle;
+
+    /**
+     * @var string
+     */
+    protected string $description;
+
+    /**
+     * @var string
+     */
+    protected string $shortDescription;
+
+    /**
+     * @var string
+     */
+    protected string $workflowState;
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Wlb\Crowdsourcing\Domain\Model\Process>
@@ -25,6 +44,7 @@ class Campaign extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         // Initialize the processes collection
         $this->processes = new ObjectStorage();
+        $this->workflowState = self::WORKFLOW_STATE_NEW;
     }
 
     /**
@@ -53,6 +73,14 @@ class Campaign extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function getProcesses(): ObjectStorage
     {
         return $this->processes;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProcessCount(): int
+    {
+        return $this->processes->count();
     }
 
     /**
@@ -87,5 +115,81 @@ class Campaign extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setDescription(string $description): void
     {
         $this->description = $description;
+    }
+
+    public function getSubtitle(): string
+    {
+        return $this->subtitle;
+    }
+
+    public function setSubtitle(string $subtitle): void
+    {
+        $this->subtitle = $subtitle;
+    }
+
+    public function getShortDescription(): string
+    {
+        return $this->shortDescription;
+    }
+
+    public function setShortDescription(string $shortDescription): void
+    {
+        $this->shortDescription = $shortDescription;
+    }
+
+    public function getWorkflowState(): string
+    {
+        return $this->workflowState;
+    }
+
+    public function setWorkflowState(string $workflowState): void
+    {
+        $this->workflowState = $workflowState;
+    }
+
+    /**
+     * @param string $newState
+     * @return void
+     */
+    public function changeWorkflowState(string $newState)
+    {
+        $currentState = $this->getWorkflowState();
+
+        switch ($currentState) {
+            case self::WORKFLOW_STATE_NEW:
+            case self::WORKFLOW_STATE_CLOSED:
+                if ($newState !== self::WORKFLOW_STATE_PUBLISHED) {
+                    throw new \Exception(
+                        "Campaign state transition not allowed: " . $currentState . "->" . $newState
+                    );
+                } else {
+                    $this->setWorkflowState($newState);
+                }
+                break;
+            case self::WORKFLOW_STATE_PUBLISHED:
+                if ($newState !== self::WORKFLOW_STATE_CLOSED) {
+                    throw new \Exception(
+                        "Campaign state transition not allowed: " . $currentState . "->" . $newState
+                    );
+                } else {
+                    $this->setWorkflowState($newState);
+                }
+                break;
+            default:
+                throw new \Exception("Invalid current campaign workflow state");
+        }
+
+    }
+
+    public function isNew() {
+        return $this->workflowState === self::WORKFLOW_STATE_NEW;
+    }
+
+    public function isPublished() {
+        return $this->workflowState === self::WORKFLOW_STATE_PUBLISHED;
+    }
+
+    public function isClosed() {
+        return $this->workflowState === self::WORKFLOW_STATE_CLOSED;
     }
 }

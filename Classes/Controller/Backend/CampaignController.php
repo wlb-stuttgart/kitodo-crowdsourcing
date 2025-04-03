@@ -71,16 +71,32 @@ class CampaignController extends ActionController
         $this->redirect('list');
     }
 
-    public function listAction()
+
+    /**
+     * @param int $page
+     * @return void
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException
+     */
+    public function listAction(int $page = 0)
     {
+        $currentPage = $page > 0 ? $page : 1;
+        $itemsPerPage = 10;
+        $offset = ($currentPage - 1) * $itemsPerPage;
+        $totalCampaigns = $this->campaignRepository->countAll();
+        $totalPages = ceil($totalCampaigns / $itemsPerPage);
+        $pageNumbers = range(1, $totalPages);
+        $previousPage = max(1, $currentPage - 1);
+        $nextPage = min($totalPages, $currentPage + 1);
 
+        $campaigns = $this->campaignRepository->findByPage($offset, $itemsPerPage);
 
-        //$u = GeneralUtility::makeInstance(UriBuilder::class);
-        //echo $u->buildUriFromRoute('/campaign_assignProcess');
-
-
-        $campaigns = $this->campaignRepository->findAll();
         $this->view->assign('campaigns', $campaigns);
+        $this->view->assign('currentPage', $currentPage);
+        $this->view->assign('totalPages', $totalPages);
+        $this->view->assign('itemsPerPage', $itemsPerPage);
+        $this->view->assign('pageNumbers', $pageNumbers);
+        $this->view->assign('previousPage', $previousPage);
+        $this->view->assign('nextPage', $nextPage);
     }
 
     /**
@@ -193,5 +209,25 @@ class CampaignController extends ActionController
         ]);
     }
 
+    public function publishAction(Campaign $campaign, int $page)
+    {
+        $campaign->changeWorkflowState(Campaign::WORKFLOW_STATE_PUBLISHED);
+        $this->campaignRepository->update($campaign);
+        $this->redirect('list', null, null, ['page' => $page]);
+    }
+
+    public function closeAction(Campaign $campaign, int $page)
+    {
+        $campaign->changeWorkflowState(Campaign::WORKFLOW_STATE_CLOSED);
+        $this->campaignRepository->update($campaign);
+        $this->redirect('list', null, null, ['page' => $page]);
+    }
+
+    public function reopenAction(Campaign $campaign, int $page)
+    {
+        $campaign->changeWorkflowState(Campaign::WORKFLOW_STATE_PUBLISHED);
+        $this->campaignRepository->update($campaign);
+        $this->redirect('list', null, null, ['page' => $page]);
+    }
 
 }

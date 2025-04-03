@@ -124,7 +124,7 @@ class ProcessImportService
                 $process = new Process();
                 $process->setIdentifier($identifier);
                 $process->setMetadata($xmlData->saveXML());
-                $process->setState(Process::STATE_NEW);
+                $process->setState(Process::WORKFLOW_STATE_NEW);
                 $process->setImages($imageNames);
                 $this->processRepository->add($process);
 

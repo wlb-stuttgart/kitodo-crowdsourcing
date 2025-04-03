@@ -1,7 +1,10 @@
 CREATE TABLE tx_crowdsourcing_domain_model_campaign (
-    title       varchar(255)     DEFAULT ''  NOT NULL,
-    description text             DEFAULT '',
-    processes   int(11)          DEFAULT '0' NOT NULL
+    title             varchar(255)  DEFAULT ''  NOT NULL,
+    subtitle          varchar(255)  DEFAULT ''  NOT NULL,
+    description       text          DEFAULT '',
+    workflow_state    varchar(255)  DEFAULT ''  NOT NULL,
+    short_description varchar(1024) DEFAULT ''  NOT NULL,
+    processes         int(11)       DEFAULT '0' NOT NULL
 );
 
 CREATE TABLE tx_crowdsourcing_domain_model_process (

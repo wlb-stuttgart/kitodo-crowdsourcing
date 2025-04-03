@@ -6,6 +6,48 @@
 
 <f:section name="main">
 
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h4>Create a New Campaign</h4>
+                        <p>Fill in the details below to create a new campaign</p>
+                    </div>
+                    <div class="card-body">
+                        <f:form action="update" object="{campaign}" objectName="campaign" method="post">
+
+                            <f:render partial="Backend/Campaign/CampaignFields" />
+
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <f:form.submit name="createCampaign" value="Update Campaign" class="btn btn-primary w-100" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-secondary w-100" onclick="window.history.back();">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </f:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</f:section>
+
+</html>
+
+
+<f:comment>
+
     <div class="container" style="padding-top: 50px; padding-bottom: 50px;">
         <div class="row text-center">
             <div class="col-md-8 col-md-offset-2">
@@ -16,29 +58,8 @@
                     </div>
                     <div class="panel-body">
                         <f:form action="update" object="{campaign}" objectName="campaign" method="post">
-                            <!-- Campaign Name -->
-                            <div class="form-group">
-                                <label for="campaignName">Campaign Name</label>
-                                <f:form.textfield
-                                        property="title"
-                                        class="form-control"
-                                        id="campaignName"
-                                        placeholder="Enter Campaign Name"
-                                        required = "1" />
-                            </div>
 
-                            <!-- Campaign Description -->
-                            <div class="form-group">
-                                <label for="campaignDescription">Campaign Description</label>
-
-                                <f:form.textarea
-                                        property="description"
-                                        class="form-control"
-                                        id="campaignDescription"
-                                        placeholder="Describe the campaign"
-                                        rows="4"
-                                        required = "1" />
-                            </div>
+                            <f:render partial="Backend/Campaign/CampaignFields" />
 
                             <div class="form-group">
                                 <div class="row">
@@ -59,6 +80,6 @@
         </div>
     </div>
 
-</f:section>
 
-</html>
+
+</f:comment>

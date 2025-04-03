@@ -9,7 +9,7 @@ $tca = [
         'delete' => 'deleted',
         'default_sortby' => 'title',
         'iconfile' => 'EXT:crowdsourcing/Resources/Public/Icons/crowdsourcing.gif',
-        'searchFields' => 'label, description',
+        'searchFields' => 'title, subtitle, description, short_description, workflow_state',
         'enablecolumns' => [
             'fe_group' => 'fe_group',
             'disabled' => 'hidden',
@@ -25,7 +25,7 @@ $tca = [
         '1' => [
             'showitem' =>
                 '--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
-                    title, description,
+                    title, subtitle, description, short_description, workflow_state,
                  --div--;LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaign.tabs.access,
                     --palette--;;hidden,
                     --palette--;;access,',
@@ -135,6 +135,28 @@ $tca = [
                 'required' => true,
             ],
         ],
+        'subtitle' => [
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaign.subtitle',
+            'config' => [
+                'type' => 'input',
+                'size' => 40,
+                'max' => 255,
+                'eval' => 'trim',
+                'required' => false,
+            ],
+        ],
+        'short_description' => [
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaign.short_description',
+            'config' => [
+                'type' => 'text',
+                'enableRichtext' => false,
+                'rows' => 3,
+                'cols' => 40,
+                'max' => 255,
+                'eval' => 'trim',
+                'required' => false,
+            ],
+        ],
         'description' => [
             'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaign.description',
             'config' => [
@@ -144,6 +166,7 @@ $tca = [
                 'cols' => 40,
                 'max' => 2000,
                 'eval' => 'trim',
+                'required' => false,
             ],
         ],
         'fe_group' => [
@@ -171,6 +194,16 @@ $tca = [
                 ],
                 'exclusiveKeys' => '-1,-2',
                 'foreign_table' => 'fe_groups',
+            ],
+        ],
+        'workflow_state' => [
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaign.workflow_state',
+            'config' => [
+                'type' => 'input',
+                'size' => 40,
+                'max' => 255,
+                'eval' => 'trim',
+                'required' => true,
             ],
         ],
         'processes' => [

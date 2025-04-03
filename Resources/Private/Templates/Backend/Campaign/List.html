@@ -2,19 +2,19 @@
 <f:layout name="Backend/Campaign"/>
 
 <f:section name="main">
-    <div class="container" style="padding-top: 50px; padding-bottom: 50px;">
+    <div class="container py-5">
         <div class="row text-center">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
                         <h4>Manage Your Campaigns</h4>
                         <p>Here is a list of your existing campaigns. You can search, assign processes, edit, or delete them.</p>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="searchCampaign">Search Campaigns</label>
+                                <div class="mb-3">
+                                    <label for="searchCampaign" class="form-label">Search Campaigns</label>
                                     <input type="text" class="form-control" id="searchCampaign" placeholder="Search by name..." onkeyup="filterCampaigns()">
                                 </div>
                             </div>
@@ -22,8 +22,8 @@
 
                         <table class="table table-striped" id="campaignTable">
                             <colgroup>
-                                <col style="width: 70%;">
-                                <col style="width: 30%;">
+                                <col style="width: 65%;">
+                                <col style="width: 35%;">
                             </colgroup>
                             <thead>
                             <tr>
@@ -41,9 +41,27 @@
                                             Processes
                                         </f:link.action>
 
-                                        <f:link.action action="edit" arguments="{campaign: campaign}" class="btn btn-warning btn-sm">
+                                        <f:link.action action="edit" arguments="{campaign: campaign}" class="btn btn-info btn-sm">
                                             Edit
                                         </f:link.action>
+
+                                        <f:if condition="{campaign.new}">
+                                            <f:link.action action="publish" arguments="{campaign: campaign, page: currentPage}" class="btn btn-warning btn-sm">
+                                                Publish
+                                            </f:link.action>
+                                        </f:if>
+
+                                        <f:if condition="{campaign.published}">
+                                            <f:link.action action="close" arguments="{campaign: campaign, page: currentPage}" class="btn btn-warning btn-sm">
+                                                Close
+                                            </f:link.action>
+                                        </f:if>
+
+                                        <f:if condition="{campaign.closed}">
+                                            <f:link.action action="reopen" arguments="{campaign: campaign, page: currentPage}" class="btn btn-warning btn-sm">
+                                                Unclose and Publish
+                                            </f:link.action>
+                                        </f:if>
 
                                         <a href="#" class="btn btn-danger btn-sm">Delete</a>
                                     </td>
@@ -53,7 +71,23 @@
                             </tbody>
                         </table>
 
-                        <div class="alert alert-info" role="alert" style="display:none;" id="noCampaignsAlert">
+                        <div class="pagination">
+                            <f:if condition="{currentPage} > 1">
+                                <a href="{f:uri.action(action: 'list', arguments: {page: previousPage})}" class="btn btn-secondary btn-sm">Previous</a>
+                            </f:if>
+
+                            <f:for each="{pageNumbers}" as="page">
+                                <a href="{f:uri.action(action: 'list', arguments: {page: page})}" class="btn btn-secondary btn-sm {f:if(condition: page == currentPage, then: 'active', else: '')}">
+                                    {page}
+                                </a>
+                            </f:for>
+
+                            <f:if condition="{currentPage} < {totalPages}">
+                                <a href="{f:uri.action(action: 'list', arguments: {page: nextPage})}" class="btn btn-secondary btn-sm">Next</a>
+                            </f:if>
+                        </div>
+
+                        <div class="alert alert-info d-none" role="alert" id="noCampaignsAlert">
                             <strong>Info!</strong> You have no campaigns to manage at the moment.
                         </div>
 
@@ -63,8 +97,6 @@
             </div>
         </div>
     </div>
-
-
 
     <script>
         function filterCampaigns() {
