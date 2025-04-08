@@ -12,6 +12,7 @@ CREATE TABLE tx_crowdsourcing_domain_model_process (
     identifier  varchar(255),
     images      text,
     state       varchar(255),
+    type        varchar(255),
     metadata    MEDIUMTEXT      DEFAULT '0' NOT NULL,
     campaign    int(11)         DEFAULT '0' NOT NULL
 );

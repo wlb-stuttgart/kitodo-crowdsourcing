@@ -38,6 +38,9 @@
 		<trans-unit id="tx_crowdsourcing_domain_model_process.state">
 			<source>State</source>
 		</trans-unit>
+		<trans-unit id="tx_crowdsourcing_domain_model_process.type">
+			<source>Type</source>
+		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_process.metadata">
 			<source>Metadata</source>
 		</trans-unit>

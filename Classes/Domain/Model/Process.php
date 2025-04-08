@@ -31,6 +31,11 @@ class Process extends AbstractEntity
     protected $state;
 
     /**
+     * @var string
+     */
+    protected $type;
+
+    /**
      * @var string Metadata in JSON-Format
      */
     protected $metadata;
@@ -98,6 +103,16 @@ class Process extends AbstractEntity
     public function setState(string $state): void
     {
         $this->state = $state;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): void
+    {
+        $this->type = $type;
     }
 
     public function getMetadata(): string

@@ -99,20 +99,22 @@ class ProcessImportService
         }
 
         $xpathDoc = new \DOMXPath($xmlDoc);
-        //$xpathDoc->registerNamespace('kitodo', 'http://meta.kitodo.org/v1/');
-        $nodes = $xpathDoc->query('//kitodo:kitodo');
+        $xpathDoc->registerNamespace('kitodo', 'http://meta.kitodo.org/v1/');
+        $xpathDoc->registerNamespace('mets', 'http://www.loc.gov/METS/');
 
-        if ($nodes->count() <= 0) {
+        $kitodoNodes = $xpathDoc->query('//kitodo:kitodo');
+        $typeNodes   = $xpathDoc->query('/mets:mets/mets:structMap[@TYPE="LOGICAL"]/mets:div/@TYPE');
+
+        if ($kitodoNodes->count() <= 0 || $typeNodes->count() <= 0) {
             $this->moveFilesFromProcessToFailed($identifier);
             // TODO logging "Invalid xml file."
-
             return false;
         }
 
         $xmlData = new \DOMDocument();
         $xmlData->preserveWhiteSpace = true;
         $xmlData->formatOutput = true;
-        $importedNode = $xmlData->importNode($nodes->item(0), true);
+        $importedNode = $xmlData->importNode($kitodoNodes->item(0), true);
         $xmlData->appendChild($importedNode);
 
         $xpathData = new \DOMXPath($xmlData);
@@ -126,6 +128,7 @@ class ProcessImportService
                 $process->setMetadata($xmlData->saveXML());
                 $process->setState(Process::WORKFLOW_STATE_NEW);
                 $process->setImages($imageNames);
+                $process->setType($typeNodes->item(0)->nodeValue);
                 $this->processRepository->add($process);
 
                 $this->indexer->indexDocument($process->getIdentifier(), $process->getMetadata());

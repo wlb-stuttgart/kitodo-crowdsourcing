@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="de" datatype="plaintext" original="messages" date="2025-04-08T15:00:00Z">
+		<header>
+			<generator>LFEditor</generator>
+		</header>
+		<body>
+		<trans-unit id="process.type.poster">
+			<source>Poster</source>
+			<target>Plakat</target>
+		</trans-unit>
+		<trans-unit id="process.button.edit">
+			<source>Edit</source>
+            <target>Bearbeiten</target>
+		</trans-unit>
+		</body>
+	</file>
+</xliff>
