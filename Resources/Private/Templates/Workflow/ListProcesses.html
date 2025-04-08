@@ -62,7 +62,9 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Arbeitsschritt: Erfassung</h5>
                     <p><f:translate key="process.type.{process.type}" /></p>
-                    <a href="#" class="btn btn-outline-secondary btn-sm"><f:translate key="process.button.edit" /></a>
+                    <f:link.action action="editMetadata" arguments="{process: process}" class="btn btn-outline-secondary btn-sm">
+                        <f:translate key="process.button.edit" />
+                    </f:link.action>
                 </div>
             </div>
         </li>

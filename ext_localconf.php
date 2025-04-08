@@ -28,5 +28,5 @@ if ($versionInformation->getMajorVersion() < 12) {
 ExtensionUtility::configurePlugin(
     'Crowdsourcing',
     'Campaigns',
-    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'index,listCampaigns,showCampaignDetails, listProcesses']
+    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'index,listCampaigns,showCampaignDetails, listProcesses, editMetadata, saveForm']
 );
