@@ -41,8 +41,6 @@ class WorkflowController extends ActionController
      */
     public function listCampaignsAction()
     {
-        $this->view->assign("importedPath", $importedPath);
-
         $campaigns = $this->campaignRepository->findByWorkflowState(Campaign::WORKFLOW_STATE_PUBLISHED);
         $this->view->assign('campaigns', $campaigns);
     }

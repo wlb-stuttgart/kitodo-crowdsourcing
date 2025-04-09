@@ -2,6 +2,14 @@
 
 <f:layout name="Backend/Campaign"/>
 <f:section name="main">
+    <style>
+        .carousel-image {
+        object-fit: cover;
+        height: 300px;
+        width: 100%;
+        }
+    </style>
+
     <div class="container mt-5">
         <h1>{campaign.title}</h1>
         <h2>Processes</h2>
@@ -29,7 +37,7 @@
                                 <div class="carousel-inner">
                                     <f:for each="{document.images}" as="imageName" iteration="index">
                                         <div class="carousel-item {f:if(condition: '{index.index} == 0', then: 'active', else: '')}">
-                                            <f:image src="file:{importedPath}/{document.identifier}/images/{imageName}" alt="Image" class="d-block w-100" />
+                                            <f:image src="file:{importedPath}/{document.identifier}/images/{imageName}" alt="Image" class="d-block w-100 carousel-image" />
                                         </div>
                                     </f:for>
                                 </div>
