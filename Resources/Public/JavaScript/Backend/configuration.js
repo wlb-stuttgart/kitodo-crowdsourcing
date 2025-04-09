@@ -1,7 +1,63 @@
 
 $( document ).ready(function() {
     clickEvents();
+
+    openLayer();
+    
 });
+
+function openLayer() {
+    const extent = [0, 0, 1024, 968];
+    const projection = new ol.proj.Projection({
+        code: 'image',
+        units: 'pixels',
+        extent: extent,
+    });
+    var source = [];
+    $('.processimages').each(function () {
+        var tempSource = new ol.source.ImageStatic({
+            attributions: '',
+            url: $(this).data('path'),
+            projection: projection,
+            imageExtent: [0, 0, $(this).data('width'), $(this).data('height')],
+        });
+        source.push(tempSource);
+    });
+
+    const imageLayer = new ol.layer.Image({
+        source: source[0],
+    });
+
+    const map = new ol.Map({
+        layers: [
+            imageLayer,
+        ],
+        target: 'map',
+        view: new ol.View({
+            projection: projection,
+            center: [300,300],
+            zoom: 2,
+            maxZoom: 6,
+        }),
+    });
+
+    $('.ol-prev-image').on('click', function (evt) {
+        var currentSource = $('#map').data('sourcecount');
+        if (currentSource > 0) {
+            $('#map').data('sourcecount', currentSource-1);
+            imageLayer.setSource(source[currentSource-1]);
+        }
+    });
+
+    $('.ol-next-image').on('click', function (evt) {
+        var currentSource = $('#map').data('sourcecount');
+        var maxCount = $('.processimages').length;
+        if (currentSource < maxCount-1) {
+            $('#map').data('sourcecount', currentSource+1);
+            imageLayer.setSource(source[currentSource+1]);
+        }
+    });
+}
 
 function clickEvents() {
 

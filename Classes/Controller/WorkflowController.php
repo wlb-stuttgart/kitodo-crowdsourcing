@@ -97,6 +97,9 @@ class WorkflowController extends ActionController
 
         $this->view->assign('process', $process);
 
+        // Get images as base64 with width and height info
+        $this->view->assign("processImagesInfo", $this->processImageInfo($process));
+
         // build value array for each active configuration
         $formValues = [];
 
@@ -127,6 +130,29 @@ class WorkflowController extends ActionController
         $this->view->assign('formValues', $formValues);
 
         return $this->htmlResponse();
+    }
+
+    public function processImageInfo(Process $process)
+    {
+        $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
+        if (substr($importedPath, -1) === '/') {
+            $importedPath = $importedPath . '/';
+        }
+        $processImagesInfo = [];
+        $i = 0;
+        foreach ($process->getImages() as $image) {
+            $path = $importedPath .'/'. $process->getIdentifier() . '/images/' . $image;
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $processImagesInfo[$i]['image'] = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+            $imageSize = getimagesize($path);
+            $processImagesInfo[$i]['width'] = $imageSize[0];
+            $processImagesInfo[$i]['height'] = $imageSize[1];
+            $i++;
+        }
+
+        return $processImagesInfo;
     }
 
     public function saveFormAction(): ResponseInterface

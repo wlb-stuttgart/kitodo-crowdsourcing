@@ -15,103 +15,126 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<script src="{f:uri.resource(path:'EXT:crowdsourcing/Resources/Public/JavaScript/Backend/configuration.js')}"></script>
+<script src="https://cdn.jsdelivr.net/npm/ol@v10.5.0/dist/ol.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.5.0/ol.css">
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div>
+                <div id="map" class="map" data-sourcecount="0" style="width: 100%;height: 800px;"></div>
 
-<f:form action="saveForm" id="{process.type}">
-    <f:for each="{dbConfig.{process.type}}" as="metadata" key="metadataId">
-        <f:if condition="{metadata.active}">
-            <div id="{metadataId}" class="form-group metadata-group metadatafield-{metadataId} pb-4 {f:if(condition: '{metadata.children}', then: 'group-with-children')}">
-                <label for="meta-{metadataId}">
-                    {metadata.label} ({metadata.minOccurs} / {metadata.maxOccurs})
-                </label>
+                <f:if condition="{processImagesInfo -> f:count()} > 1">
+                    <f:then>
+                        <f:form.button class="ol-prev-image btn btn-primary mb-2 mt-2" type="button">Prev</f:form.button>
+                        <f:form.button class="ol-next-image btn btn-primary mb-2 mt-2" type="button">Next</f:form.button>
+                    </f:then>
+                </f:if>
 
-                <f:variable name="maxOccurs">{metadata.maxOccurs - 1}</f:variable>
-                <f:for each="{v:iterator.range(low: 0, high: maxOccurs)}" as="i">
-                    <f:if condition="!{metadata.children}">
-                        <f:then>
-                            <div class="input-group pb-2">
-                                <f:if condition="{i} > {metadata.minOccurs}">
+                <f:for each="{processImagesInfo}" as="imageInfo" iteration="index">
+                    <div class="processimages" data-path="{imageInfo.image}" data-height="{imageInfo.height}" data-width="{imageInfo.width}"></div>
+                </f:for>
+            </div>
+        </div>
+        <div class="col">
+            <f:form action="saveForm" id="{process.type}">
+                <f:for each="{dbConfig.{process.type}}" as="metadata" key="metadataId">
+                    <f:if condition="{metadata.active}">
+                        <div id="{metadataId}" class="form-group metadata-group metadatafield-{metadataId} pb-4 {f:if(condition: '{metadata.children}', then: 'group-with-children')}">
+                            <label for="meta-{metadataId}">
+                                {metadata.label} ({metadata.minOccurs} / {metadata.maxOccurs})
+                            </label>
+
+                            <f:variable name="maxOccurs">{metadata.maxOccurs - 1}</f:variable>
+                            <f:for each="{v:iterator.range(low: 0, high: maxOccurs)}" as="i">
+                                <f:if condition="!{metadata.children}">
                                     <f:then>
-                                        <f:render partial="Backend/Configuration/FormFieldRendering" arguments="{_all}"/>
-                                        <div class="input-group-text deleteField" style="cursor: pointer;">
-                                            <span class="fa-solid fa-trash"></span>
+                                        <div class="input-group pb-2">
+                                            <f:if condition="{i} > {metadata.minOccurs}">
+                                                <f:then>
+                                                    <f:render partial="Backend/Configuration/FormFieldRendering" arguments="{_all}"/>
+                                                    <div class="input-group-text deleteField" style="cursor: pointer;">
+                                                        <span class="fa-solid fa-trash"></span>
+                                                    </div>
+                                                </f:then>
+                                                <f:else>
+                                                    <f:variable name="required">1</f:variable>
+                                                    <f:render partial="Backend/Configuration/FormFieldRendering" arguments="{_all}"/>
+                                                    <f:variable name="required">0</f:variable>
+                                                </f:else>
+                                            </f:if>
                                         </div>
                                     </f:then>
                                     <f:else>
-                                        <f:variable name="required">1</f:variable>
-                                        <f:render partial="Backend/Configuration/FormFieldRendering" arguments="{_all}"/>
-                                        <f:variable name="required">0</f:variable>
-                                    </f:else>
-                                </f:if>
-                            </div>
-                        </f:then>
-                        <f:else>
-                            <div class="card metadata-group child-group">
-                                <div class="card-body"
-                                     data-required="{f:if(condition: '{i} > {metadata.minOccurs}', then: '0', else: '1')}">
-                                    <f:if condition="{i} > {metadata.minOccurs}">
-                                        <f:then>
-                                            <div class="deleteGroup" style="position: absolute;top:10px;right: 20px;cursor: pointer;">
-                                                <span class="fa-solid fa-trash"></span>
-                                            </div>
-                                        </f:then>
-                                    </f:if>
-                                    <f:for each="{metadata.children}" as="metadataChild" key="metadataChildId">
-                                        <label for="meta-{metadataChildId}">
-                                            {metadataChild.label} ({metadataChild.minOccurs} / {metadataChild.maxOccurs})
-                                        </label>
-                                        <f:variable name="child">1</f:variable>
-                                        <f:for each="{v:iterator.range(low: 1, high: metadataChild.maxOccurs)}" as="j">
-                                            <div class="metadataChildField">
-                                                <div class="input-group pb-2">
-                                                    <f:if condition="{j} > {metadataChild.minOccurs}">
+                                        <div class="card metadata-group child-group">
+                                            <div class="card-body"
+                                                 data-required="{f:if(condition: '{i} > {metadata.minOccurs}', then: '0', else: '1')}">
+                                                <f:if condition="{i} > {metadata.minOccurs}">
+                                                    <f:then>
+                                                        <div class="deleteGroup" style="position: absolute;top:10px;right: 20px;cursor: pointer;">
+                                                            <span class="fa-solid fa-trash"></span>
+                                                        </div>
+                                                    </f:then>
+                                                </f:if>
+                                                <f:for each="{metadata.children}" as="metadataChild" key="metadataChildId">
+                                                    <label for="meta-{metadataChildId}">
+                                                        {metadataChild.label} ({metadataChild.minOccurs} / {metadataChild.maxOccurs})
+                                                    </label>
+                                                    <f:variable name="child">1</f:variable>
+                                                    <f:for each="{v:iterator.range(low: 1, high: metadataChild.maxOccurs)}" as="j">
+                                                        <div class="metadataChildField">
+                                                            <div class="input-group pb-2">
+                                                                <f:if condition="{j} > {metadataChild.minOccurs}">
+                                                                    <f:then>
+                                                                        <f:render partial="Backend/Configuration/FormFieldRendering" arguments="{_all}"/>
+                                                                        <div class="input-group-text deleteField" style="cursor: pointer;">
+                                                                            <span class="fa-solid fa-trash"></span>
+                                                                        </div>
+                                                                    </f:then>
+                                                                    <f:else>
+                                                                        <f:variable name="required">1</f:variable>
+                                                                        <f:render partial="Backend/Configuration/FormFieldRendering" arguments="{_all}"/>
+                                                                        <f:variable name="required">0</f:variable>
+                                                                    </f:else>
+                                                                </f:if>
+                                                            </div>
+                                                        </div>
+                                                    </f:for>
+                                                    <f:if condition="{metadataChild.minOccurs} < {metadataChild.maxOccurs}">
                                                         <f:then>
-                                                            <f:render partial="Backend/Configuration/FormFieldRendering" arguments="{_all}"/>
-                                                            <div class="input-group-text deleteField" style="cursor: pointer;">
-                                                                <span class="fa-solid fa-trash"></span>
+                                                            <div style="display: block;">
+                                                                <f:form.button class="addFormGroupField btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"></f:form.button>
                                                             </div>
                                                         </f:then>
-                                                        <f:else>
-                                                            <f:variable name="required">1</f:variable>
-                                                            <f:render partial="Backend/Configuration/FormFieldRendering" arguments="{_all}"/>
-                                                            <f:variable name="required">0</f:variable>
-                                                        </f:else>
                                                     </f:if>
-                                                </div>
+                                                </f:for>
                                             </div>
-                                        </f:for>
-                                        <f:if condition="{metadataChild.minOccurs} < {metadataChild.maxOccurs}">
-                                            <f:then>
-                                                <div style="display: block;">
-                                                    <f:form.button class="addFormGroupField btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"></f:form.button>
-                                                </div>
-                                            </f:then>
-                                        </f:if>
-                                    </f:for>
-                                </div>
-                            </div>
-                            <f:variable name="child">0</f:variable>
-                        </f:else>
+                                        </div>
+                                        <f:variable name="child">0</f:variable>
+                                    </f:else>
+                                </f:if>
+                            </f:for>
+
+                            <f:if condition="{metadata.minOccurs} < {metadata.maxOccurs}">
+                                <f:then>
+                                    <div style="display: block;">
+                                        <f:form.button class="{f:if(condition: '!{metadata.children}', then: 'addFormField', else: 'addGroup')} btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"></f:form.button>
+                                    </div>
+                                </f:then>
+                            </f:if>
+                            <f:if condition="{metadata.helptext}">
+                                <f:then>
+                                    <div class="form-text">
+                                        {metadata.helptext}
+                                    </div>
+                                </f:then>
+                            </f:if>
+                        </div>
                     </f:if>
                 </f:for>
-
-                <f:if condition="{metadata.minOccurs} < {metadata.maxOccurs}">
-                    <f:then>
-                        <div style="display: block;">
-                            <f:form.button class="{f:if(condition: '!{metadata.children}', then: 'addFormField', else: 'addGroup')} btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"></f:form.button>
-                        </div>
-                    </f:then>
-                </f:if>
-                <f:if condition="{metadata.helptext}">
-                    <f:then>
-                        <div class="form-text">
-                            {metadata.helptext}
-                        </div>
-                    </f:then>
-                </f:if>
-            </div>
-        </f:if>
-    </f:for>
-    <f:form.submit class="btn btn-primary " value="Speichern" />
-</f:form>
+                <f:form.submit class="btn btn-primary " value="Speichern" />
+            </f:form>
+        </div>
+    </div>
+    <script src="{f:uri.resource(path:'EXT:crowdsourcing/Resources/Public/JavaScript/Backend/configuration.js')}"></script>
+</div>
