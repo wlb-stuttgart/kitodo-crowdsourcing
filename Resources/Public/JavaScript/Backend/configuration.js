@@ -6,10 +6,20 @@ $( document ).ready(function() {
 function clickEvents() {
 
     // Hide all empty input fields which are not required
-    $('input.processForm:not([required])').parent().hide();
+    $('input.processForm:not([required])[value=""]').parent().hide();
 
-    // Hide all from groups
-    $('div.metadata-group div[data-required="0"]').parent().hide();
+    // Hide all metadata groups with empty input fields
+    $('div.group-with-children .child-group').each(function() {
+        let allInputs = $(this).find('div[data-required="0"] input');
+        let hasValue = allInputs.filter(function() {
+            return $(this).val().trim() !== "";
+        }).length > 0;
+
+        if (!hasValue) {
+            $(this).hide();
+        }
+    });
+
 
     // Click event for adding new form fields
     $('button.addFormField').on('click', function (evt) {

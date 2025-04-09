@@ -18,16 +18,16 @@
 <script src="{f:uri.resource(path:'EXT:crowdsourcing/Resources/Public/JavaScript/Backend/configuration.js')}"></script>
 
 
-<f:form action="saveForm" id="plakat">
-    <f:for each="{dbConfig.Plakat}" as="metadata" key="metadataId">
+<f:form action="saveForm" id="{process.type}">
+    <f:for each="{dbConfig.{process.type}}" as="metadata" key="metadataId">
         <f:if condition="{metadata.active}">
-            <div id="{metadataId}" class="form-group metadata-group metadatafield-{metadataId} pb-4" data-formconfig="{metadata -> f:format.json()}">
+            <div id="{metadataId}" class="form-group metadata-group metadatafield-{metadataId} pb-4 {f:if(condition: '{metadata.children}', then: 'group-with-children')}">
                 <label for="meta-{metadataId}">
                     {metadata.label} ({metadata.minOccurs} / {metadata.maxOccurs})
                 </label>
 
-                <f:for each="{v:iterator.range(low: 1, high: metadata.maxOccurs)}" as="i">
-
+                <f:variable name="maxOccurs">{metadata.maxOccurs - 1}</f:variable>
+                <f:for each="{v:iterator.range(low: 0, high: maxOccurs)}" as="i">
                     <f:if condition="!{metadata.children}">
                         <f:then>
                             <div class="input-group pb-2">
@@ -47,7 +47,7 @@
                             </div>
                         </f:then>
                         <f:else>
-                            <div class="card metadata-group">
+                            <div class="card metadata-group child-group">
                                 <div class="card-body"
                                      data-required="{f:if(condition: '{i} > {metadata.minOccurs}', then: '0', else: '1')}">
                                     <f:if condition="{i} > {metadata.minOccurs}">

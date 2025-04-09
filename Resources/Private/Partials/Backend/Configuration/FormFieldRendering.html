@@ -2,18 +2,13 @@
       xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers"
       data-namespace-typo3-fluid="true">
 
-<f:comment>
-    Required
-    DeleteButton
-</f:comment>
-
 <f:switch expression="{metadata.inputtype}">
     <f:case value="text">
         <f:form.textfield
                 id="{f:if(condition: '{child} == 1', then: 'meta-{metadataChildId}', else: 'meta-{metadataId}')}"
                 class="form-control processForm"
-                name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
-                value=""
+                name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{i}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
+                value="{f:if(condition: '{child} == 1', then: '{formValues.{metadataId}.{i}.{metadataChildId}}', else: '{formValues.{metadataId}.{i}}')}"
                 placeholder=""
                 required="{f:if(condition: '{required} == 1', then: 'true', else: 'false')}"
                 pattern="{metadata.validation}"/>
@@ -22,8 +17,8 @@
         <f:form.textarea
                 id="{f:if(condition: '{child} == 1', then: 'meta-{metadataChildId}', else: 'meta-{metadataId}')}"
                 class="form-control processForm"
-                name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
-                value=""
+                name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{i}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
+                value="{f:if(condition: '{child} == 1', then: '{formValues.{metadataId}.{i}.{metadataChildId}}', else: '{formValues.{metadataId}.{i}}')}"
                 placeholder=""
                 required="{f:if(condition: '{required} == 1', then: 'true', else: 'false')}"
                 pattern="{metadata.validation}"/>

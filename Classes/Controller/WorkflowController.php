@@ -2,6 +2,8 @@
 
 namespace Wlb\Crowdsourcing\Controller;
 
+use \DOMDocument;
+use \DOMXPath;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -92,6 +94,37 @@ class WorkflowController extends ActionController
         } else {
             throw new \Exception('Metadata configuration missing');
         }
+
+        $this->view->assign('process', $process);
+
+        // build value array for each active configuration
+        $formValues = [];
+
+        // load process xml
+        $doc = new DOMDocument();
+        $doc->loadXML($process->getMetadata());
+        $xpath = new DOMXPath($doc);
+
+        foreach ($dbConfigArray[$process->getType()] as $metadataKey => $metadataConfig) {
+            if (!key_exists('children', $metadataConfig)) {
+                foreach ($xpath->query('//*[@name="'.$metadataKey.'"]') as $metadataValue) {
+                    $formValues[$metadataKey][] = $metadataValue->nodeValue;
+                }
+            } else {
+                $i = 0;
+                /** @var \DOMElement $metadataValue */
+                foreach ($xpath->query('//*[@name="'.$metadataKey.'"]') as $metadataValue) {
+                    foreach ($metadataValue->childNodes as $metadataChildValue) {
+                        if ($metadataChildValue->nodeType != XML_TEXT_NODE) {
+                            $formValues[$metadataKey][$i][$metadataChildValue->getAttribute('name')] = $metadataChildValue->nodeValue;
+                        }
+                    }
+                    $i++;
+                }
+            }
+        }
+
+        $this->view->assign('formValues', $formValues);
 
         return $this->htmlResponse();
     }
