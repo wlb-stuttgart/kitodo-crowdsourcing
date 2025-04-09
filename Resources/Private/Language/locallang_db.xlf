@@ -23,6 +23,9 @@
 		<trans-unit id="tx_crowdsourcing_domain_model_campaign.workflow_state">
         	<source>Workflow state</source>
         </trans-unit>
+		<trans-unit id="tx_crowdsourcing_domain_model_campaign.files">
+        	<source>Files</source>
+        </trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_process">
 			<source>Process</source>
 		</trans-unit>

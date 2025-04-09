@@ -16,9 +16,9 @@
                         <p>Fill in the details below to create a new campaign</p>
                     </div>
                     <div class="card-body">
-                        <f:form action="update" object="{campaign}" objectName="campaign" method="post">
+                        <f:form action="update" object="{campaign}" objectName="campaign" method="post" enctype="multipart/form-data">
 
-                            <f:render partial="Backend/Campaign/CampaignFields" />
+                            <f:render partial="Backend/Campaign/CampaignFields" arguments="{campaign: campaign}"/>
 
                             <div class="mb-3">
                                 <div class="row">
@@ -33,6 +33,7 @@
                             </div>
 
                         </f:form>
+
                     </div>
                 </div>
             </div>
@@ -57,7 +58,7 @@
                         <p>Fill in the details below to create a new campaign</p>
                     </div>
                     <div class="panel-body">
-                        <f:form action="update" object="{campaign}" objectName="campaign" method="post">
+                        <f:form action="update" object="{campaign}" objectName="campaign" method="post" enctype="multipart/form-data">
 
                             <f:render partial="Backend/Campaign/CampaignFields" />
 
@@ -79,7 +80,5 @@
             </div>
         </div>
     </div>
-
-
 
 </f:comment>

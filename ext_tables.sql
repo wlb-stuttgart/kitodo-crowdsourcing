@@ -4,7 +4,8 @@ CREATE TABLE tx_crowdsourcing_domain_model_campaign (
     description       text          DEFAULT '',
     workflow_state    varchar(255)  DEFAULT ''  NOT NULL,
     short_description varchar(1024) DEFAULT ''  NOT NULL,
-    processes         int(11)       DEFAULT '0' NOT NULL
+    processes         int(11)       DEFAULT '0' NOT NULL,
+    image             int(11) UNSIGNED DEFAULT '0' NOT NULL
 );
 
 CREATE TABLE tx_crowdsourcing_domain_model_process (

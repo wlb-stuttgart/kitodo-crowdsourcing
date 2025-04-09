@@ -55,3 +55,7 @@ defined('TYPO3') or die();
         'labels' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_mod_configuration.xlf'
     ]
 );
+
+\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir_deep(
+    \TYPO3\CMS\Core\Core\Environment::getPublicPath(). '/fileadmin/uploads/tx_crowdsourcing'
+);

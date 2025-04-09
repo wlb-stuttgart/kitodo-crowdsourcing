@@ -40,10 +40,16 @@ class Campaign extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     protected $processes;
 
+    /**
+     * @var int
+     */
+    protected $image;
+
+
     public function __construct()
     {
         // Initialize the processes collection
-        $this->processes = new ObjectStorage();
+        $this->processes     = new ObjectStorage();
         $this->workflowState = self::WORKFLOW_STATE_NEW;
     }
 
@@ -81,6 +87,30 @@ class Campaign extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function getProcessCount(): int
     {
         return $this->processes->count();
+    }
+
+    public function getImage(): int
+    {
+        return $this->image;
+    }
+
+    public function setImage(int $image): void
+    {
+        $this->image = $image;
+    }
+
+    /**
+     * @return \TYPO3\CMS\Core\Resource\File|null
+     * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
+     */
+    public function getImageObject()
+    {
+        if ($this->getImage() > 0) {
+            $resourceFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\ResourceFactory::class);
+            return $resourceFactory->getFileObject($this->getImage());
+        }
+
+        return null;
     }
 
     /**
