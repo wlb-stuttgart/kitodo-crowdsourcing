@@ -41,6 +41,8 @@ class WorkflowController extends ActionController
      */
     public function listCampaignsAction()
     {
+        $this->view->assign("importedPath", $importedPath);
+
         $campaigns = $this->campaignRepository->findByWorkflowState(Campaign::WORKFLOW_STATE_PUBLISHED);
         $this->view->assign('campaigns', $campaigns);
     }
@@ -79,6 +81,12 @@ class WorkflowController extends ActionController
      */
     public function showCampaignDetailsAction(Campaign $campaign)
     {
+        $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
+        if (substr($importedPath, -1) !== '/') {
+        } else {
+            $importedPath = $importedPath . '/';
+        }
+        $this->view->assign('importedPath', $importedPath);
         $this->view->assign('campaign', $campaign);
     }
 
