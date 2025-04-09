@@ -72,9 +72,13 @@
 
                         <f:if condition="{campaign.image}">
                             <f:then>
-                                <img src="{campaign.image}" class="card-img-top" alt="..."
+                                <f:comment>
+                                <img src="{image}" class="card-img-top" alt="..."
                                      style="object-fit: cover; height: 200px; width: 100%;"
                                      class="img-fluid">
+                                </f:comment>
+                                <f:image image="{campaign.imageObject}" class="card-img-top" alt=""
+                                         additionalAttributes='{style: "object-fit: cover; height: 200px; width: 100%;"}'/>
                             </f:then>
                             <f:else>
                                 <div class="card-img-top" style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; background-color: #e0e0e0; border: 0px solid #333;">

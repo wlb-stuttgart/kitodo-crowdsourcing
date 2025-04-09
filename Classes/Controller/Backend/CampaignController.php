@@ -5,8 +5,16 @@ namespace Wlb\Crowdsourcing\Controller\Backend;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Http\UploadedFile;
+use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Resource\FileRepository;
+use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extensionmanager\Controller\ActionController;
 use Wlb\Crowdsourcing\Common\Solr\SolrSearcher;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
@@ -21,6 +29,7 @@ class CampaignController extends ActionController
         private readonly CampaignRepository $campaignRepository,
         private readonly ProcessRepository $processRepository,
         private readonly SolrSearcher $solrSearcher,
+        private readonly ResourceFactory $resourceFactory
     )
     {
     }
@@ -40,10 +49,15 @@ class CampaignController extends ActionController
      * Creates a new campaign.
      *
      * @param Campaign $campaign
+     * @param array $uploadFile
      * @return void
      */
-    public function updateAction(Campaign $campaign)
+    public function updateAction(Campaign $campaign, $uploadFile = [])
     {
+        if ($uploadFile) {
+            $this->saveAndUploadFile($campaign, $uploadFile);
+        }
+
         $this->campaignRepository->update($campaign);
         $this->redirect('list');
     }
@@ -63,10 +77,15 @@ class CampaignController extends ActionController
      * Creates a new campaign.
      *
      * @param Campaign $campaign
+     * @param array $uploadFile
      * @return void
      */
-    public function createAction(Campaign $campaign)
+    public function createAction(Campaign $campaign, $uploadFile = [])
     {
+        if ($uploadFile) {
+            $this->saveAndUploadFile($campaign, $uploadFile);
+        }
+
         $this->campaignRepository->add($campaign);
         $this->redirect('list');
     }
@@ -140,7 +159,7 @@ class CampaignController extends ActionController
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
      */
-    public function editProcessesAction(Campaign $campaign, int $processUid = 10000) {
+    public function editProcessesAction(Campaign $campaign, int $processUid = 0) {
 
         $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
         if (substr($importedPath, -1) !== '/') {
@@ -230,4 +249,27 @@ class CampaignController extends ActionController
         $this->redirect('list', null, null, ['page' => $page]);
     }
 
+    /**
+     * @param Campaign $campaign
+     * @param array $uploadFile
+     * @return void
+     * @throws \TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException
+     */
+    protected function saveAndUploadFile($campaign, $uploadFile)
+    {
+        $resourceFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\ResourceFactory::class);
+        $defaultStorage = $resourceFactory->getDefaultStorage();
+        $folder = $defaultStorage->getFolder("uploads/tx_crowdsourcing/");
+
+        $tempFilePath = $uploadFile['tmp_name'];
+
+        if (is_file($tempFilePath)) {
+            $destinationPath = GeneralUtility::getFileAbsFileName(ltrim($folder->getPublicUrl(), '/') . basename($uploadFile['name']));
+
+            if (move_uploaded_file($tempFilePath, $destinationPath)) {
+                $file = $folder->getFile($uploadFile['name']);
+                $campaign->setImage($file->getUid());
+            }
+        }
+    }
 }

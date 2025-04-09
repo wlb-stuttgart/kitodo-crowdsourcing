@@ -15,7 +15,7 @@
                         <p>Fill in the details below to create a new campaign</p>
                     </div>
                     <div class="card-body">
-                        <f:form action="create" object="{campaign}" objectName="campaign" method="post">
+                        <f:form action="create" object="{campaign}" objectName="campaign" method="post" enctype="multipart/form-data">
 
                             <f:render partial="Backend/Campaign/CampaignFields" />
 
