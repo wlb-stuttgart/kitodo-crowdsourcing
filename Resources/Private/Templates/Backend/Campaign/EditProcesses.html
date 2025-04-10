@@ -67,12 +67,12 @@
                                     <td>{process.metadataForDisplay.signature}</td>
                                     <td><span class="badge bg-warning">In Progress</span></td>
                                     <td>
-                                        <div id="carousel-{process.uid}" class="carousel slide" data-bs-ride="carousel">
+                                        <div id="carousel-{process.uid}" class="carousel slide">
                                             <!-- Wrapper for slides -->
                                             <div class="carousel-inner">
                                                 <f:for each="{process.images}" as="imageName" iteration="index">
                                                     <div class="carousel-item {f:if(condition: '{index.index} == 0', then: 'active', else: '')}">
-                                                        <f:image src="file:{importedPath}/{process.identifier}/images/{imageName}" alt="Image" class="d-block w-100 carousel-image" />
+                                                        <img src="{process.imageInfos.{index.index}.image}" class="d-block w-100 carousel-image" />
                                                     </div>
                                                 </f:for>
                                             </div>

@@ -3,6 +3,7 @@
 namespace Wlb\Crowdsourcing\Domain\Model;
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 
 class Process extends AbstractEntity
 {
@@ -131,5 +132,28 @@ class Process extends AbstractEntity
         $xml->registerXPathNamespace('kitodo', 'http://meta.kitodo.org/v1/');
         $values = $xml->xpath("//kitodo:metadata[@name='signature']");
         return ['signature' => (string)$values[0]];
+    }
+
+    public function getImageInfos()
+    {
+        $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
+        if (substr($importedPath, -1) === '/') {
+            $importedPath = $importedPath . '/';
+        }
+        $processImagesInfo = [];
+        $i = 0;
+        foreach ($this->getImages() as $image) {
+            $path = $importedPath .'/'. $this->getIdentifier() . '/images/' . $image;
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $processImagesInfo[$i]['image'] = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+            $imageSize = getimagesize($path);
+            $processImagesInfo[$i]['width'] = $imageSize[0];
+            $processImagesInfo[$i]['height'] = $imageSize[1];
+            $i++;
+        }
+
+        return $processImagesInfo;
     }
 }

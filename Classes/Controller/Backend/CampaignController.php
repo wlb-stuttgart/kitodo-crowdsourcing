@@ -28,8 +28,7 @@ class CampaignController extends ActionController
     public function __construct(
         private readonly CampaignRepository $campaignRepository,
         private readonly ProcessRepository $processRepository,
-        private readonly SolrSearcher $solrSearcher,
-        private readonly ResourceFactory $resourceFactory
+        private readonly SolrSearcher $solrSearcher
     )
     {
     }

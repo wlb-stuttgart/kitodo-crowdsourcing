@@ -3,7 +3,7 @@ $( document ).ready(function() {
     clickEvents();
 
     openLayer();
-    
+
 });
 
 function openLayer() {
@@ -35,8 +35,8 @@ function openLayer() {
         target: 'map',
         view: new ol.View({
             projection: projection,
-            center: [300,300],
-            zoom: 2,
+            center: [1000,1000],
+            zoom: 0,
             maxZoom: 6,
         }),
     });
