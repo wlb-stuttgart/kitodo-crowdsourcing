@@ -88,7 +88,9 @@ class SolrIndexer
         foreach ($this->config as $indexField => $indexFieldConfig) {
             if (array_key_exists($indexField, $result)) {
                 if ($indexFieldConfig['_multivalue'] === false) {
-                    $result[$indexField] = implode(", ", $result[$indexField]);
+                    if (is_array($result[$indexField])) {
+                        $result[$indexField] = implode(", ", $result[$indexField]);
+                    }
                 }
             }
         }
