@@ -62,7 +62,7 @@ function openLayer() {
 function clickEvents() {
 
     // Hide all empty input fields which are not required
-    $('input.processForm:not([required])[value=""]').parent().hide();
+    $('input.processForm:not([required]):not([data-required="1"])[value=""]').parent().hide();
 
     // Hide all metadata groups with empty input fields
     $('div.group-with-children .child-group').each(function() {
@@ -95,6 +95,11 @@ function clickEvents() {
         var configElement = $(this).closest('.metadata-group');
         var nextHidden = $(configElement).find('div.metadata-group:hidden').first();
         nextHidden.show();
+
+        // find elements which are required
+        var requiredFields = configElement.find('input[data-required="1"]');
+        requiredFields.attr('required', 'true');
+
     });
 
     // Click event for hiding form field and empty this field
@@ -118,6 +123,9 @@ function clickEvents() {
         var metadataGroup = $(this).closest('.metadata-group').hide();
         // find all input fields and try to clear them
         $(metadataGroup).find(':input').val('');
+
+        var requiredFields = metadataGroup.find('input[required]');
+        requiredFields.removeAttr('required');
     });
 
 }

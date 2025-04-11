@@ -10,8 +10,9 @@
                 name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{i}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
                 value="{f:if(condition: '{child} == 1', then: '{formValues.{metadataId}.{i}.{metadataChildId}}', else: '{formValues.{metadataId}.{i}}')}"
                 placeholder=""
-                required="{f:if(condition: '{required} == 1', then: 'true', else: 'false')}"
-                pattern="{metadata.validation}"/>
+                required="{f:if(condition: '{required} == 1 && {child} != 1', then: 'true', else: 'false')}"
+                pattern="{metadata.validation}"
+                data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"/>
     </f:case>
     <f:case value="textarea">
         <f:form.textarea
@@ -20,7 +21,8 @@
                 name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{i}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
                 value="{f:if(condition: '{child} == 1', then: '{formValues.{metadataId}.{i}.{metadataChildId}}', else: '{formValues.{metadataId}.{i}}')}"
                 placeholder=""
-                required="{f:if(condition: '{required} == 1', then: 'true', else: 'false')}"
-                pattern="{metadata.validation}"/>
+                required="{f:if(condition: '{required} == 1 && {child} != 1', then: 'true', else: 'false')}"
+                pattern="{metadata.validation}"
+                data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"/>
     </f:case>
 </f:switch>

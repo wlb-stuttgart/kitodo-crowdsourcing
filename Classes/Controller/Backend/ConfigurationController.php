@@ -142,7 +142,6 @@ class ConfigurationController extends ActionController
                 }
             }
 
-
             $this->view->assign('missingDocType', $missingDocType);
             $this->view->assign('rulesetAdded', $rulesetAdded);
             $this->view->assign('rulesetRemoved', $rulesetRemoved);

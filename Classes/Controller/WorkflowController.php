@@ -101,11 +101,6 @@ class WorkflowController extends ActionController
             throw new \Exception('Metadata configuration missing');
         }
 
-        $this->view->assign('process', $process);
-
-        // Get images as base64 with width and height info
-        $this->view->assign("processImagesInfo", $this->processImageInfo($process));
-
         // build value array for each active configuration
         $formValues = [];
 
@@ -133,6 +128,9 @@ class WorkflowController extends ActionController
             }
         }
 
+        // Get images as base64 with width and height info
+        $this->view->assign("processImagesInfo", $this->processImageInfo($process));
+        $this->view->assign('process', $process);
         $this->view->assign('formValues', $formValues);
 
         return $this->htmlResponse();
@@ -167,7 +165,13 @@ class WorkflowController extends ActionController
         $trustedMetadata = $this->request->getArgument('metadata');
 
         debug($trustedMetadata);
-        debug($untrustedMetadata);
+
+        // delete old dataset (for history)
+        // create new dataset
+
+
+
+
 
         exit;
 
