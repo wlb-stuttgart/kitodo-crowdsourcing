@@ -22,13 +22,14 @@ use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
+use Wlb\Crowdsourcing\Services\SearchService;
 
 class CampaignController extends ActionController
 {
     public function __construct(
         private readonly CampaignRepository $campaignRepository,
         private readonly ProcessRepository $processRepository,
-        private readonly SolrSearcher $solrSearcher
+        private readonly SearchService $searchService
     )
     {
     }
@@ -123,21 +124,6 @@ class CampaignController extends ActionController
      */
     public function listProcessesAction(Campaign $campaign)
     {
-        //$query = empty($search)? '*' : $search;
-
-        // $results = [];
-
-        // $results = $this->solrSearcher->searchWithFacets($query);
-
-        // $documentIdentifiers = [];
-
-        // foreach($results as $result) {
-        //    $documentIdentifiers[] = $result->id;
-        // }
-
-
-        //$documents = $this->campaignRepository->findByUid();
-
         $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
         if (substr($importedPath, -1) !== '/') {
         } else {

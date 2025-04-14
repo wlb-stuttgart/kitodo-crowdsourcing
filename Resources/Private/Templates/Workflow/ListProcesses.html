@@ -18,10 +18,19 @@
     <!-- Search Area -->
     <div class="row mb-4">
         <div class="col-12">
-            <form class="d-flex justify-content-between align-items-center">
+            <f:form action="listProcesses"
+                    controller="Workflow"
+                    pluginName="Campaigns"
+                    method="post" name="searchForm" id="searchForm"
+                    class="d-flex justify-content-between align-items-center">
                 <!-- Search Input -->
                 <div class="form-group mb-0">
-                    <input type="text" class="form-control" id="searchInput" placeholder="Search..." aria-label="Search">
+                    <f:form.textfield name="query"
+                                      id="searchInput"
+                                      class="form-control"
+                                      placeholder="Enter search term"
+                                      aria-label="Search"
+                                      value="{query}" />
                 </div>
 
                 <!-- Filter Dropdowns -->
@@ -46,7 +55,9 @@
                         </select>
                     </div>
                 </div>
-            </form>
+
+                <input class="btn btn-secondary" type="submit" value="sdfds"/>
+            </f:form>
         </div>
     </div>
 

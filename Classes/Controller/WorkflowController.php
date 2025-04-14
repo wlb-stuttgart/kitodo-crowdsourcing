@@ -14,6 +14,7 @@ use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
+use Wlb\Crowdsourcing\Services\SearchService;
 
 class WorkflowController extends ActionController
 {
@@ -22,7 +23,7 @@ class WorkflowController extends ActionController
         private readonly CampaignRepository $campaignRepository,
         private readonly ProcessRepository $processRepository,
         private readonly MetadataConfigurationRepository $metadataConfigurationRepository,
-        private readonly SolrSearcher $solrSearcher
+        private readonly SearchService $searchService
     )
     {
 
@@ -46,22 +47,16 @@ class WorkflowController extends ActionController
     }
 
     /**
+     * @param string $query
      * @return void
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function listProcessesAction()
+    public function listProcessesAction(string $query = '')
     {
-        $query = empty($search)? '*' : $search;
-        $results = [];
+        $processes = $this->searchService->searchProcesses($query);
 
-        $results = $this->solrSearcher->searchWithFacets($query);
-
-        $documentIdentifiers = [];
-
-        foreach($results as $result) {
-            $documentIdentifiers[] = $result->id;
-        }
-
-        $processes = $this->processRepository->findByIdentifierList($documentIdentifiers);
         $this->view->assign("processes", $processes);
 
         $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
@@ -71,6 +66,7 @@ class WorkflowController extends ActionController
         }
 
         $this->view->assign("importedPath", $importedPath);
+        $this->view->assign("query", $query);
     }
 
     /**

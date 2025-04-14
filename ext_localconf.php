@@ -8,8 +8,6 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use FriendsOfTYPO3\BlogExample\Controller\PostController;
-use FriendsOfTYPO3\BlogExample\Controller\CommentController;
 
 // TODO: In contrast to the integration via Overrides/pages.php,
 // this automatic integration works, i.e., the configuration takes effect
@@ -28,5 +26,6 @@ if ($versionInformation->getMajorVersion() < 12) {
 ExtensionUtility::configurePlugin(
     'Crowdsourcing',
     'Campaigns',
+    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'index,listCampaigns,showCampaignDetails, listProcesses, editMetadata, saveForm'],
     [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'index,listCampaigns,showCampaignDetails, listProcesses, editMetadata, saveForm']
 );
