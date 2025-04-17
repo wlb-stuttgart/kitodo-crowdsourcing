@@ -5,6 +5,7 @@ namespace Wlb\Crowdsourcing\Controller;
 use \DOMDocument;
 use \DOMXPath;
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use Wlb\Crowdsourcing\Common\Solr\SolrSearcher;
@@ -13,6 +14,7 @@ use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
+use Wlb\Crowdsourcing\Services\AccessControlService;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 use Wlb\Crowdsourcing\Services\SearchService;
 
@@ -23,12 +25,21 @@ class WorkflowController extends ActionController
         private readonly CampaignRepository $campaignRepository,
         private readonly ProcessRepository $processRepository,
         private readonly MetadataConfigurationRepository $metadataConfigurationRepository,
-        private readonly SearchService $searchService
+        private readonly SearchService $searchService,
+        private readonly AccessControlService $accessControlService
     )
     {
 
     }
 
+    protected function initializeAction()
+    {
+        parent::initializeAction();
+
+        if (!$this->accessControlService->isCrowdsourcingUser()) {
+            die("Access denied");
+        }
+    }
 
     /**
      * @return void

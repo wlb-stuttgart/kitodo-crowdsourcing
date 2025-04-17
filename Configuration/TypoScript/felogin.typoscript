@@ -1,0 +1,22 @@
+plugin.tx_felogin_login {
+    view {
+        templateRootPaths {
+            10 = EXT:crowdsourcing/Resources/Private/Extensions/Felogin/Templates/
+        }
+
+        partialRootPaths {
+            10 = EXT:crowdsourcing/Resources/Private/Extensions/Felogin/Partials/
+            11 = EXT:crowdsourcing/Resources/Private/Partials/
+        }
+
+        layoutRootPaths {
+            10 = EXT:crowdsourcing/Resources/Private/Extensions/Felogin/Layouts/
+        }
+    }
+
+    settings {
+        crowdsourcingUserGroup = {$plugin.tx_crowdsourcing.settings.crowdsourcingUserGroup}
+        crowdsourcingRegister =  {$plugin.tx_crowdsourcing.settings.crowdsourcingRegister}
+    }
+}
+

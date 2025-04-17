@@ -1,8 +1,14 @@
 plugin.tx_crowdsourcing {
-  persistence {
-    # cat=plugin.tx_crowdsourcing//a; type=string; label=Default storage PID
-    storagePid =
-    # cat=plugin.tx_crowdsourcing//a; type=int; label=UID of the page/folder where all new records will be created
-    newRecordStoragePid =
-  }
+
+    settings {
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=PID of the crowdsourcing frontend user group
+        crowdsourcingUserGroup =
+
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Register PID
+        crowdsourcingRegister =
+
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Login PID
+        crowdsourcingLogin =
+    }
 }
+

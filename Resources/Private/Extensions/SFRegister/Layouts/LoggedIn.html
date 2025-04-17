@@ -1,0 +1,20 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:render partial="Common/Navbar" arguments="{_all}"/>
+
+<main class="container mt-4">
+
+<div class="tx_evoweb_sfregister">
+	<f:security.ifAuthenticated>
+		<f:then>
+			<f:render section="Main" />
+		</f:then>
+		<f:else>
+			<f:translate id="needTobBeLoggedIn"/>
+		</f:else>
+	</f:security.ifAuthenticated>
+</div>
+
+</main>
+
+</html>

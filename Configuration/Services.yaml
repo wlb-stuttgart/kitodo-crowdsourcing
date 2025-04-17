@@ -13,3 +13,9 @@ services:
         command: 'crowdsourcing:import'
         description: 'A command to import processes with their data.'
         schedulable: true
+  Wlb\Crowdsourcing\Domain\Model\FrontendUser:
+    public: true
+    tags:
+      -
+        name: 'extender.extends'
+        class: Evoweb\SfRegister\Domain\Model\FrontendUser

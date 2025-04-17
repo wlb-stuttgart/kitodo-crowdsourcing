@@ -1,0 +1,44 @@
+# Adding additional fields to sf_register plugins field list.
+
+plugin.tx_sfregister.view.layoutRootPaths {
+  50 = EXT:crowdsourcing/Resources/Private/Extensions/SFRegister/Layouts/
+}
+
+plugin.tx_sfregister.view.templateRootPaths {
+  50 = EXT:crowdsourcing/Resources/Private/Extensions/SFRegister/Templates/
+}
+
+plugin.tx_sfregister.view.partialRootPaths {
+  50 = EXT:crowdsourcing/Resources/Private/Extensions/SFRegister/Partials/
+  51 = EXT:crowdsourcing/Resources/Private/Partials/
+}
+
+
+plugin.tx_sfregister.settings.fields.configuration {
+   extending {
+      partial = Extending
+      backendLabel = LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_be.xlf:extending
+   }
+}
+
+plugin.tx_sfregister.settings {
+    validation.create {
+        username {
+            1 = "Evoweb.SfRegister:Required"
+            2 = "StringLength", options={"minimum": 8, "maximum": 80}
+            3 = "Wlb.Crowdsourcing:UniqueUsername"
+       }
+    }
+
+    validation.edit {
+         username {
+            1 = "Evoweb.SfRegister:Required"
+            2 = "StringLength", options={"minimum": 8, "maximum": 80}
+            3 = "Wlb.Crowdsourcing:UniqueUsername"
+         }
+    }
+
+    crowdsourcingUserGroup = {$plugin.tx_crowdsourcing.settings.crowdsourcingUserGroup}
+    crowdsourcingLogin = {$plugin.tx_crowdsourcing.settings.crowdsourcingLogin}
+
+}

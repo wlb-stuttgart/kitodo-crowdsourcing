@@ -29,3 +29,7 @@ ExtensionUtility::configurePlugin(
     [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'index,listCampaigns,showCampaignDetails, listProcesses, editMetadata, saveForm'],
     [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'index,listCampaigns,showCampaignDetails, listProcesses, editMetadata, saveForm']
 );
+
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserTSConfig(
+    '@import \'EXT:crowdsourcing/Configuration/TypoScript/sfregister.typoscript\''
+);

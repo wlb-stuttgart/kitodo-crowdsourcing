@@ -22,3 +22,10 @@ CREATE TABLE tx_crowdsourcing_domain_model_metadataconfiguration (
     name        varchar(255)    DEFAULT '',
     json        JSON
 );
+
+#
+# Table structure for table 'fe_users'
+#
+CREATE TABLE fe_users (
+    extending varchar(60) DEFAULT '',
+);

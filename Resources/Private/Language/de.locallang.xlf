@@ -13,6 +13,10 @@
 			<source>Edit</source>
             <target>Bearbeiten</target>
 		</trans-unit>
+        <trans-unit id="error_notunique_global">
+             <source>The %1$s is not unique</source>
+            <target>Il campo %1$s non è univoco</target>
+        </trans-unit>
 		</body>
 	</file>
 </xliff>

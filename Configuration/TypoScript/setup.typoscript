@@ -16,6 +16,24 @@ plugin.tx_crowdsourcing {
   persistence {
     storagePid = {$plugin.tx_crowdsourcing.persistence.storagePid}
   }
+
+}
+
+plugin.tx_crowdsourcing_campaigns {
+    settings {
+        crowdsourcingUserGroup = {$plugin.tx_crowdsourcing.settings.crowdsourcingUserGroup}
+        crowdsourcingLogin = {$plugin.tx_crowdsourcing.settings.crowdsourcingLogin}
+    }
+}
+
+page.includeCSS {
+    bootstrap   = EXT:crowdsourcing/Resources/Public/CSS/Bootstrap/bootstrap.min.css
+    fontawesome = EXT:crowdsourcing/Resources/Public/CSS/Fontawesome/all.min.css
+}
+
+page.includeJSFooter {
+    bootstrap = EXT:crowdsourcing/Resources/Public/JavaScript/bootstrap.min.js
+    #fontawesome = EXT:crowdsourcing/Resources/Public/CSS/Fontawesome/all.min.js
 }
 
 
@@ -26,5 +44,5 @@ module.tx_crowdsourcing {
     }
 }
 
-plugin.tx_crowdsourcing_campaigns {
-}
+@import 'EXT:crowdsourcing/Configuration/TypoScript/sfregister.typoscript'
+@import 'EXT:crowdsourcing/Configuration/TypoScript/felogin.typoscript'
