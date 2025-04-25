@@ -2,17 +2,18 @@
 
 namespace Wlb\Crowdsourcing\Domain\Repository;
 
-use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 {
 
     /**
      * @param $identifiers
-     * @return array|object[]|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     * @return array|object[]|QueryResultInterface
+     * @throws InvalidQueryException
      */
-    public function findByIdentifierList($identifiers)
+    public function findByIdentifierList($identifiers): QueryResultInterface|array
     {
         $query = $this->createQuery();
 
