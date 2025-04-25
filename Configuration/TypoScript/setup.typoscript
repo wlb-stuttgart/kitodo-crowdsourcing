@@ -29,11 +29,20 @@ plugin.tx_crowdsourcing_campaigns {
 page.includeCSS {
     bootstrap   = EXT:crowdsourcing/Resources/Public/CSS/Bootstrap/bootstrap.min.css
     fontawesome = EXT:crowdsourcing/Resources/Public/CSS/Fontawesome/all.min.css
+    datetimepicker = EXT:crowdsourcing/Resources/Public/CSS/Datetimepicker/jquery.datetimepicker.min.css
+    ol = EXT:crowdsourcing/Resources/Public/CSS/Openlayer/ol.css
+}
+
+page.includeJS {
+    jquery = EXT:crowdsourcing/Resources/Public/JavaScript/Jquery/jquery-1.12.4.min.js
+    ol = EXT:crowdsourcing/Resources/Public/JavaScript/Openlayer/ol-10.5.0.min.js
 }
 
 page.includeJSFooter {
-    bootstrap = EXT:crowdsourcing/Resources/Public/JavaScript/bootstrap.min.js
-    #fontawesome = EXT:crowdsourcing/Resources/Public/CSS/Fontawesome/all.min.js
+    bootstrap = EXT:crowdsourcing/Resources/Public/JavaScript/Bootstrap/bootstrap.min.js
+    datetimepicker = EXT:crowdsourcing/Resources/Public/JavaScript/Datetimepicker/jquery.datetimepicker.full.min.js
+    fontawesome = EXT:crowdsourcing/Resources/Public/JavaScript/Fontawesome/all.min.js
+    main = EXT:crowdsourcing/Resources/Public/JavaScript/main.js
 }
 
 
