@@ -38,6 +38,7 @@
         </div>
         <div class="col">
             <f:form action="saveForm" id="{process.type}">
+                <f:form.hidden name="process" value="{process.uid}" />
                 <f:for each="{dbConfig.{process.type}}" as="metadata" key="metadataId">
                     <f:if condition="{metadata.active}">
                         <div id="{metadataId}" class="form-group metadata-group metadatafield-{metadataId} pb-4 {f:if(condition: '{metadata.children}', then: 'group-with-children')}">
@@ -81,7 +82,8 @@
                                                         {metadataChild.label} ({metadataChild.minOccurs} / {metadataChild.maxOccurs})
                                                     </label>
                                                     <f:variable name="child">1</f:variable>
-                                                    <f:for each="{v:iterator.range(low: 1, high: metadataChild.maxOccurs)}" as="j">
+                                                    <f:variable name="maxOccurs">{metadataChild.maxOccurs - 1}</f:variable>
+                                                    <f:for each="{v:iterator.range(low: 0, high: maxOccurs)}" as="j">
                                                         <div class="metadataChildField">
                                                             <div class="input-group pb-2">
                                                                 <f:if condition="{j} > {metadataChild.minOccurs}">

@@ -98,6 +98,8 @@ class ProcessImportService
             return false;
         }
 
+        // TODO: Extract kitodo xmlns from meta.xml and add it to kitodo:kitodo
+        // TODO: Otherwise, adding new child nodes becomes problematic
         $xpathDoc = new \DOMXPath($xmlDoc);
         $xpathDoc->registerNamespace('kitodo', 'http://meta.kitodo.org/v1/');
         $xpathDoc->registerNamespace('mets', 'http://www.loc.gov/METS/');

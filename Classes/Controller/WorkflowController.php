@@ -127,7 +127,7 @@ class WorkflowController extends ActionController
                 foreach ($xpath->query('//*[@name="'.$metadataKey.'"]') as $metadataValue) {
                     foreach ($metadataValue->childNodes as $metadataChildValue) {
                         if ($metadataChildValue->nodeType != XML_TEXT_NODE) {
-                            $formValues[$metadataKey][$i][$metadataChildValue->getAttribute('name')] = $metadataChildValue->nodeValue;
+                            $formValues[$metadataKey][$i][$metadataChildValue->getAttribute('name')][] = $metadataChildValue->nodeValue;
                         }
                     }
                     $i++;
@@ -168,10 +168,17 @@ class WorkflowController extends ActionController
 
     public function saveFormAction(): ResponseInterface
     {
-        $untrustedMetadata = $this->request->getParsedBody()['metadata'];
         $trustedMetadata = $this->request->getArgument('metadata');
+        $processId = $this->request->getArgument('process');
 
-        debug($trustedMetadata);
+//        debug($processId);
+//        debug($trustedMetadata);
+
+        $process = $this->processRepository->findByUid($processId);
+        $process->updateMetadata($trustedMetadata);
+
+//        $this->updateProcessMetadata($process, $trustedMetadata);
+
 
         // delete old dataset (for history)
         // create new dataset

@@ -62,7 +62,11 @@ function openLayer() {
 function clickEvents() {
 
     // Hide all empty input fields which are not required
-    $('input.processForm:not([required]):not([data-required="1"])[value=""]').parent().hide();
+    $('input.processForm:not([required]):not([data-required="1"])').each(function () {
+        if ($(this).val() === '') {
+            $(this).parent().hide();
+        }
+    });
 
     // Hide all metadata groups with empty input fields
     $('div.group-with-children .child-group').each(function() {

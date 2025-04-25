@@ -156,4 +156,99 @@ class Process extends AbstractEntity
 
         return $processImagesInfo;
     }
+
+    public function updateMetadata(Array $metadataArray)
+    {
+        $sxe = simplexml_load_string($this->metadata);
+
+        // TODO: Consider whether you could clean the array first, i.e. remove the empty values
+
+        foreach ($metadataArray as $metadataKey => $metadata) {
+            if (is_array($metadata[0])) {
+//                debug($metadataKey);debug($metadata);
+                $availableGroups = $sxe->xpath('*[@name="' . $metadataKey . '"]');
+
+                foreach ($metadata as $metadataGroupCount => $metadataGroupFields) {
+
+                    if (array_key_exists($metadataGroupCount, $availableGroups)) {
+                        // metadata group exist // override values or create metadata node if it doesnt exist
+                        foreach ($metadataGroupFields as $subMetadataKey => $subMetadata) {
+                            $availableElements = $availableGroups[$metadataGroupCount]->xpath('*[@name="' . $subMetadataKey . '"]');
+
+                            if (is_array($availableElements)) {
+                                // check each value
+                                $j = 0;
+                                foreach ($subMetadata as $subMetadataField) {
+                                    if (!empty($subMetadata[$j])) {
+                                        if ($availableElements[$j]) {
+                                            $availableElements[$j][0] = $subMetadata[$j];
+                                        } else {
+                                            // missing field for sub metadata
+                                            $availableGroups[$metadataGroupCount]->addChild('kitodo:metadata', $subMetadata[$j])->addAttribute('name', $subMetadataKey);
+                                        }
+                                    }
+                                    $j++;
+                                }
+
+                            } else {
+                                // No avaiable element ?? create it inside group
+                                $j = 0;
+                                foreach ($subMetadata as $subMetadataField) {
+                                    if (!empty($subMetadata[$j])) {
+                                        $availableGroups[$metadataGroupCount]->addChild('kitodo:metadata', $subMetadata[$j])->addAttribute('name', $subMetadataKey);
+                                    }
+                                    $j++;
+                                }
+
+                            }
+                        }
+                    } else {
+                        // metadata group doesnt exist / create metadata group
+                        $createNodeArray = [];
+                        $createGroup = false;
+                        $i = 0;
+                        foreach ($metadataGroupFields as $subMetadataKey => $subMetadata) {
+                            if (!empty($subMetadata)) {
+                                $j = 0;
+                                foreach ($subMetadata as $subMetadataField) {
+                                    if (!empty($subMetadata[$j])) {
+                                        $createGroup = true;
+                                        $createNodeArray[$i.$j]['name'] = $subMetadataKey;
+                                        $createNodeArray[$i.$j]['value'] = $subMetadata[$j];
+                                    }
+                                    $j++;
+                                }
+                            }
+                            $i++;
+                        }
+                        if ($createGroup) {
+                            $group = $sxe->addChild('kitodo:metadataGroup', '');
+                            $group->addAttribute('name', $metadataKey);
+
+                            foreach ($createNodeArray as $node) {
+                                $group->addChild('kitodo:metadata', $node['value'])->addAttribute('name', $node['name']);
+                            }
+                        }
+
+                    }
+                }
+
+            } else {
+                $availableElements = $sxe->xpath('*[@name="' . $metadataKey . '"]');
+                $i = 0;
+                foreach ($metadata as $subMetadata) {
+                    if (!empty($subMetadata)) {
+                        if (array_key_exists($i, $availableElements)) {
+                            $availableElements[$i][0] = $subMetadata;
+                        } else {
+                            $sxe->addChild('kitodo:metadata', $subMetadata)->addAttribute('name', $metadataKey);
+                        }
+                        $i++;
+                    }
+                }
+            }
+        }
+
+
+    }
 }
