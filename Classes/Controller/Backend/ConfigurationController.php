@@ -131,8 +131,7 @@ class ConfigurationController extends ActionController
                     $rulesetRemoved[$key] = array_diff_key($dbDocumentConfiguration, $configurationRuleset[$key]);
                 } else {
                     $missingDocType[$key] = $key;
-//                    // TODO: Remove dbDocumentConfiguration for the given key, if its not existing anymore??
-//                    var_dump('Key not found: ' . $key);
+                    // TODO: Remove dbDocumentConfiguration for the given key, if its not existing anymore??
                 }
             }
 
@@ -152,10 +151,6 @@ class ConfigurationController extends ActionController
             } else {
                 $config = $dbConfigArray;
             }
-
-            /** demo only -- should be moved to frontend if process/campaign is available */
-//            $this->view->assign('jsonConfig', $dbConfiguration->getJson());
-            /** demo only */
         }
 
         $this->view->assign('rulesetConfig', $configurationRuleset);
@@ -199,6 +194,7 @@ class ConfigurationController extends ActionController
             $metadataConfigurationObject = $queryResult->getFirst();
             $metadataConfigurationObject->setName("Name");
             $metadataConfigurationObject->setJson(json_encode($metadataConfiguration));
+
             $this->metadataConfigurationRepository->update($metadataConfigurationObject);
         }
 
