@@ -171,23 +171,8 @@ class WorkflowController extends ActionController
         $trustedMetadata = $this->request->getArgument('metadata');
         $processId = $this->request->getArgument('process');
 
-//        debug($processId);
-//        debug($trustedMetadata);
-
         $process = $this->processRepository->findByUid($processId);
         $process->updateMetadata($trustedMetadata);
-
-//        $this->updateProcessMetadata($process, $trustedMetadata);
-
-
-        // delete old dataset (for history)
-        // create new dataset
-
-
-
-
-
-        exit;
 
         return (new ForwardResponse('index'));
     }
