@@ -3,13 +3,18 @@
 namespace Wlb\Crowdsourcing\Domain\Model;
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Frontend\Exception;
+use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
+use Wlb\Crowdsourcing\Domain\Repository\FrontendUserRepository;
+use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 
 class Process extends AbstractEntity
 {
     const WORKFLOW_STATE_NEW = 'NEW';
-    const WORKFLOW_STATE_CORRECTION  = 'CORRECTION';
-    const WORKFLOW_STATE_FINAL_CORRECTION= 'FINAL_CORRECTION';
+    const WORKFLOW_STATE_CORRECTION = 'CORRECTION';
+    const WORKFLOW_STATE_FINAL_CORRECTION = 'FINAL_CORRECTION';
+    const WORKFLOW_STATE_COMPLETED = 'COMPLETED';
 
     /**
      * @var string
@@ -39,12 +44,17 @@ class Process extends AbstractEntity
     /**
      * @var string Metadata in JSON-Format
      */
-    protected $metadata;
+    protected $metadata = '';
 
     /**
      * @var \Wlb\Crowdsourcing\Domain\Model\Campaign
      */
     protected $campaign;
+
+    /**
+     * @var \Wlb\Crowdsourcing\Domain\Model\FrontendUser|null
+     */
+    protected $feUser;
 
     /**
      * Get the campaign associated with this process.
@@ -106,6 +116,17 @@ class Process extends AbstractEntity
         $this->state = $state;
     }
 
+    public function setNextState(): void
+    {
+        if ($this->state === self::WORKFLOW_STATE_NEW) {
+            $this->state = self::WORKFLOW_STATE_CORRECTION;
+        } else if ($this->state === self::WORKFLOW_STATE_CORRECTION) {
+            $this->state = self::WORKFLOW_STATE_FINAL_CORRECTION;
+        } else if ($this->state === self::WORKFLOW_STATE_FINAL_CORRECTION) {
+            $this->state = self::WORKFLOW_STATE_COMPLETED;
+        }
+    }
+
     public function getType(): string
     {
         return $this->type;
@@ -114,6 +135,32 @@ class Process extends AbstractEntity
     public function setType(string $type): void
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return \Wlb\Crowdsourcing\Domain\Model\FrontendUser|null
+     */
+    public function getFeUser(): \Wlb\Crowdsourcing\Domain\Model\FrontendUser|null
+    {
+        return $this->feUser;
+    }
+
+    /**
+     * @param \Wlb\Crowdsourcing\Domain\Model\FrontendUser $feUser
+     */
+    public function setFeUser(\Wlb\Crowdsourcing\Domain\Model\FrontendUser $feUser): void
+    {
+        $this->feUser = $feUser;
+    }
+
+    public function hasFeUser(): bool
+    {
+        return (bool)$this->feUser;
+    }
+
+    public function resetFeUser(): void
+    {
+        $this->feUser = 0;
     }
 
     public function getMetadata(): string
@@ -165,7 +212,6 @@ class Process extends AbstractEntity
 
         foreach ($metadataArray as $metadataKey => $metadata) {
             if (is_array($metadata[0])) {
-//                debug($metadataKey);debug($metadata);
                 $availableGroups = $sxe->xpath('*[@name="' . $metadataKey . '"]');
 
                 foreach ($metadata as $metadataGroupCount => $metadataGroupFields) {
@@ -249,6 +295,22 @@ class Process extends AbstractEntity
             }
         }
 
+        $this->setMetadata($sxe->saveXML());
 
+    }
+
+    public function toArray()
+    {
+        return [
+            'uid' => $this->getUid(),
+            'title' => $this->getTitle(),
+            'identifier' => $this->getIdentifier(),
+            'images' => $this->getImages(),
+            'state' => $this->getState(),
+            'type' => $this->getType(),
+            'metadata' => $this->getMetadata(),
+            'campaign' => $this->getCampaign()?->getUid(),
+            'feUser' => $this->getFeUser()?->getUid(),
+        ];
     }
 }

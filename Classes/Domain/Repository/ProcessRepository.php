@@ -23,6 +23,7 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             $query->matching(
                 $query->in('identifier', $identifiers)
             );
+
             return $query->execute();
         }
     }

@@ -1,5 +1,8 @@
 
 $( document ).ready(function() {
+
+    FontAwesomeConfig = { autoReplaceSvg: false }
+
     clickEvents();
 
     openLayer();

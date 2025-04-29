@@ -41,8 +41,8 @@ page.includeJS {
 page.includeJSFooter {
     bootstrap = EXT:crowdsourcing/Resources/Public/JavaScript/Bootstrap/bootstrap.min.js
     datetimepicker = EXT:crowdsourcing/Resources/Public/JavaScript/Datetimepicker/jquery.datetimepicker.full.min.js
-    fontawesome = EXT:crowdsourcing/Resources/Public/JavaScript/Fontawesome/all.min.js
     main = EXT:crowdsourcing/Resources/Public/JavaScript/main.js
+    #fontawesome = EXT:crowdsourcing/Resources/Public/JavaScript/Fontawesome/all.min.js
 }
 
 

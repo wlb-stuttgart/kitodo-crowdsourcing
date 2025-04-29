@@ -6,16 +6,26 @@ use \DOMDocument;
 use \DOMXPath;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
+use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
+use TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use Wlb\Crowdsourcing\Common\Solr\SolrSearcher;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
+use Wlb\Crowdsourcing\Domain\Model\MetadataConfiguration;
 use Wlb\Crowdsourcing\Domain\Model\Process;
+use Wlb\Crowdsourcing\Domain\Model\ProcessHistory;
 use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
+use Wlb\Crowdsourcing\Domain\Repository\FrontendUserRepository;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
+use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 use Wlb\Crowdsourcing\Services\AccessControlService;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
+use Wlb\Crowdsourcing\Services\ProcessHistoryService;
 use Wlb\Crowdsourcing\Services\SearchService;
 
 class WorkflowController extends ActionController
@@ -26,10 +36,14 @@ class WorkflowController extends ActionController
         private readonly ProcessRepository $processRepository,
         private readonly MetadataConfigurationRepository $metadataConfigurationRepository,
         private readonly SearchService $searchService,
-        private readonly AccessControlService $accessControlService
+        private readonly AccessControlService $accessControlService,
+        private readonly Context $context,
+        private readonly FrontendUserRepository $frontendUserRepository,
+        private readonly PersistenceManager $persistenceManager,
+        private readonly ProcessHistoryRepository $processHistoryRepository,
+        private readonly ProcessHistoryService $processHistoryService
     )
     {
-
     }
 
     protected function initializeAction()
@@ -66,6 +80,12 @@ class WorkflowController extends ActionController
      */
     public function listProcessesAction(string $query = '')
     {
+        $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
+        /** @var FrontendUser $user */
+        $feUser = $this->frontendUserRepository->findByUid($userId);
+
+        $this->view->assign('currentUser', $feUser);
+
         $processes = $this->searchService->searchProcesses($query);
 
         $this->view->assign("processes", $processes);
@@ -95,8 +115,33 @@ class WorkflowController extends ActionController
         $this->view->assign('campaign', $campaign);
     }
 
+    /**
+     * @throws AspectNotFoundException
+     * @throws UnknownObjectException
+     * @throws IllegalObjectTypeException
+     */
     public function editMetadataAction(Process $process): ResponseInterface
     {
+        $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
+        /** @var FrontendUser $user */
+        $feUser = $this->frontendUserRepository->findByUid($userId);
+
+        if ($process->hasFeUser() && $process->getFeUser() !== $feUser) {
+            throw new \Exception('Process already taken');
+        }
+
+        // check if user is currently editing
+        $currentlyEditingProcess = $this->processRepository->findOneByFeUser($feUser);
+        if ($currentlyEditingProcess && $currentlyEditingProcess !== $process) {
+            // TODO: The user should be asked whether the process currently being processed should be released
+            throw new \Exception('User is already editing another process');
+        }
+
+        $process->setFeUser($feUser);
+        $this->processRepository->update($process);
+
+//        $this->persistenceManager->persistAll();
+
         $queryResult = $this->metadataConfigurationRepository->findAll();
         if ($queryResult->count() !== 0) {
             /** @var MetadataConfiguration $dbConfiguration */
@@ -166,13 +211,46 @@ class WorkflowController extends ActionController
         return $processImagesInfo;
     }
 
+    /**
+     * @throws UnknownObjectException
+     * @throws NoSuchArgumentException
+     * @throws IllegalObjectTypeException
+     */
     public function saveFormAction(): ResponseInterface
     {
         $trustedMetadata = $this->request->getArgument('metadata');
         $processId = $this->request->getArgument('process');
-
+        /* @var $process \Wlb\Crowdsourcing\Domain\Model\Process */
         $process = $this->processRepository->findByUid($processId);
-        $process->updateMetadata($trustedMetadata);
+
+        if ($this->request->hasArgument('abort')) {
+            $process->resetFeUser();
+        }
+
+        if ($this->request->hasArgument('cache')) {
+            $process->updateMetadata($trustedMetadata);
+        }
+
+        if ($this->request->hasArgument('save')) {
+            $process->updateMetadata($trustedMetadata);
+
+            $processHistory = new ProcessHistory();
+            $data = $process->toArray();
+
+            // add data from process to processHistory
+            $this->processHistoryService->restoreFromArray($processHistory, $data);
+
+            // save process history
+            $this->processHistoryRepository->add($processHistory);
+            $this->persistenceManager->persistAll();
+
+            // Remove user
+            $process->resetFeUser();
+            // Set process to next state
+            $process->setNextState();
+        }
+
+        $this->processRepository->update($process);
 
         return (new ForwardResponse('index'));
     }
