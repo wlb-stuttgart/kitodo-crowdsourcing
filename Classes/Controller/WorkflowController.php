@@ -83,11 +83,17 @@ class WorkflowController extends ActionController
         $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
         /** @var FrontendUser $user */
         $feUser = $this->frontendUserRepository->findByUid($userId);
-
         $this->view->assign('currentUser', $feUser);
 
         $processes = $this->searchService->searchProcesses($query);
 
+        $processEditAllowedByCurrentUser = [];
+        foreach ($processes as $process) {
+            $allowed = $this->processHistoryService->hasUserAlreadyEdited($process, $feUser);
+            $processEditAllowedByCurrentUser[$process->getUid()] = !$allowed;
+        }
+
+        $this->view->assign('editAllowed', $processEditAllowedByCurrentUser);
         $this->view->assign("processes", $processes);
 
         $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');

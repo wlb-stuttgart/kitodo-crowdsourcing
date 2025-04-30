@@ -2,15 +2,18 @@
 
 namespace Wlb\Crowdsourcing\Services;
 
+use Wlb\Crowdsourcing\Domain\Model\FrontendUser;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
 use Wlb\Crowdsourcing\Domain\Repository\FrontendUserRepository;
+use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
 
 class ProcessHistoryService
 {
     public function __construct(
         private CampaignRepository     $campaignRepository,
-        private FrontendUserRepository $frontendUserRepository
+        private FrontendUserRepository $frontendUserRepository,
+        private ProcessHistoryRepository $processHistoryRepository
     )
     {
     }
@@ -56,10 +59,22 @@ class ProcessHistoryService
         }
     }
 
-
-    public function fromArray(array $data): void
+    public function hasUserAlreadyEdited(Process $process, FrontendUser $feUser)
     {
+        $processHistories = $this->processHistoryRepository->findByRecordIdentifier($process->getRecordIdentifier());
+        $hasEdited = false;
+
+        /* @var \Wlb\Crowdsourcing\Domain\Model\ProcessHistory $processHistory */
+        foreach ($processHistories as $processHistory) {
+            if ($processHistory->getFeUser() === $feUser) {
+                $hasEdited = true;
+                break;
+            }
+        }
+
+        return $hasEdited;
 
     }
+
 
 }
