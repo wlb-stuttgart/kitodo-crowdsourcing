@@ -133,7 +133,7 @@ class ProcessImportService
                 $process->setType($typeNodes->item(0)->nodeValue);
                 $this->processRepository->add($process);
 
-                $this->indexer->indexDocument($process->getIdentifier(), $process->getMetadata());
+                $this->indexer->indexDocument($process->getRecordIdentifier(), $process->getMetadata());
             }
             $this->persistenceManager->persistAll();
         } catch (\Throwable $throwable) {

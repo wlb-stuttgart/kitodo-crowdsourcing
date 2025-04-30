@@ -21,7 +21,7 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             return [];
         } else {
             $query->matching(
-                $query->in('identifier', $identifiers)
+                $query->in('recordIdentifier', $identifiers)
             );
 
             return $query->execute();

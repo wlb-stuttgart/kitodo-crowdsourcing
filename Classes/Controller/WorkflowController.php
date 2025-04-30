@@ -197,7 +197,7 @@ class WorkflowController extends ActionController
         $processImagesInfo = [];
         $i = 0;
         foreach ($process->getImages() as $image) {
-            $path = $importedPath .'/'. $process->getIdentifier() . '/images/' . $image;
+            $path = $importedPath .'/'. $process->getRecordIdentifier() . '/images/' . $image;
             $type = pathinfo($path, PATHINFO_EXTENSION);
             $data = file_get_contents($path);
             $processImagesInfo[$i]['image'] = 'data:image/' . $type . ';base64,' . base64_encode($data);

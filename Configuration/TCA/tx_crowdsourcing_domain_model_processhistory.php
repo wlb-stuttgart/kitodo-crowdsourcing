@@ -26,7 +26,7 @@ $tca = [
         '1' => [
             'showitem' =>
                 '--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
-                    title, identifier, images, state, type, metadata, campaign, fe_user,
+                    title, record_identifier, images, state, type, metadata, campaign, fe_user,
                  --div--;LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.tabs.access,
                     --palette--;;hidden,
                     --palette--;;access,',
@@ -136,8 +136,8 @@ $tca = [
                 'required' => true,
             ],
         ],
-        'identifier' => [
-            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.identifier',
+        'record_identifier' => [
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.record_identifier',
             'config' => [
                 'type' => 'input',
                 'size' => 20,

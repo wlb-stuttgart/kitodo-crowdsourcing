@@ -24,7 +24,7 @@ class Process extends AbstractEntity
     /**
      * @var string
      */
-    protected $identifier;
+    protected $recordIdentifier = '';
 
     /**
      * @var string List of images
@@ -86,14 +86,14 @@ class Process extends AbstractEntity
         $this->title = $title;
     }
 
-    public function getIdentifier(): string
+    public function getRecordIdentifier(): string
     {
-        return $this->identifier;
+        return $this->recordIdentifier;
     }
 
-    public function setIdentifier(string $identifier): void
+    public function setRecordIdentifier(string $recordIdentifier): void
     {
-        $this->identifier = $identifier;
+        $this->recordIdentifier = $recordIdentifier;
     }
 
     public function getImages(): array
@@ -190,7 +190,7 @@ class Process extends AbstractEntity
         $processImagesInfo = [];
         $i = 0;
         foreach ($this->getImages() as $image) {
-            $path = $importedPath .'/'. $this->getIdentifier() . '/images/' . $image;
+            $path = $importedPath .'/'. $this->getRecordIdentifier() . '/images/' . $image;
             $type = pathinfo($path, PATHINFO_EXTENSION);
             $data = file_get_contents($path);
             $processImagesInfo[$i]['image'] = 'data:image/' . $type . ';base64,' . base64_encode($data);
@@ -304,7 +304,7 @@ class Process extends AbstractEntity
         return [
             'uid' => $this->getUid(),
             'title' => $this->getTitle(),
-            'identifier' => $this->getIdentifier(),
+            'identifier' => $this->getRecordIdentifier(),
             'images' => $this->getImages(),
             'state' => $this->getState(),
             'type' => $this->getType(),

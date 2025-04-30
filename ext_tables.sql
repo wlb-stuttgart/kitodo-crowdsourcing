@@ -9,25 +9,25 @@ CREATE TABLE tx_crowdsourcing_domain_model_campaign (
 );
 
 CREATE TABLE tx_crowdsourcing_domain_model_process (
-    title       varchar(255)    DEFAULT ''  NOT NULL,
-    identifier  varchar(255),
-    images      text,
-    state       varchar(255),
-    type        varchar(255),
-    metadata    MEDIUMTEXT      DEFAULT '0' NOT NULL,
-    campaign    int(11)         DEFAULT '0' NOT NULL,
-    fe_user     int(11)         DEFAULT '0' NOT NULL
+    title               varchar(255)    DEFAULT ''  NOT NULL,
+    record_identifier   varchar(255),
+    images              text,
+    state               varchar(255),
+    type                varchar(255),
+    metadata            MEDIUMTEXT      DEFAULT '0' NOT NULL,
+    campaign            int(11)         DEFAULT '0' NOT NULL,
+    fe_user             int(11)         DEFAULT '0' NOT NULL
 );
 
 CREATE TABLE tx_crowdsourcing_domain_model_processhistory (
-    title       varchar(255)    DEFAULT ''  NOT NULL,
-    identifier  varchar(255),
-    images      text,
-    state       varchar(255),
-    type        varchar(255),
-    metadata    MEDIUMTEXT      DEFAULT '0' NOT NULL,
-    campaign    int(11)         DEFAULT '0' NOT NULL,
-    fe_user     int(11)         DEFAULT '0' NOT NULL
+    title               varchar(255)    DEFAULT ''  NOT NULL,
+    record_identifier   varchar(255),
+    images              text,
+    state               varchar(255),
+    type                varchar(255),
+    metadata            MEDIUMTEXT      DEFAULT '0' NOT NULL,
+    campaign            int(11)         DEFAULT '0' NOT NULL,
+    fe_user             int(11)         DEFAULT '0' NOT NULL
 );
 
 CREATE TABLE tx_crowdsourcing_domain_model_metadataconfiguration (
