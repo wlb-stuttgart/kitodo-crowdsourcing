@@ -39,5 +39,14 @@
         "typo3/cms": {
             "extension-key": "crowdsourcing"
         }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "typo3/cms-composer-installers": true,
+            "typo3/class-alias-loader": true
+        }
     }
 }
