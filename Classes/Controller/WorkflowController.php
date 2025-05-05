@@ -50,15 +50,15 @@ class WorkflowController extends ActionController
     {
         parent::initializeAction();
 
-        if (!$this->accessControlService->isCrowdsourcingUser()) {
-            die("Access denied");
-        }
+        //if (!$this->accessControlService->isCrowdsourcingUser()) {
+        //    die("Access denied");
+        //}
     }
 
     /**
      * @return void
      */
-    public function indexAction()
+    public function landingPageAction()
     {
     }
 

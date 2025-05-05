@@ -1,7 +1,7 @@
 
 $( document ).ready(function() {
 
-    FontAwesomeConfig = { autoReplaceSvg: false }
+    FontAwesomeConfig = {autoReplaceSvg: false}
 
     clickEvents();
 
@@ -9,22 +9,39 @@ $( document ).ready(function() {
 
     datePicker();
 
+
+    generateSectionLinks();
+
+    $(window).on('scroll resize load', function () {
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(checkScrollArrows, 100);
+    });
+
+    $('.scroll-arrow-up').on('click', scrollToPreviousSection);
+    $('.scroll-arrow-down').on('click', scrollToNextSection);
+
+    $('#navbarNav .nav-link').on('click', function () {
+        if (isMobile()) {
+            $('.navbar-toggler').trigger('click');  // Collapse the mobile menu
+        }
+    });
+
 });
 
 function datePicker() {
     $('.datepicker').datetimepicker({
-        timepicker:false,
-        format:'d.m.Y',
+        timepicker: false,
+        format: 'd.m.Y',
         yearStart: 500,
         closeOnDateSelect: false,
         closeOnWithoutClick: true,
-        onSelectDate:function(ct,input){
+        onSelectDate: function (ct, input) {
             this.setOptions({format: 'd.m.Y'});
-            input.currentValue = ('0' + (ct.getDay()+1)).slice(-2) + '.' + ('0' + (ct.getMonth()+1)).slice(-2) + '.' + ct.getFullYear();
+            input.currentValue = ('0' + (ct.getDay() + 1)).slice(-2) + '.' + ('0' + (ct.getMonth() + 1)).slice(-2) + '.' + ct.getFullYear();
         },
         onChangeMonth: function (ct, input) {
             this.setOptions({format: 'm.Y'});
-            input.currentValue = ('0' + (ct.getMonth()+1)).slice(-2) + '.' + ct.getFullYear();
+            input.currentValue = ('0' + (ct.getMonth() + 1)).slice(-2) + '.' + ct.getFullYear();
             input.val(input.currentValue);
         },
         onChangeYear: function (ct, input) {
@@ -70,7 +87,7 @@ function openLayer() {
         target: 'map',
         view: new ol.View({
             projection: projection,
-            center: [1000,1000],
+            center: [1000, 1000],
             zoom: 0,
             maxZoom: 6,
         }),
@@ -168,3 +185,82 @@ function clickEvents() {
     });
 
 }
+
+// Landing page
+var navbarHeight = 60;
+var isScrolling = false;
+var $navbarCollapse = $('#navbarNav');
+var scrollTimer;
+
+function isMobile() {
+    return $(window).width() <= 768;
+}
+
+function getScrollOffset() {
+    return isMobile() ? navbarHeight : 0;
+}
+
+function scrollToNextSection() {
+    if (isScrolling) return;
+    isScrolling = true;
+
+    var currentScroll = $(window).scrollTop();
+    $('.scroll-section').each(function () {
+        var sectionTop = $(this).offset().top;
+        if (sectionTop > currentScroll + getScrollOffset()) {
+            $('html, body').stop().animate({
+                scrollTop: sectionTop - getScrollOffset()
+            }, 600, function () {
+                isScrolling = false;
+            });
+            collapseNavbar();
+            return false;
+        }
+    });
+}
+
+function scrollToPreviousSection() {
+    if (isScrolling) return;
+    isScrolling = true;
+
+    var currentScroll = $(window).scrollTop();
+    var sections = $('.scroll-section').get().reverse();
+
+    $.each(sections, function (i, el) {
+        var sectionTop = $(el).offset().top;
+        if (sectionTop < currentScroll - 10) {
+            $('html, body').stop().animate({
+                scrollTop: sectionTop - getScrollOffset()
+            }, 600, function () {
+                isScrolling = false;
+            });
+            collapseNavbar();
+            return false;
+        }
+    });
+}
+
+function collapseNavbar() {
+    if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('show')) {
+        $('.navbar-toggler').trigger('click');
+    }
+}
+
+function checkScrollArrows() {
+    var scrollTop = $(window).scrollTop();
+    var windowHeight = $(window).height();
+    var docHeight = $(document).height();
+
+    $('.scroll-arrow-up').toggle(scrollTop > 0);
+    $('.scroll-arrow-down').toggle(scrollTop + windowHeight < docHeight - 1);
+}
+
+function generateSectionLinks() {
+    $('h2[id^="section-"]').each(function() {
+        const text = $(this).text();
+        const id = $(this).attr('id');
+        $('ul.navbar-nav').append(`<li class="nav-item"><a class="nav-link" href="#${id}">${text}</a></li>`);
+        $('.nav-links').append(`<a href="#${id}">${text}</a>`);
+    });
+}
+

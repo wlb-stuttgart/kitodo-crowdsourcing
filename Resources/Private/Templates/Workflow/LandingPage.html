@@ -1,0 +1,130 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+{namespace wlb=Wlb\Crowdsourcing\ViewHelpers}
+
+<f:layout name="Frontend"/>
+
+<f:section name="main">
+
+    <wlb:userInfo as="userInfo" />
+
+    <!-- Mobile Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top d-md-none">
+        <div class="container-fluid d-flex justify-content-end">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav w-100">
+                    <f:comment>
+                        Added by JavaScript due to the section with id="section-..."
+                        <li class="nav-item"><a class="nav-link" href="#">Section-Link</a></li>
+                    </f:comment>
+
+                    <f:if condition="{userInfo}">
+                        <f:then>
+                            <li class="nav-item">
+                                <f:link.page pageUid="{settings.crowdsourcingLogin}" additionalParams="{logintype: 'logout'}" noCacheHash="1" class="nav-link" title="Logout">
+                                    Logout
+                                </f:link.page>
+                            </li>
+                        </f:then>
+                        <f:else>
+                            <li class="nav-item">
+                                <f:link.page pageUid="{settings.crowdsourcingLogin}" title="Login" class="nav-link">
+                                    Login
+                                </f:link.page>
+                            </li>
+                            <li class="nav-item">
+                                <f:link.page pageUid="{settings.crowdsourcingRegister}" title="Register" class="nav-link">
+                                    Register
+                                </f:link.page>
+                            </li>
+                        </f:else>
+                    </f:if>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Fixed Login/Register -->
+    <div class="bottom-links-fixed d-none d-md-block">
+        <f:if condition="{userInfo}">
+            <f:then>
+                <f:link.page pageUid="{settings.crowdsourcingLogin}" additionalParams="{logintype: 'logout'}" noCacheHash="1" class="nav-link" title="Logout">
+                    Logout
+                </f:link.page>
+            </f:then>
+            <f:else>
+                <f:link.page pageUid="{settings.crowdsourcingLogin}" title="Login">
+                    Login
+                </f:link.page>
+                <f:link.page pageUid="{settings.crowdsourcingRegister}" title="Register">
+                    Register
+                </f:link.page>
+            </f:else>
+        </f:if>
+    </div>
+
+    <!-- Scroll Arrows -->
+    <div class="scroll-arrow scroll-arrow-up" onclick="scrollToPreviousSection()">
+        <i class="fa fa-solid fa-chevron-up"></i>
+    </div>
+    <div class="scroll-arrow scroll-arrow-down" onclick="scrollToNextSection()">
+        <i class="fa fa-solid fa-chevron-down"></i>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="container-fluid scroll-section">
+        <div class="row full-height-row">
+            <div class="col-md-3 sidebar d-none d-md-block">
+                <div class="nav-links">
+                    <f:comment>
+                        Added by JavaScript due to the section with id="section-..."
+                        <a href="#">Link</a>
+                    </f:comment>
+                </div>
+            </div>
+            <div class="col-md-9 main-content">
+                <h1>
+                    <f:translate key="landingpage.header" />
+                </h1>
+                <hr class="header" />
+                <h2 class="h4">
+                    <f:translate key="landingpage.subheader" />
+                </h2>
+                <p class="mt-4">
+                    <f:translate key="landingpage.description" />
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scrollable Sections -->
+    <div class="full-width-section section-colored scroll-section">
+        <h2 id="section-1" class="h1"><f:translate key="landingpage.about.header" /></h2>
+        <hr class="header" />
+        <h3 class="h4"><f:translate key="landingpage.about.subheader" /></h3>
+        <p class="mt-4"><f:translate key="landingpage.about.description" /></p>
+    </div>
+
+    <div class="full-width-section section-white scroll-section">
+        <h2  id="section-2" class="h1"><f:translate key="landingpage.howToContribute.header" /></h2>
+        <hr class="header" />
+        <h3 class="h4"><f:translate key="landingpage.howToContribute.subheader" /></h3>
+        <p class="mt-4"><f:translate key="landingpage.howToContribute.description" /></p>
+    </div>
+
+    <div class="full-width-section section-colored scroll-section">
+        <h2  id="section-3" class="h1 to-menu"><f:translate key="landingpage.whyContribute.header" /></h2>
+        <hr class="header" />
+        <h3 class="h4"><f:translate key="landingpage.whyContribute.subheader" /></h3>
+        <p class="mt-4"><f:translate key="landingpage.whyContribute.description" /></p>
+    </div>
+
+</f:section>
+
+</html>

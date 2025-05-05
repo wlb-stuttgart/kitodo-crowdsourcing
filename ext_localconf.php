@@ -26,8 +26,8 @@ if ($versionInformation->getMajorVersion() < 12) {
 ExtensionUtility::configurePlugin(
     'Crowdsourcing',
     'Campaigns',
-    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'index,listCampaigns,showCampaignDetails, listProcesses, editMetadata, saveForm'],
-    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'index,listCampaigns,showCampaignDetails, listProcesses, editMetadata, saveForm']
+    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'landingPage,listCampaigns,showCampaignDetails, listProcesses, editMetadata, saveForm'],
+    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'landingPage,listCampaigns,showCampaignDetails, listProcesses, editMetadata, saveForm']
 );
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserTSConfig(

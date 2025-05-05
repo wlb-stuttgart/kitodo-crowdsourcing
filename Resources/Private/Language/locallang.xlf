@@ -11,6 +11,52 @@
 		<trans-unit id="process.button.edit">
 			<source>Edit</source>
 		</trans-unit>
+		<trans-unit id="landingpage.header">
+			<source>Powering Innovation Through Crowdsourcing</source>
+		</trans-unit>
+		<trans-unit id="landingpage.subheader">
+			<source>Join a global community solving real-world problems—remotely, collaboratively, and at scale.</source>
+		</trans-unit>
+		<trans-unit id="landingpage.description">
+			<source>Crowdsourcing brings together experts, enthusiasts, and creative minds from around the world to co-create solutions in real time. Whether you're contributing ideas, skills, or insights, our platform makes it easy to participate in challenges that matter.
+                    Discover how distributed innovation can accelerate progress—for companies, researchers, and society as a whole.</source>
+		</trans-unit>
+        <trans-unit id="landingpage.about.header">
+            <source>What’s It All About?</source>
+        </trans-unit>
+        <trans-unit id="landingpage.about.subheader">
+            <source>Crowdsourcing metadata to document the history of protest posters.</source>
+        </trans-unit>
+        <trans-unit id="landingpage.about.description">
+            <source>Crowdsourcing invites people to collaboratively explore and describe political protest posters from diverse movements and eras. Through the collective input of users, we gather metadata such as location, date, actors, themes, and design elements of these visual artifacts.
+                    The result is a dynamic, searchable archive that makes political expression visible and accessible to researchers, educators, and the public.
+                    Whether you're a witness, activist, historian, or simply curious—your contribution matters. Help preserve history and make knowledge widely available.</source>
+        </trans-unit>
+        <trans-unit id="landingpage.howToContribute.header">
+            <source>How Can I Contribute?</source>
+            <target>Wie kann ich mitmachen?</target>
+        </trans-unit>
+        <trans-unit id="landingpage.howToContribute.subheader">
+            <source>Get involved with just a few clicks and help shape a digital archive.</source>
+        </trans-unit>
+        <trans-unit id="landingpage.howToContribute.description">
+            <source>Joining in is easy: Choose a poster – Select a protest poster from our digital collection.
+                    Add metadata – Contribute details like who, when, where, and what it's about. Design notes are also valuable.
+                    Save your input – Your contribution helps classify and contextualize the poster for future users.
+                    No expert knowledge required – every observation matters. Your perspective helps build a richer understanding of political visual culture. The more people participate, the more complete and diverse the archive becomes.</source>
+        </trans-unit>
+        <trans-unit id="landingpage.whyContribute.header">
+            <source>What Am I Contributing To?</source>
+        </trans-unit>
+        <trans-unit id="landingpage.whyContribute.subheader">
+            <source>Your knowledge helps make political history visible and usable.</source>
+        </trans-unit>
+        <trans-unit id="landingpage.whyContribute.description">
+            <source>By contributing, you're helping unlock an important part of cultural heritage: protest posters are more than visuals—they’re historical documents of social movements.
+                    With your help, we create valuable resources for research, education, journalism, and collective memory.
+                    You’re making knowledge accessible that might otherwise be lost—and giving past protests a documented voice in history.
+                    Your input helps preserve and reflect on political expression—and keeps it available for future generations.</source>
+        </trans-unit>
 		</body>
 	</file>
 </xliff>
