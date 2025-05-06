@@ -55,6 +55,10 @@ class WorkflowController extends ActionController
         //}
     }
 
+    public function indexAction()
+    {
+    }
+
     /**
      * @return void
      */
@@ -174,9 +178,9 @@ class WorkflowController extends ActionController
             $defaultValues = $sorted['default'];
             unset($sorted['default']);
             $sorted['default'] = $defaultValues;
-            $dbConfigArray[$processType] = $sorted;
+            $dbConfigArraySorted[$processType] = $sorted;
 
-            $this->view->assign('dbConfigTabSorted', $dbConfigArray);
+            $this->view->assign('dbConfigTabSorted', $dbConfigArraySorted);
 
         } else {
             throw new \Exception('Metadata configuration missing');
