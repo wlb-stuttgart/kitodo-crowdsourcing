@@ -9,9 +9,15 @@ $( document ).ready(function() {
 
     datePicker();
 
-
     generateSectionLinks();
 
+    scrollButtons();
+
+    tabNavigation();
+
+});
+
+function scrollButtons() {
     $(window).on('scroll resize load', function () {
         clearTimeout(scrollTimer);
         scrollTimer = setTimeout(checkScrollArrows, 100);
@@ -25,8 +31,38 @@ $( document ).ready(function() {
             $('.navbar-toggler').trigger('click');  // Collapse the mobile menu
         }
     });
+}
 
-});
+function tabNavigation() {
+    const $tabs = $('#nav-tab button');
+    let currentIndex = $tabs.index($tabs.filter('.active'));
+
+    function activateTab(index) {
+        if (index >= 0 && index < $tabs.length) {
+            $tabs.eq(index).tab('show');
+            currentIndex = index;
+        }
+    }
+
+    $('#nextBtn').on('click', function (evt) {
+        evt.preventDefault();
+        if (currentIndex < $tabs.length - 1) {
+            activateTab(currentIndex + 1);
+        }
+    });
+
+    $('#prevBtn').on('click', function (evt) {
+        evt.preventDefault();
+        if (currentIndex > 0) {
+            activateTab(currentIndex - 1);
+        }
+    });
+
+    // Aktuellen Index auch beim manuellen Tab-Wechsel aktualisieren
+    $tabs.on('shown.bs.tab', function (e) {
+        currentIndex = $tabs.index($(e.target));
+    });
+}
 
 function datePicker() {
     $('.datepicker').datetimepicker({

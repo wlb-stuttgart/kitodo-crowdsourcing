@@ -159,18 +159,18 @@ class ConfigurationController extends ActionController
         return $this->htmlResponse();
     }
 
-    public function saveDemoFormAction(): ResponseInterface
-    {
-        $untrustedMetadata = $this->request->getParsedBody()['metadata'];
-        $trustedMetadata = $this->request->getArgument('metadata');
-
-        debug($trustedMetadata);
-        debug($untrustedMetadata);
-
-        exit;
-
-        return (new ForwardResponse('index'));
-    }
+//    public function saveDemoFormAction(): ResponseInterface
+//    {
+//        $untrustedMetadata = $this->request->getParsedBody()['metadata'];
+//        $trustedMetadata = $this->request->getArgument('metadata');
+//
+//        debug($trustedMetadata);
+//        debug($untrustedMetadata);
+//
+//        exit;
+//
+//        return (new ForwardResponse('index'));
+//    }
 
 
     /**

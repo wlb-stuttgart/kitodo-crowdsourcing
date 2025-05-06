@@ -132,6 +132,8 @@ class WorkflowController extends ActionController
         /** @var FrontendUser $user */
         $feUser = $this->frontendUserRepository->findByUid($userId);
 
+        $processType = $process->getType();
+
         if ($process->hasFeUser() && $process->getFeUser() !== $feUser) {
             throw new \Exception('Process already taken');
         }
@@ -155,6 +157,27 @@ class WorkflowController extends ActionController
             $dbConfigArray = json_decode($dbConfiguration->getJson(), true);
 
             $this->view->assign('dbConfig', $dbConfigArray);
+
+            // configuration preprocessing (tabs and active metadata)
+            $sorted = [];
+
+            foreach ($dbConfigArray[$processType] as $fieldName => $meta) {
+                $tab = $meta['tab'] === '' ? 'default' : $meta['tab']; // falls kein 'tab' vorhanden ist
+                if (!isset($sorted[$tab])) {
+                    $sorted[$tab] = [];
+                }
+                $sorted[$tab][$fieldName] = $meta;
+            }
+
+            // set default at the end
+            asort($sorted);
+            $defaultValues = $sorted['default'];
+            unset($sorted['default']);
+            $sorted['default'] = $defaultValues;
+            $dbConfigArray[$processType] = $sorted;
+
+            $this->view->assign('dbConfigTabSorted', $dbConfigArray);
+
         } else {
             throw new \Exception('Metadata configuration missing');
         }

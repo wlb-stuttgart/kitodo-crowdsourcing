@@ -83,6 +83,16 @@
                             min="1" />
                 </div>
 
+                <div class="col-md-2">
+                    <label for="meta-{metadataId}-tab" class="form-label">Tabname</label>
+                    <f:form.textfield
+                            id="meta-{metadataId}-tab"
+                            class="form-control"
+                            name="metadata[{docType}][{metadataId}][tab]"
+                            value="{metadata.tab}"
+                            placeholder="Name des Tabs für Sortierung"/>
+                </div>
+
                 <!-- Regulärer Ausdruck -->
                 <div class="col-xs-6">
                     <label for="meta-{metadataId}-validation" class="form-label">Validierung (HTML5)</label>
