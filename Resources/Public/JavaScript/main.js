@@ -1,3 +1,8 @@
+// Landing page
+var navbarHeight = 60;
+var isScrolling = false;
+var $navbarCollapse = $('#navbarNav');
+var scrollTimer;
 
 $( document ).ready(function() {
 
@@ -221,12 +226,6 @@ function clickEvents() {
     });
 
 }
-
-// Landing page
-var navbarHeight = 60;
-var isScrolling = false;
-var $navbarCollapse = $('#navbarNav');
-var scrollTimer;
 
 function isMobile() {
     return $(window).width() <= 768;
