@@ -247,8 +247,14 @@ function clickEvents() {
         requiredFields.removeAttr('required');
     });
 
+    // Validate form
     $('form.processForm').on('click', function (evt) {
         validateTabs();
+    });
+
+    // Remove required on abort / No validation needed
+    $('input.abortEdit').on('click', function (evt) {
+        $('form.processForm [required]').removeAttr('required');
     });
 
 }
