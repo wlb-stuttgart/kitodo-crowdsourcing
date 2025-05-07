@@ -141,6 +141,22 @@
 }
 
 
+/* Metadata form */
+
+button.tab-error::after {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+    margin-left: 6px;
+}
+
+.form-error {
+    border: 1px solid red;
+}
+
 
 
 @media (max-width: 768px) {

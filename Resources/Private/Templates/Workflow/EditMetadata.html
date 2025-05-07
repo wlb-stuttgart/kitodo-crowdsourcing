@@ -47,7 +47,7 @@
                 </div>
             </nav>
 
-            <f:form action="saveForm" id="{process.type}">
+            <f:form action="saveForm" id="{process.type}" class="processForm">
                 <f:form.hidden name="process" value="{process.uid}" />
                 <div class="tab-content" id="nav-tabContent">
                     <f:for each="{dbConfigTabSorted.{process.type}}" as="tab" key="tabName" iteration="tabIterator">

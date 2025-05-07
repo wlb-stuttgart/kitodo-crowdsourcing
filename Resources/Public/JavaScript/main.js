@@ -22,6 +22,28 @@ $( document ).ready(function() {
 
 });
 
+function validateTabs() {
+    $('#nav-tabContent .tab-pane').each(function () {
+        const tabId = $(this).attr('id');
+        const requiredFields = $('#' + tabId).find('*[required]');
+        let hasError = false;
+
+        requiredFields.each(function () {
+            if (!$(this).val()) {
+                hasError = true;
+                $(this).addClass('form-error')
+                return false; // break loop
+            }
+        });
+
+        if (hasError) {
+            $('button#' + tabId + '-tab').addClass('tab-error');
+        } else {
+            $('button#' + tabId + '-tab').removeClass('tab-error');
+        }
+    });
+}
+
 function scrollButtons() {
     $(window).on('scroll resize load', function () {
         clearTimeout(scrollTimer);
@@ -223,6 +245,10 @@ function clickEvents() {
 
         var requiredFields = metadataGroup.find('input[required]');
         requiredFields.removeAttr('required');
+    });
+
+    $('form.processForm').on('click', function (evt) {
+        validateTabs();
     });
 
 }
