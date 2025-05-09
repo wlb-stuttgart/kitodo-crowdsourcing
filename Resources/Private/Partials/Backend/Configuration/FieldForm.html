@@ -93,6 +93,16 @@
                             placeholder="Name des Tabs für Sortierung"/>
                 </div>
 
+                <div class="col-md-2">
+                    <label for="meta-{metadataId}-facet" class="form-label">Facet</label>
+                    <f:form.textfield
+                            id="meta-{metadataId}-facet"
+                            class="form-control"
+                            name="metadata[{docType}][{metadataId}][facet]"
+                            value="{metadata.facet}"
+                            placeholder="Use as facet ( $firstname $lastname or $this)"/>
+                </div>
+
                 <!-- Regulärer Ausdruck -->
                 <div class="col-xs-6">
                     <label for="meta-{metadataId}-validation" class="form-label">Validierung (HTML5)</label>
@@ -125,7 +135,7 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{metadataChildId}" aria-expanded="true" aria-controls="collapse_{metadataChildId}">
-                            {metadataChild.label}
+                            {metadataChild.label} ({metadataChildId})
                         </button>
                     </h2>
                     <div id="collapse_{metadataChildId}" class="accordion-collapse collapse">

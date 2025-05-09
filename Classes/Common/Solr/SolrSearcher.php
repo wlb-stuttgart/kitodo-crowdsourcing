@@ -24,7 +24,7 @@ class SolrSearcher
      * @param $facetFields
      * @return ResultInterface
      */
-    public function searchWithFacets($queryString, $start = 0, $rows = 10, $facetFields = []): ResultInterface
+    public function searchWithFacets($queryString, $start = 0, $rows = 50, $facetFields = []): ResultInterface
     {
         $query = $this->client->createSelect();
 

@@ -13,6 +13,7 @@ use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
 use TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Common\Solr\SolrSearcher;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
 use Wlb\Crowdsourcing\Domain\Model\MetadataConfiguration;
@@ -41,7 +42,8 @@ class WorkflowController extends ActionController
         private readonly FrontendUserRepository $frontendUserRepository,
         private readonly PersistenceManager $persistenceManager,
         private readonly ProcessHistoryRepository $processHistoryRepository,
-        private readonly ProcessHistoryService $processHistoryService
+        private readonly ProcessHistoryService $processHistoryService,
+        private readonly SolrIndexer $solrIndexer
     )
     {
     }
@@ -166,7 +168,7 @@ class WorkflowController extends ActionController
             $sorted = [];
 
             foreach ($dbConfigArray[$processType] as $fieldName => $meta) {
-                $tab = $meta['tab'] === '' ? 'default' : $meta['tab']; // falls kein 'tab' vorhanden ist
+                $tab = $meta['tab'] === '' ? 'default' : $meta['tab'];
                 if (!isset($sorted[$tab])) {
                     $sorted[$tab] = [];
                 }
@@ -248,6 +250,7 @@ class WorkflowController extends ActionController
      * @throws UnknownObjectException
      * @throws NoSuchArgumentException
      * @throws IllegalObjectTypeException
+     * @throws \Exception
      */
     public function saveFormAction(): ResponseInterface
     {
@@ -262,6 +265,10 @@ class WorkflowController extends ActionController
 
         if ($this->request->hasArgument('cache')) {
             $process->updateMetadata($trustedMetadata);
+            $this->persistenceManager->persistAll();
+
+            // index data
+            $this->solrIndexer->indexDocument($process);
         }
 
         if ($this->request->hasArgument('save')) {
@@ -281,6 +288,10 @@ class WorkflowController extends ActionController
             $process->resetFeUser();
             // Set process to next state
             $process->setNextState();
+
+            // index data
+            $this->solrIndexer->indexDocument($process);
+
         }
 
         $this->processRepository->update($process);

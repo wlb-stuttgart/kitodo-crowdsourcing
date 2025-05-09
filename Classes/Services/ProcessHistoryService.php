@@ -25,7 +25,7 @@ class ProcessHistoryService
         }
 
         if (isset($data['identifier'])) {
-            $process->setIdentifier($data['identifier']);
+            $process->setRecordIdentifier($data['identifier']);
         }
 
         if (isset($data['images'])) {

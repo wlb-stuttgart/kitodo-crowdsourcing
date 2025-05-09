@@ -3,6 +3,8 @@
 namespace Wlb\Crowdsourcing\Common\Solr;
 
 use Wlb\Crowdsourcing\Common\XMLExtractor;
+use Wlb\Crowdsourcing\Domain\Model\Process;
+use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
 use Wlb\Crowdsourcing\Services\IndexFieldConfigReader;
 
 class SolrIndexer
@@ -19,7 +21,8 @@ class SolrIndexer
      */
     public function __construct(
         private readonly IndexFieldConfigReader $indexFieldConfigReader,
-        private readonly XMLExtractor $xmlExtractor
+        private readonly XMLExtractor $xmlExtractor,
+        private readonly MetadataConfigurationRepository $metadataConfigurationRepository
     )
     {
         $this->config = $this->indexFieldConfigReader->getConfig();
@@ -30,9 +33,9 @@ class SolrIndexer
      * @return void
      * @throws \Exception
      */
-    public function indexDocument(string $identifier, string $xmlData)
+    public function indexDocument(Process $process)
     {
-        $this->addDocument($identifier, $this->getDocument($xmlData));
+        $this->addDocument($process->getRecordIdentifier(), $this->getDocument($process));
     }
 
     /**
@@ -73,26 +76,72 @@ class SolrIndexer
      * @return array
      * @throws \JsonPath\InvalidJsonException
      */
-    public function getDocument(string $xmlData)
+    public function getDocument(Process $process)
     {
+        $xmlData = $process->getMetadata();
         $xml = simplexml_load_string($xmlData);
         $xml->registerXPathNamespace('kitodo', 'http://meta.kitodo.org/v1/');
 
         $result = [];
 
-        foreach ($this->config as $indexField => $indexFieldConfig) {
-            $result[$indexField] = $this->xmlExtractor->extractData($indexFieldConfig, $xml);
-        }
+        // Use metadataconfiguration to define solr field config
+        $queryResult = $this->metadataConfigurationRepository->findAll();
+        if ($queryResult->count() !== 0) {
+            /** @var MetadataConfiguration $dbConfiguration */
+            $dbConfiguration = $queryResult->getFirst();
+            $dbConfigArray = json_decode($dbConfiguration->getJson(), true);
 
-        // Convert values of a field (key) to string if the index field is not a multi value field.
-        foreach ($this->config as $indexField => $indexFieldConfig) {
-            if (array_key_exists($indexField, $result)) {
-                if ($indexFieldConfig['_multivalue'] === false) {
-                    if (is_array($result[$indexField])) {
-                        $result[$indexField] = implode(", ", $result[$indexField]);
+            $indexConfig = [];
+            foreach ($dbConfigArray[$process->getType()] as $metadataKey => $metadata) {
+                if ($metadata['active'] === '1') {
+                    if (is_array($metadata['children'])) {
+                        $childNames = [];
+                        $childFields = [];
+                        foreach ($metadata['children'] as $metadataChildKey => $metdataChild) {
+                            $childNames[$metadataChildKey] = true;
+                        }
+                        $childFields['_fields'][$metadataKey]['_fields'] = $childNames;
+                        $indexConfig[$metadataKey . '_tsi'] = $childFields;
+
+
+                        // prepare facet config
+                        $childNames = [];
+                        $childFields = [];
+                        if (!empty($metadata['facet'])) {
+                            $facets = explode('###', $metadata['facet']);
+
+                            $i = 0;
+                            foreach ($facets as $facet) {
+                                $fieldRepresentation = explode('$', $facet);
+                                foreach ($fieldRepresentation as $field) {
+                                    if (!empty($field)) {
+                                        if ($field === 'this') {
+                                            foreach ($metadata['children'] as $metadataChildKey => $metdataChild) {
+                                                $childNames[$metadataChildKey] = true;
+                                            }
+                                        } else {
+                                            $childNames[trim($field)] = true;
+                                        }
+                                    }
+                                }
+                                $childFields['_fields'][$metadataKey]['_fields'] = $childNames;
+                                $indexConfig[$metadataKey . '_' . $i .  '_faceting'] = $childFields;
+                                $i++;
+                            }
+                        }
+
+                    } else {
+                        $indexConfig[$metadataKey . '_tsi'] = ['_fields' => $metadataKey];
                     }
                 }
             }
+
+            foreach ($indexConfig as $indexField => $indexFieldConfig) {
+                $result[$indexField] = $this->xmlExtractor->extractData($indexFieldConfig, $xml);
+            }
+
+        } else {
+            throw new \Exception('Metadata configuration missing');
         }
 
         return $result;
