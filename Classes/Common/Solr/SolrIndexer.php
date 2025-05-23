@@ -35,7 +35,7 @@ class SolrIndexer
      */
     public function indexDocument(Process $process)
     {
-        $this->addDocument($process->getRecordIdentifier(), $this->getDocument($process));
+        $this->addDocument($process);
     }
 
     /**
@@ -44,11 +44,14 @@ class SolrIndexer
      * @return void
      * @throws \Exception
      */
-    public function addDocument(string $identifier, array $indexData)
+    public function addDocument(Process $process)
     {
         $solr   = SolrClient::getInstance();
         $update = $solr->getClient()->createUpdate();
         $doc    = $update->createDocument();
+
+        $identifier = $process->getRecordIdentifier();
+        $indexData = $this->getDocument($process);
 
         if (!isset($identifier) || empty($identifier)) {
             throw new \Exception('Error while indexing: Document with no ID.');
@@ -131,7 +134,7 @@ class SolrIndexer
                         }
 
                     } else {
-                        $indexConfig[$metadataKey . '_tsi'] = ['_fields' => $metadataKey];
+                        $indexConfig[$metadataKey . '_tsi'] = ['_fields' => [$metadataKey => true]];
                     }
                 }
             }
