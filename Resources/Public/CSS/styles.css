@@ -157,6 +157,29 @@ button.tab-error::after {
     border: 1px solid red;
 }
 
+.carousel-image {
+    object-fit: cover;
+    height: 300px;
+    width: 100%;
+}
+
+.search-container {
+    position: relative;
+}
+
+.search-container .searchSubmit {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+
+
+}
+
+.search-container .searchSubmit:hover {
+    color: #000;
+}
+
 
 
 @media (max-width: 768px) {

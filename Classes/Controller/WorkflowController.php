@@ -91,7 +91,34 @@ class WorkflowController extends ActionController
         $feUser = $this->frontendUserRepository->findByUid($userId);
         $this->view->assign('currentUser', $feUser);
 
-        $processes = $this->searchService->searchProcesses($query);
+        $facetsFields = $this->searchService->getFacetFields();
+        $activeFacets = $this->request->getArguments()['facet'];
+        $searchResult = $this->searchService->searchProcesses($query, $facetsFields, $activeFacets);
+        $processes = $searchResult['processes'];
+        $facets = $searchResult['facets'];
+
+        // Process facets for frontend use
+        $facetValueCounter = [];
+        foreach ($facetsFields as $facetLabel => $facetField) {
+            foreach ($facetField as $fieldName => $value) {
+                if (array_key_exists($fieldName, $facets)) {
+                    $facetsFields[$facetLabel][$fieldName] = $facets[$fieldName];
+                    $i = 0;
+                    foreach ($facetsFields[$facetLabel][$fieldName] as $key => $facetValue) {
+                        if ($i % 2 == 1) {
+                            // Save facet value counter and remove it from array
+                            $facetValueCounter[$fieldName][] = $facetValue;
+                            unset($facetsFields[$facetLabel][$fieldName][$key]);
+                        }
+                        $i++;
+                    }
+                }
+            }
+        }
+
+        $this->view->assign("activeFacets", $activeFacets);
+        $this->view->assign("facetCounters", $facetValueCounter);
+        $this->view->assign("facets", $facetsFields);
 
         $processEditAllowedByCurrentUser = [];
         foreach ($processes as $process) {

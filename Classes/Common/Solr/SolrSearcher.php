@@ -24,19 +24,30 @@ class SolrSearcher
      * @param $facetFields
      * @return ResultInterface
      */
-    public function searchWithFacets($queryString, $start = 0, $rows = 50, $facetFields = []): ResultInterface
+    public function searchWithFacets($queryString, $start = 0, $rows = 50, $facetFields = [], $activeFacets = []): ResultInterface
     {
         $query = $this->client->createSelect();
+
+        $facetQuery = '';
+        if (!empty($activeFacets)) {
+            foreach ($activeFacets as $facetField => $facet) {
+                $facetQuery .= $facetField.':"'.key($facet).'"';
+            }
+            $queryString = $queryString . ' AND ' . $facetQuery;
+        }
 
         $query->setQuery($queryString);
 
         $query->setStart($start);
         $query->setRows($rows);
 
+        $facetSet = $query->getFacetSet();
+
         if (!empty($facetFields)) {
-            $facetSet = $query->getFacetSet();
-            foreach ($facetFields as $facetField) {
-                $facetSet->createFacetField($facetField)->setField($facetField);
+            foreach ($facetFields as $facetLabel => $facetField) {
+                foreach ($facetField as $facetName => $facetValue) {
+                    $facetSet->createFacetField($facetName)->setField($facetName);
+                }
             }
         }
 
