@@ -5,6 +5,8 @@ namespace Wlb\Crowdsourcing\Services;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Domain\Model\Process;
+use Wlb\Crowdsourcing\Domain\Model\ProcessHistory;
+use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 
 class ProcessImportService
@@ -49,7 +51,8 @@ class ProcessImportService
     public function __construct(
         private readonly ProcessRepository  $processRepository,
         private readonly PersistenceManager $persistenceManager,
-        private readonly SolrIndexer        $indexer
+        private readonly SolrIndexer        $indexer,
+        private readonly ProcessHistoryRepository $processHistoryRepository
     )
     {
         $this->importedDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
@@ -124,16 +127,25 @@ class ProcessImportService
         try {
             $imageNames = $this->getImageNames($identifier);
 
-            if (!$this->processRepository->findOneByIdentifier($identifier)) {
+            if (!$this->processRepository->findOneByRecordIdentifier($identifier)) {
                 $process = new Process();
-                $process->setIdentifier($identifier);
+                $process->setRecordIdentifier($identifier);
                 $process->setMetadata($xmlData->saveXML());
                 $process->setState(Process::WORKFLOW_STATE_NEW);
                 $process->setImages($imageNames);
                 $process->setType($typeNodes->item(0)->nodeValue);
                 $this->processRepository->add($process);
 
-                $this->indexer->indexDocument($process->getRecordIdentifier(), $process->getMetadata());
+                // Set initial history dataset
+                $processHistory = new ProcessHistory();
+                $processHistory->setRecordIdentifier($identifier);
+                $processHistory->setMetadata($xmlData->saveXML());
+                $processHistory->setState(Process::WORKFLOW_STATE_NEW);
+                $processHistory->setImages($imageNames);
+                $processHistory->setType($typeNodes->item(0)->nodeValue);
+                $this->processHistoryRepository->add($processHistory);
+
+                $this->indexer->indexDocument($process);
             }
             $this->persistenceManager->persistAll();
         } catch (\Throwable $throwable) {
