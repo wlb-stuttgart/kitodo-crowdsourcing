@@ -24,14 +24,19 @@ class XMLExtractor
 
                 foreach ($fieldGroups as $group) {
                     $nestedData = $this->extractData($fieldConfig, $xml, $group);
-                    // Add the nested data to the current group
-                    $data[] = trim(
-                        implode(
-                            $this->getDelimiter($fieldConfig),
-                            $nestedData
-                        ),
-                        $this->getDelimiter($fieldConfig)
-                    );
+                    if (!empty($nestedData)) {
+                        // Add the nested data to the current group
+                        $test = trim(
+                            implode(
+                                $this->getDelimiter($fieldConfig),
+                                $nestedData
+                            ),
+                            $this->getDelimiter($fieldConfig)
+                        );
+                        if (!empty($test)) {
+                            $data[] = $test;
+                        }
+                    }
                 }
             } else { // Handle simple fields
                 $values = $parent
@@ -44,11 +49,13 @@ class XMLExtractor
                 }
 
                 if (!empty($fieldValues)) {
-                    $data[] = implode($this->getDelimiter($config), $fieldValues);
+                    $test = implode($this->getDelimiter($config), $fieldValues);
+                    if (!empty($test)) {
+                        $data[] = $test;
+                    }
                 }
             }
         }
-
         return $data;
     }
 
