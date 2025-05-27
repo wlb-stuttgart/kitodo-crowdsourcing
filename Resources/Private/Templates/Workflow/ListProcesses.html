@@ -33,11 +33,11 @@
 
     <!-- Facet area -->
     <div class="row mb-4 mt-4">
-        <div class="col">
-            <f:for each="{facets}" key="facetLabel" as="facetFields">
-                <h3>{facetLabel}</h3>
-                <f:for each="{facetFields}" key="facetField" as="facet">
-                    <ul>
+        <f:for each="{facets}" key="facetLabel" as="facetFields">
+            <f:for each="{facetFields}" key="facetField" as="facet">
+                <div class="col">
+                    <h3>{facetLabel}</h3>
+                    <ul class="facets">
                     <f:for each="{facet}" key="facetName" as="value" iteration="iterator">
                         <li>
                             <f:if condition="{wlb:isFacetActive(facetField:'{facetField}', activeFacets:'{activeFacets}')}">
@@ -51,14 +51,22 @@
                             <f:link.action action="listProcesses"
                                            arguments="{wlb:facetArgument(facetValue: '{value}', facetField:'{facetField}', activeFacets:'{activeFacets}')}"
                                            class="{facetActive}">
-                                {value} ({facetCounters.{facetField}.{iterator.index}})
+                                <f:if condition="{facetActive} == 'active'">
+                                    <f:then>
+                                        <i class="fa-solid fa-square-xmark"></i>
+                                    </f:then>
+                                    <f:else>
+                                        <i class="fa-regular fa-square"></i>
+                                    </f:else>
+                                </f:if>
+                                 {value} ({facetCounters.{facetField}.{iterator.index}})
                             </f:link.action>
                         </li>
                     </f:for>
                     </ul>
-                </f:for>
+                </div>
             </f:for>
-        </div>
+        </f:for>
     </div>
 
     <ul class="list-unstyled row">

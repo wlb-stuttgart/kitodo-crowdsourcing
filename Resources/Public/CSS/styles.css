@@ -180,6 +180,21 @@ button.tab-error::after {
     color: #000;
 }
 
+ul.facets {
+    list-style: none;
+    padding-left: 0;
+}
+
+ul.facets li a {
+    text-decoration: none;
+    color: #000;
+}
+
+ul.facets li a:hover {
+    text-decoration: underline;
+    color: #0a53be;
+}
+
 
 
 @media (max-width: 768px) {
