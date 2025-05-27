@@ -288,6 +288,12 @@ class WorkflowController extends ActionController
 
         if ($this->request->hasArgument('abort')) {
             $process->resetFeUser();
+
+            $lastHistoryProcess = $this->processHistoryRepository->getLastHistory($process->getRecordIdentifier());
+            $data = $lastHistoryProcess->toArray();
+
+            $this->processHistoryService->restoreFromArray($process, $data);
+            $this->persistenceManager->persistAll();
         }
 
         if ($this->request->hasArgument('cache')) {

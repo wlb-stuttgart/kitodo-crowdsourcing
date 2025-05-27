@@ -225,14 +225,14 @@ class Process extends AbstractEntity
                                 // check each value
                                 $j = 0;
                                 foreach ($subMetadata as $subMetadataField) {
-                                    if (!empty($subMetadata[$j])) {
+//                                    if (!empty($subMetadata[$j])) {
                                         if ($availableElements[$j]) {
                                             $availableElements[$j][0] = $subMetadata[$j];
                                         } else {
                                             // missing field for sub metadata
                                             $availableGroups[$metadataGroupCount]->addChild('kitodo:metadata', $subMetadata[$j])->addAttribute('name', $subMetadataKey);
                                         }
-                                    }
+//                                    }
                                     $j++;
                                 }
 
