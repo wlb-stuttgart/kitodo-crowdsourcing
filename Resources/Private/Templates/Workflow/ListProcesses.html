@@ -39,29 +39,33 @@
                     <h3>{facetLabel}</h3>
                     <ul class="facets">
                     <f:for each="{facet}" key="facetName" as="value" iteration="iterator">
-                        <li>
-                            <f:if condition="{wlb:isFacetActive(facetField:'{facetField}', activeFacets:'{activeFacets}')}">
-                                <f:then>
-                                    <v:variable.set name="facetActive" value="active"/>
-                                </f:then>
-                                <f:else>
-                                    <v:variable.set name="facetActive" value=""/>
-                                </f:else>
-                            </f:if>
-                            <f:link.action action="listProcesses"
-                                           arguments="{wlb:facetArgument(facetValue: '{value}', facetField:'{facetField}', activeFacets:'{activeFacets}')}"
-                                           class="{facetActive}">
-                                <f:if condition="{facetActive} == 'active'">
-                                    <f:then>
-                                        <i class="fa-solid fa-square-xmark"></i>
-                                    </f:then>
-                                    <f:else>
-                                        <i class="fa-regular fa-square"></i>
-                                    </f:else>
-                                </f:if>
-                                 {value} ({facetCounters.{facetField}.{iterator.index}})
-                            </f:link.action>
-                        </li>
+                        <f:if condition="{facetCounters.{facetField}.{iterator.index}} != 0">
+                            <f:then>
+                                <li>
+                                    <f:if condition="{wlb:isFacetActive(facetValue: '{value}',facetField:'{facetField}', activeFacets:'{activeFacets}')}">
+                                        <f:then>
+                                            <v:variable.set name="facetActive" value="active"/>
+                                        </f:then>
+                                        <f:else>
+                                            <v:variable.set name="facetActive" value=""/>
+                                        </f:else>
+                                    </f:if>
+                                    <f:link.action action="listProcesses"
+                                                   arguments="{wlb:facetArgument(facetValue: '{value}', facetField:'{facetField}', activeFacets:'{activeFacets}')}"
+                                                   class="{facetActive}">
+                                        <f:if condition="{facetActive} == 'active'">
+                                            <f:then>
+                                                <i class="fa-solid fa-square-xmark"></i>
+                                            </f:then>
+                                            <f:else>
+                                                <i class="fa-regular fa-square"></i>
+                                            </f:else>
+                                        </f:if>
+                                        {value} ({facetCounters.{facetField}.{iterator.index}})
+                                    </f:link.action>
+                                </li>
+                            </f:then>
+                        </f:if>
                     </f:for>
                     </ul>
                 </div>

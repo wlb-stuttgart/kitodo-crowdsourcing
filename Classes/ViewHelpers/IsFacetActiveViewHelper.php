@@ -14,6 +14,7 @@ class IsFacetActiveViewHelper extends AbstractViewHelper
     {
         parent::initializeArguments();
         $this->registerArgument('facetField', 'string', '', false, '');
+        $this->registerArgument('facetValue', 'string', '', false, '');
 
         $this->registerArgument('activeFacets', 'array', '', false, '');
     }
@@ -26,10 +27,14 @@ class IsFacetActiveViewHelper extends AbstractViewHelper
 
         $facetField = $this->arguments['facetField'];
         $activeFacets = $this->arguments['activeFacets'];
+        $facetValue = $this->arguments['facetValue'];
+
 
         if (is_array($activeFacets)) {
             if (array_key_exists($facetField, $activeFacets)) {
-                return true;
+                if (array_key_exists($facetValue, $activeFacets[$facetField])) {
+                    return true;
+                }
             } else {
                 return false;
             }

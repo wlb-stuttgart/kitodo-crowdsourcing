@@ -31,13 +31,16 @@ class FacetArgumentViewHelper extends AbstractViewHelper
         $activeFacets = $this->arguments['activeFacets'];
 
         // Facetfield already active, remove it
-        if (is_array($activeFacets) && array_key_exists($facetField, $activeFacets)) {
-            unset($activeFacets[$facetField]);
+        if (is_array($activeFacets) && array_key_exists($facetField, $activeFacets)
+            && array_key_exists($facetValue, $activeFacets[$facetField])) {
+
+            unset($activeFacets[$facetField][$facetValue]);
             if (!empty($activeFacets)) {
                 $result['facet'] = $activeFacets;
+
             }
         } else if (!empty($activeFacets)) {
-            $mergedArray = array_merge($activeFacets, [$facetField => [$facetValue => 1]]);
+            $mergedArray = array_merge_recursive($activeFacets, [$facetField => [$facetValue => 1]]);
             $result['facet'] = $mergedArray;
         } else {
             $result['facet'] = [$facetField => [$facetValue => 1]];
