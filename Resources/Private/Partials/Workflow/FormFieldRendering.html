@@ -57,4 +57,16 @@
                 pattern="{metadata.validation}"
                 data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"/>
     </f:case>
+    <f:case value="checkbox">
+        {value}
+        <f:form.checkbox
+                id="{f:if(condition: '{child} == 1', then: 'meta-{metadataChildId}', else: 'meta-{metadataId}')}"
+                class="form-control processForm form-check-input"
+                name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{i}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
+                value="true"
+                placeholder=""
+                required="{f:if(condition: '{required} == 1 && {child} != 1', then: 'true', else: 'false')}"
+                pattern="{metadata.validation}"
+                data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"/>
+    </f:case>
 </f:switch>

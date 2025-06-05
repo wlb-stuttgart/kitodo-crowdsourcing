@@ -48,13 +48,19 @@ class ConfigurationController extends ActionController
         // load metadata to array
         foreach ($sxe->declaration->key as $key) {
             $metadataId = (string) $key->attributes()->{'id'};
-            $metadataDefinitions[$metadataId] = (string) $key->label;
+            $metadataDefinitions[$metadataId]['label'] = (string) $key->label;
+            $metadataDefinitions[$metadataId]['type'] = (string) $key->codomain->attributes()->{'type'};
+            $metadataDefinitions[$metadataId]['pattern'] = (string) $key->pattern;
             foreach ($key->key as $secondKey) {
                 $metadataId = (string) $secondKey->attributes()->{'id'};
-                $metadataDefinitions[$metadataId] = (string) $secondKey->label;
+                $metadataDefinitions[$metadataId]['label'] = (string) $secondKey->label;
+                $metadataDefinitions[$metadataId]['type'] = (string) $secondKey->codomain->attributes()->{'type'};
+                $metadataDefinitions[$metadataId]['pattern'] = (string) $secondKey->pattern;
                 foreach ($secondKey->key as $thirdKey) {
                     $metadataId = (string) $thirdKey->attributes()->{'id'};
-                    $metadataDefinitions[$metadataId] = (string) $thirdKey->label;
+                    $metadataDefinitions[$metadataId]['label'] = (string) $thirdKey->label;
+                    $metadataDefinitions[$metadataId]['type'] = (string) $thirdKey->codomain->attributes()->{'type'};
+                    $metadataDefinitions[$metadataId]['pattern'] = (string) $thirdKey->pattern;
                 }
             }
         }
@@ -74,35 +80,47 @@ class ConfigurationController extends ActionController
                 foreach ($restriction as $permit) {
                     if ((string) $permit->attributes()->{'key'}) {
                         $permitKey = (string) $permit->attributes()->{'key'};
-                        $configurationRuleset[$divisionName][$permitKey]['label'] = $metadataDefinitions[$permitKey];
+                        $configurationRuleset[$divisionName][$permitKey]['label'] = $metadataDefinitions[$permitKey]['label'];
                         if ($minOccurs = (string) $permit->attributes()->{'minOccurs'}) {
                             $configurationRuleset[$divisionName][$permitKey]['minOccurs'] = $minOccurs;
                         }
                         if ($maxOccurs = (string) $permit->attributes()->{'maxOccurs'}) {
                             $configurationRuleset[$divisionName][$permitKey]['maxOccurs'] = $maxOccurs;
                         }
+                        if ($inputType = $metadataDefinitions[$permitKey]['type']) {
+                            $inputType = $this->convertInputType($inputType);
+                            $configurationRuleset[$divisionName][$permitKey]['inputtype'] = $inputType;
+                        }
                     }
                     foreach ($permit->permit as $secondPermit) {
                         if ((string) $secondPermit->attributes()->{'key'}) {
                             $secondPermitKey = (string) $secondPermit->attributes()->{'key'};
-                            $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['label'] = $metadataDefinitions[$secondPermitKey];
+                            $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['label'] = $metadataDefinitions[$secondPermitKey]['label'];
                             if ($minOccurs = (string) $secondPermit->attributes()->{'minOccurs'}) {
                                 $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['minOccurs'] = $minOccurs;
                             }
                             if ($maxOccurs = (string) $secondPermit->attributes()->{'maxOccurs'}) {
                                 $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['maxOccurs'] = $maxOccurs;
                             }
+                            if ($inputType = $metadataDefinitions[$secondPermitKey]['type']) {
+                                $inputType = $this->convertInputType($inputType);
+                                $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['inputtype'] = $inputType;
+                            }
                         }
 
                         foreach ($secondPermit->permit as $thirdPermit) {
                             if ((string) $thirdPermit->attributes()->{'key'}) {
                                 $thirdPermitKey = (string) $thirdPermit->attributes()->{'key'};
-                                $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['label'] = $metadataDefinitions[$thirdPermitKey];
+                                $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['label'] = $metadataDefinitions[$thirdPermitKey]['label'];
                                 if ($minOccurs = (string) $thirdPermit->attributes()->{'minOccurs'}) {
                                     $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['minOccurs'] = $minOccurs;
                                 }
                                 if ($maxOccurs = (string) $thirdPermit->attributes()->{'maxOccurs'}) {
                                     $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['maxOccurs'] = $maxOccurs;
+                                }
+                                if ($inputType = $metadataDefinitions[$thirdPermitKey]['type']) {
+                                    $inputType = $this->convertInputType($inputType);
+                                    $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['inputtype'] = $inputType;
                                 }
                             }
 
@@ -159,18 +177,14 @@ class ConfigurationController extends ActionController
         return $this->htmlResponse();
     }
 
-//    public function saveDemoFormAction(): ResponseInterface
-//    {
-//        $untrustedMetadata = $this->request->getParsedBody()['metadata'];
-//        $trustedMetadata = $this->request->getArgument('metadata');
-//
-//        debug($trustedMetadata);
-//        debug($untrustedMetadata);
-//
-//        exit;
-//
-//        return (new ForwardResponse('index'));
-//    }
+    public function convertInputType($inputType)
+    {
+        switch ($inputType) {
+            case 'boolean':
+                return 'checkbox';
+        }
+        return $inputType;
+    }
 
 
     /**
