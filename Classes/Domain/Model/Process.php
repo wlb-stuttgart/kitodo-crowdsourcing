@@ -181,7 +181,7 @@ class Process extends AbstractEntity
         return ['signature' => (string)$values[0]];
     }
 
-    public function getImageInfos()
+    public function getImageInfos(string $fileType = 'default')
     {
         $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
         if (substr($importedPath, -1) === '/') {
@@ -190,7 +190,7 @@ class Process extends AbstractEntity
         $processImagesInfo = [];
         $i = 0;
         foreach ($this->getImages() as $image) {
-            $path = $importedPath .'/'. $this->getRecordIdentifier() . '/images/' . $image;
+            $path = $importedPath .'/'. $this->getRecordIdentifier() . '/images/' . $fileType . '/' . $image;
             $type = pathinfo($path, PATHINFO_EXTENSION);
             $data = file_get_contents($path);
             $processImagesInfo[$i]['image'] = 'data:image/' . $type . ';base64,' . base64_encode($data);
