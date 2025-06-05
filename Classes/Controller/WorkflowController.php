@@ -250,7 +250,7 @@ class WorkflowController extends ActionController
         return $this->htmlResponse();
     }
 
-    public function processImageInfo(Process $process)
+    public function processImageInfo(Process $process, $imageType = 'default')
     {
         $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
         if (substr($importedPath, -1) === '/') {
@@ -259,7 +259,7 @@ class WorkflowController extends ActionController
         $processImagesInfo = [];
         $i = 0;
         foreach ($process->getImages() as $image) {
-            $path = $importedPath .'/'. $process->getRecordIdentifier() . '/images/' . $image;
+            $path = $importedPath .'/'. $process->getRecordIdentifier() . '/images/' . $imageType . '/' . $image;
             $type = pathinfo($path, PATHINFO_EXTENSION);
             $data = file_get_contents($path);
             $processImagesInfo[$i]['image'] = 'data:image/' . $type . ';base64,' . base64_encode($data);
