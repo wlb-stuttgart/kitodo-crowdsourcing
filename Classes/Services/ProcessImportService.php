@@ -80,7 +80,7 @@ class ProcessImportService
 
         // Check for necessary subdirectories and XML file
         $dataDir = $this->processDir . '/' . $identifier;
-        $imagesDir = $dataDir . '/images';
+        $imagesDir = $dataDir . '/images/default';
         $xmlFilePath = $dataDir . '/meta.xml';
 
         if (!is_dir($dataDir) || !is_dir($imagesDir) || !file_exists($xmlFilePath)) {
@@ -113,6 +113,7 @@ class ProcessImportService
         if ($kitodoNodes->count() <= 0 || $typeNodes->count() <= 0) {
             $this->moveFilesFromProcessToFailed($identifier);
             // TODO logging "Invalid xml file."
+            var_dump("Invalid xml file");
             return false;
         }
 
@@ -150,6 +151,7 @@ class ProcessImportService
             $this->persistenceManager->persistAll();
         } catch (\Throwable $throwable) {
             $this->moveFilesFromProcessToFailed($identifier);
+            var_dump($throwable);
             return false;
 
         }
