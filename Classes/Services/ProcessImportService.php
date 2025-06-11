@@ -40,6 +40,20 @@ class ProcessImportService
      */
     private $processDir;
 
+    /**
+     *  The path to the directory holding the data for the next process to be imported.
+     *
+     * @var string
+     */
+    private $exportDir;
+
+    /**
+     *  The path to the directory holding the completed data
+     *
+     * @var string
+     */
+    private $archiveDir;
+
 
     /**
      * @param ProcessRepository $processRepository
@@ -59,6 +73,8 @@ class ProcessImportService
         $this->failedDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('failedDirectoryPath');
         $this->toImportDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('toImportDirectoryPath');
         $this->processDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('processDirectoryPath');
+        $this->exportDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('exportDirectoryPath');
+        $this->archiveDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('archiveDirectoryPath');
     }
 
     /**
@@ -243,5 +259,27 @@ class ProcessImportService
         if (!rename($this->processDir . '/' . $identifier, $this->importedDir . '/' . $identifier)) {
             throw new \Exception('Could not move data from process to imported folder');
         }
+    }
+
+    /**
+     * Moves all files of a processes to the exported directory.
+     *
+     * @param string $identifier
+     * @return void
+     * @throws \Exception
+     */
+    public function moveFilesFromProcessToExported($identifier)
+    {
+        if (!rename($this->importedDir . '/' . $identifier, $this->exportDir . '/' . $identifier)) {
+            throw new \Exception('Could not move data from process to imported folder');
+        }
+    }
+
+    public function copyFilesFromProcessToArchive($identifier)
+    {
+        if (!copy($this->importedDir . '/' . $identifier, $this->archiveDir . '/' . $identifier)) {
+            throw new \Exception('Could not move data from process to imported folder');
+        }
+
     }
 }

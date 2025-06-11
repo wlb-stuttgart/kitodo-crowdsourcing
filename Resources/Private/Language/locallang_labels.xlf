@@ -17,6 +17,12 @@
 			<trans-unit id="config.import.processDirectoryPath">
 				<source>Path to the import process directory</source>
 			</trans-unit>
+			<trans-unit id="config.import.exportedDirectoryPath">
+				<source>Path to the exported data directory</source>
+			</trans-unit>
+			<trans-unit id="config.import.archiveDirectoryPath">
+				<source>Path to the archive data directory</source>
+			</trans-unit>
 			<trans-unit id="config.storage.storagePid">
 				<source>UID of the system folder to store datasets</source>
 			</trans-unit>
