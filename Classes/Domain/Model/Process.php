@@ -183,14 +183,19 @@ class Process extends AbstractEntity
 
     public function getImageInfos(string $fileType = 'default')
     {
-        $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
-        if (substr($importedPath, -1) === '/') {
-            $importedPath = $importedPath . '/';
+        if ($this->state === self::WORKFLOW_STATE_COMPLETED) {
+            $processImagePath = ExtensionConfigurationService::getInstance()->getConfigurationValue('archiveDirectoryPath');
+        } else {
+            $processImagePath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
         }
+        if (substr($processImagePath, -1) === '/') {
+            $processImagePath = $processImagePath . '/';
+        }
+
         $processImagesInfo = [];
         $i = 0;
         foreach ($this->getImages() as $image) {
-            $path = $importedPath .'/'. $this->getRecordIdentifier() . '/images/' . $fileType . '/' . $image;
+            $path = $processImagePath .'/'. $this->getRecordIdentifier() . '/images/' . $fileType . '/' . $image;
             $type = pathinfo($path, PATHINFO_EXTENSION);
             $data = file_get_contents($path);
             $processImagesInfo[$i]['image'] = 'data:image/' . $type . ';base64,' . base64_encode($data);
