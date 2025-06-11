@@ -55,6 +55,10 @@ class SearchService
 
             $facets = [];
 
+            // add static facets like state, type, etc.
+            $facets['Status']['state_faceting'] = false;
+            $facets['Typ']['type_faceting'] = false;
+
             foreach ($dbConfigArray as $docType => $docTypConfig) {
                 foreach ($docTypConfig as $metadataName => $metadataConfig) {
                     if ($metadataConfig['facet'] !== '') {

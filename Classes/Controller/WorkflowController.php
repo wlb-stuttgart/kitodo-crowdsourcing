@@ -27,6 +27,7 @@ use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 use Wlb\Crowdsourcing\Services\AccessControlService;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 use Wlb\Crowdsourcing\Services\ProcessHistoryService;
+use Wlb\Crowdsourcing\Services\ProcessImportService;
 use Wlb\Crowdsourcing\Services\SearchService;
 
 class WorkflowController extends ActionController
@@ -43,7 +44,8 @@ class WorkflowController extends ActionController
         private readonly PersistenceManager $persistenceManager,
         private readonly ProcessHistoryRepository $processHistoryRepository,
         private readonly ProcessHistoryService $processHistoryService,
-        private readonly SolrIndexer $solrIndexer
+        private readonly SolrIndexer $solrIndexer,
+        private readonly ProcessImportService $processImportService
     )
     {
     }
@@ -126,7 +128,7 @@ class WorkflowController extends ActionController
             $processEditAllowedByCurrentUser[$process->getUid()] = !$allowed;
         }
 
-        $this->view->assign('editAllowed', $processEditAllowedByCurrentUser);
+        $this->view->assign('editAllowedByCurrentUser', $processEditAllowedByCurrentUser);
         $this->view->assign("processes", $processes);
 
         $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
@@ -264,6 +266,7 @@ class WorkflowController extends ActionController
         $process = $this->processRepository->findByUid($processId);
 
         if ($this->request->hasArgument('abort')) {
+            // TODO: Return last condition from processHistory
             $process->resetFeUser();
 
             $lastHistoryProcess = $this->processHistoryRepository->getLastHistory($process->getRecordIdentifier());
@@ -298,6 +301,13 @@ class WorkflowController extends ActionController
             $process->resetFeUser();
             // Set process to next state
             $process->setNextState();
+
+            // Check if process is finished
+            // Move directory to exported directory
+            if ($process->getState() === $process::WORKFLOW_STATE_COMPLETED) {
+                $this->processImportService->copyFilesFromProcessToArchive($process->getRecordIdentifier());
+                $this->processImportService->moveFilesFromProcessToExported($process->getRecordIdentifier());
+            }
 
             // index data
             $this->solrIndexer->indexDocument($process);

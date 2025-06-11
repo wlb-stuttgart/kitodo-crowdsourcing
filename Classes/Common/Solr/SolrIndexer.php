@@ -143,6 +143,9 @@ class SolrIndexer
                 $result[$indexField] = $this->xmlExtractor->extractData($indexFieldConfig, $xml);
             }
 
+            $result['type_faceting'] = $process->getType();
+            $result['state_faceting'] = $process->getState();
+
         } else {
             throw new \Exception('Metadata configuration missing');
         }

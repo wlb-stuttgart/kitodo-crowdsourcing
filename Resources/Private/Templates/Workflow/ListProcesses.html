@@ -74,7 +74,6 @@
     </div>
 
     <ul class="list-unstyled row">
-
         <f:for each="{processes}" as="process">
         <li class="col-xl-2 col-lg-4 col-md-6 col-sm-6 mb-4">
             <div class="card d-flex flex-column" style="height: 100%;">
@@ -94,7 +93,7 @@
                     <h5 class="card-title">Arbeitsschritt: Erfassung</h5>
                     <p><f:translate key="process.type.{process.type}" /></p>
 
-                    <f:if condition="(!{process.feUser} || {process.feUser} == {currentUser}) && {editAllowed.{process.uid}}">
+                    <f:if condition="(!{process.feUser} || {process.feUser} == {currentUser}) && {editAllowedByCurrentUser.{process.uid}} && {process.state} != 'COMPLETED'">
                         <f:then>
                             <f:link.action action="editMetadata" arguments="{process: process}" class="btn btn-outline-secondary btn-sm">
                                 <f:if condition="{process.feUser} == {currentUser}">
@@ -108,7 +107,7 @@
                             </f:link.action>
                         </f:then>
                         <f:else>
-                            <f:if condition="{editAllowed.{process.uid}}">
+                            <f:if condition="{editAllowedByCurrentUser.{process.uid}}">
                                 <f:then>
                                     <button class="btn btn-outline-secondary btn-sm" disabled>Aktuell in Bearbeitung</button>
                                 </f:then>
