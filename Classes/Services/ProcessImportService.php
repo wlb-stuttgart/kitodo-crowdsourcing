@@ -84,7 +84,7 @@ class ProcessImportService
      * @return bool
      * @throws \Exception
      */
-    protected function processProcess(string $identifier): bool
+    protected function importProcess(string $identifier): bool
     {
         // Check if process folder is ready for the next file import.
         if (count(array_diff(scandir($this->processDir), ['.', '..'])) != 0) {
@@ -179,10 +179,10 @@ class ProcessImportService
     /**
      * Imports all processes from the configured "toImport" directory.
      *
-     * @return void
+     * @return bool
      * @throws \Exception
      */
-    public function processProcessQueue()
+    public function importProcessQueue()
     {
         if (!is_dir($this->importedDir) || !is_dir($this->failedDir) || !is_dir($this->toImportDir) ||!is_dir($this->processDir)) {
             throw new \Exception("Missing import directories. Check extension configuration.");
@@ -196,8 +196,10 @@ class ProcessImportService
             }
 
             // Filename has to be an identifier.
-            $this->processProcess($fileName->getFilename());
+            $this->importProcess($fileName->getFilename());
         }
+
+        return true;
     }
 
     /**

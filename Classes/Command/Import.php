@@ -65,7 +65,7 @@ class Import extends Command
         // TODO error logging.
         // TODO optimize exception handling.
         try {
-            if ($this->processImportService->processProcessQueue()) {
+            if ($this->processImportService->importProcessQueue()) {
                 return Command::SUCCESS;
             }
         } catch( \Throwable $throwable) {
