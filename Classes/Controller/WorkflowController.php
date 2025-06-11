@@ -305,6 +305,35 @@ class WorkflowController extends ActionController
             // Check if process is finished
             // Move directory to exported directory
             if ($process->getState() === $process::WORKFLOW_STATE_COMPLETED) {
+                // TODO: Convert the next lines into a export service??
+                // save metadata to file
+                $metadata = $process->getMetadata();
+                $identifier = $process->getRecordIdentifier();
+
+                $importedDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
+                // Check for necessary subdirectories and XML file
+                $dataDir = $importedDir . '/' . $identifier;
+                $imagesDir = $dataDir . '/images/default';
+                $xmlFilePath = $dataDir . '/meta.xml';
+
+                $xmlDoc = new \DOMDocument();
+                if (!$xmlDoc->load($xmlFilePath)) {
+                    throw new \Exception('Could not load XML file');
+                }
+                $xpathDoc = new \DOMXPath($xmlDoc);
+
+                $xmlDataNode = $xpathDoc->query('//mets:xmlData');
+                $xmlDataNode->item(0)->removeChild($xmlDataNode->item(0)->firstChild);
+
+                $dbDoc = new \DOMDocument();
+                $dbDoc->loadXML($metadata);
+
+                $xmlDataNode->item(0)->appendChild($xmlDoc->importNode($dbDoc->documentElement, TRUE));
+
+                if (!$xmlDoc->save($xmlFilePath)) {
+                    throw new \Exception('Could not save XML file');
+                }
+
                 $this->processImportService->copyFilesFromProcessToArchive($process->getRecordIdentifier());
                 $this->processImportService->moveFilesFromProcessToExported($process->getRecordIdentifier());
             }
