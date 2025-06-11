@@ -243,34 +243,11 @@ class WorkflowController extends ActionController
         }
 
         // Get images as base64 with width and height info
-        $this->view->assign("processImagesInfo", $this->processImageInfo($process));
+        $this->view->assign("processImagesInfo", $process->getImageInfos());
         $this->view->assign('process', $process);
         $this->view->assign('formValues', $formValues);
 
         return $this->htmlResponse();
-    }
-
-    public function processImageInfo(Process $process, $imageType = 'default')
-    {
-        $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
-        if (substr($importedPath, -1) === '/') {
-            $importedPath = $importedPath . '/';
-        }
-        $processImagesInfo = [];
-        $i = 0;
-        foreach ($process->getImages() as $image) {
-            $path = $importedPath .'/'. $process->getRecordIdentifier() . '/images/' . $imageType . '/' . $image;
-            $type = pathinfo($path, PATHINFO_EXTENSION);
-            $data = file_get_contents($path);
-            $processImagesInfo[$i]['image'] = 'data:image/' . $type . ';base64,' . base64_encode($data);
-
-            $imageSize = getimagesize($path);
-            $processImagesInfo[$i]['width'] = $imageSize[0];
-            $processImagesInfo[$i]['height'] = $imageSize[1];
-            $i++;
-        }
-
-        return $processImagesInfo;
     }
 
     /**
