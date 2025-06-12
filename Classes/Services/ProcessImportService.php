@@ -2,6 +2,7 @@
 
 namespace Wlb\Crowdsourcing\Services;
 
+use Symfony\Component\Filesystem\Filesystem;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Domain\Model\Process;
@@ -54,6 +55,13 @@ class ProcessImportService
      */
     private $archiveDir;
 
+    /**
+     * The filesystem object.
+     *
+     * @var Filesystem
+     */
+    private $filesystem;
+
 
     /**
      * @param ProcessRepository $processRepository
@@ -69,6 +77,8 @@ class ProcessImportService
         private readonly ProcessHistoryRepository $processHistoryRepository
     )
     {
+        $this->filesystem = new Filesystem();
+
         $this->importedDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
         $this->failedDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('failedDirectoryPath');
         $this->toImportDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('toImportDirectoryPath');
@@ -279,9 +289,6 @@ class ProcessImportService
 
     public function copyFilesFromProcessToArchive($identifier)
     {
-        if (!copy($this->importedDir . '/' . $identifier, $this->archiveDir . '/' . $identifier)) {
-            throw new \Exception('Could not move data from process to imported folder');
-        }
-
+        $this->filesystem->mirror($this->importedDir . '/' . $identifier, $this->archiveDir . '/' . $identifier);
     }
 }

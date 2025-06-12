@@ -7,6 +7,7 @@
     ],
     "require": {
         "php": "^8.2||~8.3.0",
+        "ext-dom": "*",
         "typo3/cms-backend": "^11.5",
         "typo3/cms-core": "^11.5",
         "solarium/solarium": "^6.3",
@@ -14,7 +15,8 @@
         "fluidtypo3/vhs": "^7.0",
         "evoweb/sf-register": "^11",
         "evoweb/recaptcha": "^11",
-        "evoweb/extender": "^10"
+        "evoweb/extender": "^10",
+        "symfony/filesystem": "^5.4"
     },
     "authors": [
         {
