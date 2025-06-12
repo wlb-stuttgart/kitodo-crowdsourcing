@@ -40,7 +40,7 @@
                                 <f:variable name="ariaSelected">false</f:variable>
                             </f:else>
                         </f:if>
-                        <button class="nav-link {activeTabClass}" id="nav-{tabName}-tab" data-bs-toggle="tab" data-bs-target="#nav-{tabName}" type="button" role="tab" aria-controls="nav-{tabName}" aria-selected="{ariaSelected}">
+                        <button class="nav-link {activeTabClass}" id="nav-{tabIterator.index}-tab" data-bs-toggle="tab" data-bs-target="#nav-{tabIterator.index}" type="button" role="tab" aria-controls="nav-{tabIterator.index}" aria-selected="{ariaSelected}">
                             {tabName}
                         </button>
                     </f:for>
@@ -59,7 +59,7 @@
                                 <f:variable name="activeTabClass"></f:variable>
                             </f:else>
                         </f:if>
-                        <div class="tab-pane fade {activeTabClass}" id="nav-{tabName}" role="tabpanel" aria-labelledby="nav-{tabName}-tab" tabindex="0">
+                        <div class="tab-pane fade {activeTabClass}" id="nav-{tabIterator.index}" role="tabpanel" aria-labelledby="nav-{tabIterator.index}-tab" tabindex="0">
                             <f:for each="{tab}" as="metadata" key="metadataId">
                                 <f:if condition="{metadata.active}">
                                     <div id="{metadataId}" class="form-group metadata-group metadatafield-{metadataId} pb-4 {f:if(condition: '{metadata.children}', then: 'group-with-children')}">
