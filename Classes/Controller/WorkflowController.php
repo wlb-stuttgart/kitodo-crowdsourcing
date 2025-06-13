@@ -28,6 +28,7 @@ use Wlb\Crowdsourcing\Services\AccessControlService;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 use Wlb\Crowdsourcing\Services\ProcessHistoryService;
 use Wlb\Crowdsourcing\Services\ProcessImportService;
+use Wlb\Crowdsourcing\Services\RulesetService;
 use Wlb\Crowdsourcing\Services\SearchService;
 
 class WorkflowController extends ActionController
@@ -45,7 +46,8 @@ class WorkflowController extends ActionController
         private readonly ProcessHistoryRepository $processHistoryRepository,
         private readonly ProcessHistoryService $processHistoryService,
         private readonly SolrIndexer $solrIndexer,
-        private readonly ProcessImportService $processImportService
+        private readonly ProcessImportService $processImportService,
+        private readonly RulesetService $rulesetService
     )
     {
     }
@@ -216,6 +218,8 @@ class WorkflowController extends ActionController
         } else {
             throw new \Exception('Metadata configuration missing');
         }
+
+        $this->view->assign('rulesetDefinitions', $this->rulesetService->getRulesetDefinitions());
 
         // build value array for each active configuration
         $formValues = [];

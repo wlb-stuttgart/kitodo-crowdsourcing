@@ -37,98 +37,9 @@ class ConfigurationController extends ActionController
 
     public function indexAction(): ResponseInterface
     {
-        $ruleset = '/var/www/html/public/fileadmin/crowd/ruleset_crowdsourcing_wlb.xml';
-
-        $sxe = null;
-        $sxe = simplexml_load_file($ruleset);
-
-        $configurationRuleset = [];
-        $metadataDefinitions = [];
-
-        // load metadata to array
-        foreach ($sxe->declaration->key as $key) {
-            $metadataId = (string) $key->attributes()->{'id'};
-            $metadataDefinitions[$metadataId]['label'] = (string) $key->label;
-            $metadataDefinitions[$metadataId]['type'] = (string) $key->codomain->attributes()->{'type'};
-            $metadataDefinitions[$metadataId]['pattern'] = (string) $key->pattern;
-            foreach ($key->key as $secondKey) {
-                $metadataId = (string) $secondKey->attributes()->{'id'};
-                $metadataDefinitions[$metadataId]['label'] = (string) $secondKey->label;
-                $metadataDefinitions[$metadataId]['type'] = (string) $secondKey->codomain->attributes()->{'type'};
-                $metadataDefinitions[$metadataId]['pattern'] = (string) $secondKey->pattern;
-                foreach ($secondKey->key as $thirdKey) {
-                    $metadataId = (string) $thirdKey->attributes()->{'id'};
-                    $metadataDefinitions[$metadataId]['label'] = (string) $thirdKey->label;
-                    $metadataDefinitions[$metadataId]['type'] = (string) $thirdKey->codomain->attributes()->{'type'};
-                    $metadataDefinitions[$metadataId]['pattern'] = (string) $thirdKey->pattern;
-                }
-            }
-        }
-
-        foreach ($sxe->declaration->division as $division) {
-            if ($division->attributes()->{'processTitle'}) {
-                $documentType = (string) $division->attributes()->{'id'};
-                $configurationRuleset[$documentType] = [];
-
-            }
-        }
-
-        foreach ($sxe->correlation->restriction as $restriction) {
-            // Each restriction defines a doc type
-            $divisionName = (string) $restriction->attributes()->{'division'};
-            if (array_key_exists($divisionName, $configurationRuleset)) {
-                foreach ($restriction as $permit) {
-                    if ((string) $permit->attributes()->{'key'}) {
-                        $permitKey = (string) $permit->attributes()->{'key'};
-                        $configurationRuleset[$divisionName][$permitKey]['label'] = $metadataDefinitions[$permitKey]['label'];
-                        if ($minOccurs = (string) $permit->attributes()->{'minOccurs'}) {
-                            $configurationRuleset[$divisionName][$permitKey]['minOccurs'] = $minOccurs;
-                        }
-                        if ($maxOccurs = (string) $permit->attributes()->{'maxOccurs'}) {
-                            $configurationRuleset[$divisionName][$permitKey]['maxOccurs'] = $maxOccurs;
-                        }
-                        if ($inputType = $metadataDefinitions[$permitKey]['type']) {
-                            $inputType = $this->convertInputType($inputType);
-                            $configurationRuleset[$divisionName][$permitKey]['inputtype'] = $inputType;
-                        }
-                    }
-                    foreach ($permit->permit as $secondPermit) {
-                        if ((string) $secondPermit->attributes()->{'key'}) {
-                            $secondPermitKey = (string) $secondPermit->attributes()->{'key'};
-                            $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['label'] = $metadataDefinitions[$secondPermitKey]['label'];
-                            if ($minOccurs = (string) $secondPermit->attributes()->{'minOccurs'}) {
-                                $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['minOccurs'] = $minOccurs;
-                            }
-                            if ($maxOccurs = (string) $secondPermit->attributes()->{'maxOccurs'}) {
-                                $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['maxOccurs'] = $maxOccurs;
-                            }
-                            if ($inputType = $metadataDefinitions[$secondPermitKey]['type']) {
-                                $inputType = $this->convertInputType($inputType);
-                                $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['inputtype'] = $inputType;
-                            }
-                        }
-
-                        foreach ($secondPermit->permit as $thirdPermit) {
-                            if ((string) $thirdPermit->attributes()->{'key'}) {
-                                $thirdPermitKey = (string) $thirdPermit->attributes()->{'key'};
-                                $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['label'] = $metadataDefinitions[$thirdPermitKey]['label'];
-                                if ($minOccurs = (string) $thirdPermit->attributes()->{'minOccurs'}) {
-                                    $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['minOccurs'] = $minOccurs;
-                                }
-                                if ($maxOccurs = (string) $thirdPermit->attributes()->{'maxOccurs'}) {
-                                    $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['maxOccurs'] = $maxOccurs;
-                                }
-                                if ($inputType = $metadataDefinitions[$thirdPermitKey]['type']) {
-                                    $inputType = $this->convertInputType($inputType);
-                                    $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['inputtype'] = $inputType;
-                                }
-                            }
-
-                        }
-                    }
-                }
-            }
-        }
+        $rulesetService = new \Wlb\Crowdsourcing\Services\RulesetService();
+        $configurationRuleset = $rulesetService->getConfigurationFromRuleset();
+        $metadataDefinitions = $rulesetService->getRulesetDefinitions();
 
         // compare db with ruleset in both directions
         $rulesetAdded = [];
@@ -164,28 +75,20 @@ class ConfigurationController extends ActionController
             $this->view->assign('rulesetRemoved', $rulesetRemoved);
             $this->view->assign('dbConfig', $dbConfigArray);
 
+
             if (!empty($rulesetAdded)) {
+                // remove options from dbConfigArray because only the keys are saved in the db
+                $this->removeOptionsRecursive($dbConfigArray);
                 $config = array_replace_recursive($dbConfigArray, $configurationRuleset);
             } else {
                 $config = $dbConfigArray;
             }
         }
-
         $this->view->assign('rulesetConfig', $configurationRuleset);
         $this->view->assign('config', $config);
 
         return $this->htmlResponse();
     }
-
-    public function convertInputType($inputType)
-    {
-        switch ($inputType) {
-            case 'boolean':
-                return 'checkbox';
-        }
-        return $inputType;
-    }
-
 
     /**
      * @throws UnknownObjectException
@@ -213,5 +116,22 @@ class ConfigurationController extends ActionController
         }
 
         $this->redirect('index');
+    }
+    function removeOptionsRecursive(&$array) {
+        if (!is_array($array)) {
+            return;
+        }
+
+        unset($array['options']);
+
+        foreach ($array as &$value) {
+            if (is_array($value)) {
+                $this->removeOptionsRecursive($value);
+
+                if (isset($value['children'])) {
+                    $this->removeOptionsRecursive($value['children']);
+                }
+            }
+        }
     }
 }
