@@ -21,6 +21,9 @@
                     </f:then>
                 </f:if>
 
+                <button id="rotate-left" class="btn btn-primary mb-2 mt-2 fa-solid fa-rotate-left"></button>
+                <button id="rotate-right" class="btn btn-primary mb-2 mt-2 fa-solid fa-rotate-right"></button>
+
                 <f:for each="{processImagesInfo}" as="imageInfo" iteration="index">
                     <div class="processimages" data-path="{imageInfo.image}" data-height="{imageInfo.height}" data-width="{imageInfo.width}"></div>
                 </f:for>

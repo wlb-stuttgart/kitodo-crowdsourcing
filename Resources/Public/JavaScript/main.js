@@ -3,6 +3,7 @@ var navbarHeight = 60;
 var isScrolling = false;
 var $navbarCollapse = $('#navbarNav');
 var scrollTimer;
+var map = null;
 
 $( document ).ready(function() {
 
@@ -143,7 +144,7 @@ function openLayer() {
         source: source[0],
     });
 
-    const map = new ol.Map({
+    map = new ol.Map({
         layers: [
             imageLayer,
         ],
@@ -256,6 +257,31 @@ function clickEvents() {
     $('input.abortEdit').on('click', function (evt) {
         $('form.processForm [required]').removeAttr('required');
     });
+
+
+    // image rotation
+    $('#rotate-left').on('click', function (evt) {
+        // Get the current rotation
+        var currentRotation = map.getView().getRotation();
+
+        // Rotate by 90 degrees
+        var newRotation = currentRotation - Math.PI / 2;
+
+        // Set the new rotation
+        map.getView().setRotation(newRotation);
+    });
+
+    $('#rotate-right').on('click', function (evt) {
+        // Get the current rotation
+        var currentRotation = map.getView().getRotation();
+
+        // Rotate by 90 degrees
+        var newRotation = currentRotation + Math.PI / 2;
+
+        // Set the new rotation
+        map.getView().setRotation(newRotation);
+    });
+
 
 }
 
