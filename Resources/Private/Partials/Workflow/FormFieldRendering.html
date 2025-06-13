@@ -58,15 +58,48 @@
                 data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"/>
     </f:case>
     <f:case value="checkbox">
-        {value}
-        <f:form.checkbox
+        <f:if condition="{value} == 'true'">
+            <f:then>
+                <f:variable name="checked">checked</f:variable>
+            </f:then>
+            <f:else>
+                <f:variable name="checked"></f:variable>
+            </f:else>
+        </f:if>
+        <div class="form-check form-switch">
+            <f:form.checkbox
+                    id="{f:if(condition: '{child} == 1', then: 'meta-{metadataChildId}', else: 'meta-{metadataId}')}"
+                    class="form-control processForm form-check-input"
+                    name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{i}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
+                    value="true"
+                    data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"
+                    checked="{checked}"/>
+        </div>
+    </f:case>
+    <f:case value="select">
+        <f:form.select
                 id="{f:if(condition: '{child} == 1', then: 'meta-{metadataChildId}', else: 'meta-{metadataId}')}"
-                class="form-control processForm form-check-input"
+                class="form-control processForm"
                 name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{i}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
-                value="true"
-                placeholder=""
+                value="{value}"
+                placeholder="Test"
                 required="{f:if(condition: '{required} == 1 && {child} != 1', then: 'true', else: 'false')}"
-                pattern="{metadata.validation}"
-                data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"/>
+                data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}">
+            <f:if condition="{child} == 1">
+                <f:then>
+                    <f:variable name="options">{metadataChild.options}</f:variable>
+                </f:then>
+                <f:else>
+                    <f:variable name="options">{metadata.options}</f:variable>
+                </f:else>
+            </f:if>
+            <f:form.select.option value=""></f:form.select.option>
+            <f:for each="{options}" as="option" key="key" iteration="iteration">
+                <f:form.select.option value="{option}">
+                    {rulesetDefinitions.{metadataChildId}.options.{option}}
+                </f:form.select.option>
+            </f:for>
+
+        </f:form.select>
     </f:case>
 </f:switch>

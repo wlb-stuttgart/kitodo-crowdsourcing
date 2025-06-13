@@ -43,6 +43,7 @@
         </div>
         <f:if condition="!{rulesetRemoved.{docType}.{metadataId}}">
             <f:then>
+
                 <div class="col-md-1">
                     <label for="meta-{metadataId}-{metadataChildId}-inputtype" class="form-label">Feldtyp</label>
                     <f:form.select id="meta-{metadataId}-{metadataChildId}-inputtype"
@@ -54,6 +55,7 @@
                         <f:form.select.option value="textarea">Textarea</f:form.select.option>
                         <f:form.select.option value="date">Date</f:form.select.option>
                         <f:form.select.option value="checkbox">Checkbox</f:form.select.option>
+                        <f:form.select.option value="select">Selectbox</f:form.select.option>
                     </f:form.select>
                 </div>
                 <div class="col-md-1">
@@ -76,6 +78,18 @@
                             value="{metadataChild.maxOccurs}"
                             type="number"
                             min="1" />
+                </div>
+
+                <div class="col-xs-6">
+                    <label for="meta-{metadataId}-{metadataChildId}-options" class="form-label">Options</label>
+                    <f:form.select
+                            id="meta-{metadataId}-{metadataChildId}-options"
+                            class="form-control"
+                            name="metadata[{docType}][{metadataId}][children][{metadataChildId}][options]"
+                            placeholder="Test"
+                            options="{metadataChild.options}"
+                            selectAllByDefault="true"
+                            multiple="true"/>
                 </div>
 
                 <!-- Regulärer Ausdruck -->
