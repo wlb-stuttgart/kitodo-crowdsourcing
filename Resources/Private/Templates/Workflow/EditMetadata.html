@@ -107,7 +107,7 @@
                                                                 <f:for each="{v:iterator.range(low: 0, high: maxOccurs)}" as="j">
                                                                     <div class="metadataChildField">
                                                                         <div class="input-group pb-2">
-                                                                            <f:if condition="{j} > {metadataChild.minOccurs}">
+                                                                            <f:if condition="{j} >= {metadataChild.minOccurs}">
                                                                                 <f:then>
                                                                                     <f:render partial="Workflow/FormFieldRendering" arguments="{_all}"/>
                                                                                     <div class="input-group-text deleteField" style="cursor: pointer;">
