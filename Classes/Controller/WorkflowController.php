@@ -283,9 +283,6 @@ class WorkflowController extends ActionController
         if ($this->request->hasArgument('cache')) {
             $process->updateMetadata($trustedMetadata);
             $this->persistenceManager->persistAll();
-
-            // index data
-            $this->solrIndexer->indexDocument($process);
         }
 
         if ($this->request->hasArgument('save')) {
@@ -341,11 +338,10 @@ class WorkflowController extends ActionController
                 $this->processImportService->copyFilesFromProcessToArchive($process->getRecordIdentifier());
                 $this->processImportService->moveFilesFromProcessToExported($process->getRecordIdentifier());
             }
-
-            // index data
-            $this->solrIndexer->indexDocument($process);
-
         }
+
+        // index data
+        $this->solrIndexer->indexDocument($process);
 
         $this->processRepository->update($process);
 
