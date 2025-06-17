@@ -181,6 +181,11 @@ class Process extends AbstractEntity
         return ['signature' => (string)$values[0]];
     }
 
+    public function getThumbsImageInfos()
+    {
+        return $this->getImageInfos('thumbs');
+    }
+
     public function getImageInfos(string $fileType = 'default')
     {
         if ($this->state === self::WORKFLOW_STATE_COMPLETED) {
