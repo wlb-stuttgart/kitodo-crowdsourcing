@@ -220,7 +220,7 @@ class ProcessImportService
      */
     protected function getImageNames(string $identifier): array
     {
-        $imagesDir = $this->processDir . '/' . $identifier . '/images';
+        $imagesDir = $this->processDir . '/' . $identifier . '/images/default';
         $imageFiles = array_diff(scandir($imagesDir), ['.', '..']);
         $imageNames = [];
 
