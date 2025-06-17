@@ -37,7 +37,7 @@
                                 <div class="carousel-inner">
                                     <f:for each="{document.images}" as="imageName" iteration="index">
                                         <div class="carousel-item {f:if(condition: '{index.index} == 0', then: 'active', else: '')}">
-                                            <img src="{document.imageInfos.{index.index}.image}" class="d-block w-100 carousel-image" />
+                                            <img src="{document.thumbsImageInfos.{index.index}.image}" class="d-block w-100 carousel-image" />
                                         </div>
                                     </f:for>
                                 </div>
