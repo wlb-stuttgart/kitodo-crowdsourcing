@@ -280,15 +280,13 @@ class ProcessImportService
      * @return void
      * @throws \Exception
      */
-    public function moveFilesFromProcessToExported($identifier)
+    public function symlinkFilesFromProcessToExported($identifier)
     {
-        if (!rename($this->importedDir . '/' . $identifier, $this->exportDir . '/' . $identifier)) {
-            throw new \Exception('Could not move data from process to imported folder');
-        }
+        $this->filesystem->symlink($this->importedDir . '/' . $identifier, $this->exportDir . '/' . $identifier);
     }
 
-    public function copyFilesFromProcessToArchive($identifier)
+    public function moveFilesFromProcessToArchive($identifier)
     {
-        $this->filesystem->mirror($this->importedDir . '/' . $identifier, $this->archiveDir . '/' . $identifier);
+        $this->filesystem->rename($this->importedDir . '/' . $identifier, $this->archiveDir . '/' . $identifier);
     }
 }

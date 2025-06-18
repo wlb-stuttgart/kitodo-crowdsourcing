@@ -335,8 +335,8 @@ class WorkflowController extends ActionController
                     throw new \Exception('Could not save XML file');
                 }
 
-                $this->processImportService->copyFilesFromProcessToArchive($process->getRecordIdentifier());
-                $this->processImportService->moveFilesFromProcessToExported($process->getRecordIdentifier());
+                $this->processImportService->moveFilesFromProcessToArchive($process->getRecordIdentifier());
+                $this->processImportService->symlinkFilesFromProcessToExported($process->getRecordIdentifier());
             }
         }
 
