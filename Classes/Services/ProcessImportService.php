@@ -282,7 +282,10 @@ class ProcessImportService
      */
     public function symlinkFilesFromProcessToExported($identifier)
     {
-        $this->filesystem->symlink($this->archiveDir . '/' . $identifier, $this->exportDir . '/' . $identifier);
+        $this->filesystem->symlink(
+            $this->filesystem->makePathRelative($this->archiveDir . '/' . $identifier, $this->exportDir . '/'),
+            $this->exportDir . '/' . $identifier
+        );
     }
 
     public function moveFilesFromProcessToArchive($identifier)
