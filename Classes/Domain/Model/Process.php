@@ -173,6 +173,31 @@ class Process extends AbstractEntity
         $this->metadata = $metadata;
     }
 
+    /**
+     * Sets the title based on metadata extracted from an XML structure.
+     *
+     * This method parses the metadata field, interprets the XML to extract the
+     * title or signature, and sets the title accordingly. If the title is not
+     * found, the signature is used as the title.
+     *
+     * @return void
+     */
+    public function setTitleFromMetadata()
+    {
+        $xml = simplexml_load_string($this->metadata);
+        $xml->registerXPathNamespace('kitodo', 'http://meta.kitodo.org/v1/');
+        // Get title and signature
+        $signature = (string) $xml->xpath('*[@name="Signatur"]')[0];
+        $title = (string) $xml->xpath('*[@name="4000"]/*[@name="4000_1"]')[0];
+        
+        if (empty($title)) {
+            $this->setTitle($signature);;
+        } else {
+            $this->setTitle($title);
+        }
+
+    }
+
     public function getMetadataForDisplay()
     {
         $xml = simplexml_load_string($this->metadata);
@@ -305,18 +330,9 @@ class Process extends AbstractEntity
             }
         }
 
-        // Get title and signature
-        $signature = (string) $sxe->xpath('*[@name="Signatur"]')[0];
-        $title = (string) $sxe->xpath('*[@name="4000"]/*[@name="4000_1"]')[0];
-
-        if (empty($title)) {
-            $this->setTitle($signature);;
-        } else {
-            $this->setTitle($title);
-        }
-
         $this->setMetadata($sxe->saveXML());
 
+        $this->setTitleFromMetadata();
     }
 
     public function toArray()

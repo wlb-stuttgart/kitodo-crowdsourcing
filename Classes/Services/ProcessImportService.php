@@ -161,6 +161,7 @@ class ProcessImportService
                 $process->setState(Process::WORKFLOW_STATE_NEW);
                 $process->setImages($imageNames);
                 $process->setType($typeNodes->item(0)->nodeValue);
+                $process->setTitleFromMetadata();
                 $this->processRepository->add($process);
 
                 // Set initial history dataset
