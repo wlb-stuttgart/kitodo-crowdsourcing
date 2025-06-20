@@ -184,14 +184,21 @@ function clickEvents() {
         }
     });
 
+    $('select.processForm:not([required]):not([data-required="1"])').each(function () {
+        if ($(this).val() === '') {
+            $(this).parent().hide();
+        }
+    });
+
     // Hide all metadata groups with empty input fields
     $('div.group-with-children .child-group').each(function() {
+        let groupRequired = $(this).find('div.card-body[data-required="1"]');
         let allInputs = $(this).find('div[data-required="0"] input');
         let hasValue = allInputs.filter(function() {
             return $(this).val().trim() !== "";
         }).length > 0;
 
-        if (!hasValue) {
+        if (!hasValue && groupRequired.length === 0) {
             $(this).hide();
         }
     });
