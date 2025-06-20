@@ -305,6 +305,16 @@ class Process extends AbstractEntity
             }
         }
 
+        // Get title and signature
+        $signature = (string) $sxe->xpath('*[@name="Signatur"]')[0];
+        $title = (string) $sxe->xpath('*[@name="4000"]/*[@name="4000_1"]')[0];
+
+        if (empty($title)) {
+            $this->setTitle($signature);;
+        } else {
+            $this->setTitle($title);
+        }
+
         $this->setMetadata($sxe->saveXML());
 
     }
