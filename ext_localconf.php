@@ -26,10 +26,13 @@ if ($versionInformation->getMajorVersion() < 12) {
 ExtensionUtility::configurePlugin(
     'Crowdsourcing',
     'Campaigns',
-    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'landingPage,listCampaigns,showCampaignDetails, listProcesses, editMetadata, saveForm'],
-    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'landingPage,listCampaigns,showCampaignDetails, listProcesses, editMetadata, saveForm']
+    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'landingPage, dashboard, listCampaigns, showCampaignDetails, listProcesses, editMetadata, saveForm'],
+    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'landingPage, dashboard, listCampaigns, showCampaignDetails, listProcesses, editMetadata, saveForm']
 );
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserTSConfig(
     '@import \'EXT:crowdsourcing/Configuration/TypoScript/sfregister.typoscript\''
 );
+
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['locallangXMLOverride']['EXT:felogin/Resources/Private/Language/locallang.xlf'][] =
+    'EXT:crowdsourcing/Resources/Private/Language/Overrides/locallang.xlf';

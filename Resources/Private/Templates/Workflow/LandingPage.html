@@ -1,150 +1,67 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
       data-namespace-typo3-fluid="true">
 
-{namespace wlb=Wlb\Crowdsourcing\ViewHelpers}
-
 <f:layout name="Frontend"/>
 
 <f:section name="main">
 
-    <wlb:userInfo as="userInfo" />
+    <f:render partial="Workflow/Navigation" arguments="{_all}"/>
 
-    <!-- Mobile Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top d-md-none">
-        <div class="container-fluid d-flex justify-content-end">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav w-100">
-                    <f:comment>
-                        Added by JavaScript due to the section with id="section-..."
-                        <li class="nav-item"><a class="nav-link" href="#">Section-Link</a></li>
-                    </f:comment>
-
-                    <f:if condition="{userInfo}">
-                        <f:then>
-                            <li class="nav-item">
-                                <f:link.page pageUid="{settings.crowdsourcingLogin}" additionalParams="{logintype: 'logout'}" noCacheHash="1" class="nav-link" title="Logout">
-                                    Logout
-                                </f:link.page>
-                            </li>
-                        </f:then>
-                        <f:else>
-                            <li class="nav-item">
-                                <f:link.page pageUid="{settings.crowdsourcingLogin}" title="Login" class="nav-link">
-                                    Login
-                                </f:link.page>
-                            </li>
-                            <li class="nav-item">
-                                <f:link.page pageUid="{settings.crowdsourcingRegister}" title="Register" class="nav-link">
-                                    Register
-                                </f:link.page>
-                            </li>
-                        </f:else>
-                    </f:if>
-                </ul>
-            </div>
+    <main class="container-fluid my-5 landing-page-main">
+        <div class="content-wrapper">
+            <h1>Protest sichtbar machen</h1>
+            <p> Kampagne wurde am TT.MM.YYYY eröffnet.</p>
+            <button class="btn btn-lg btn-primary start-now-button">Jetzt Starten</button>
         </div>
-    </nav>
 
-    <!-- Fixed Login/Register -->
-    <div class="bottom-links-fixed d-none d-md-block">
-        <f:if condition="{userInfo}">
-            <f:then>
-                <f:link.page pageUid="{settings.crowdsourcingLogin}" additionalParams="{logintype: 'logout'}" noCacheHash="1" class="nav-link" title="Logout">
-                    Logout
-                </f:link.page>
-            </f:then>
-            <f:else>
-                <f:link.page pageUid="{settings.crowdsourcingLogin}" title="Login">
-                    Login
-                </f:link.page>
-                <f:link.page pageUid="{settings.crowdsourcingRegister}" title="Register">
-                    Register
-                </f:link.page>
-            </f:else>
-        </f:if>
-    </div>
-
-    <!-- Scroll Arrows -->
-    <div class="scroll-arrow scroll-arrow-up" onclick="scrollToPreviousSection()">
-        <i class="fa fa-solid fa-chevron-up"></i>
-    </div>
-    <div class="scroll-arrow scroll-arrow-down" onclick="scrollToNextSection()">
-        <i class="fa fa-solid fa-chevron-down"></i>
-    </div>
-
-    <!-- Main Layout -->
-    <div class="container-fluid scroll-section">
-        <div class="row full-height-row">
-            <div class="col-md-3 sidebar d-none d-md-block">
-                <div class="nav-links">
-                    <f:comment>
-                        Added by JavaScript due to the section with id="section-..."
-                        <a href="#">Link</a>
-                    </f:comment>
+        <div class="info-box-wrapper">
+            <div class="row g-4">
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                        <h3>Worum geht's?</h3>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-9 main-content">
-                <h1>
-                    <f:translate key="landingpage.header" />
-                </h1>
-                <hr class="header" />
-                <h2 class="h4">
-                    <f:translate key="landingpage.subheader" />
-                </h2>
-                <p class="mt-4">
-                    <f:translate key="landingpage.description" />
-                </p>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                        <h3>Wie mitmachen?</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                        <h3>Wozu tragen die Ergebnisse bei?</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                        <h3>Was passiert mit den Ergebnissen?</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                        <h3>Was passiert mit den Ergebnissen?</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
 
-                <div class="container mt-5">
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <f:link.action action="listCampaigns" class="card shadow-sm border-0 rounded-3 bg-primary text-white text-decoration-none">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">Kampagnen</h5>
-                                    <p class="card-text">Klicken Sie, um Kampagnen zu suchen und deren Details sowie Plakate anzusehen.</p>
-                                </div>
-                            </f:link.action>
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-                            <f:link.action action="listProcesses" class="card shadow-sm border-0 rounded-3 bg-success text-white text-decoration-none">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">Plakate</h5>
-                                    <p class="card-text">Klicken Sie, um nach Plakaten zu suchen und diese anzusehen.</p>
-                                </div>
-                            </f:link.action>
-                        </div>
+                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                        <h3>FAQs</h3>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- Scrollable Sections -->
-    <div class="full-width-section section-colored scroll-section">
-        <h2 id="section-1" class="h1"><f:translate key="landingpage.about.header" /></h2>
-        <hr class="header" />
-        <h3 class="h4"><f:translate key="landingpage.about.subheader" /></h3>
-        <p class="mt-4"><f:translate key="landingpage.about.description" /></p>
-    </div>
-
-    <div class="full-width-section section-white scroll-section">
-        <h2  id="section-2" class="h1"><f:translate key="landingpage.howToContribute.header" /></h2>
-        <hr class="header" />
-        <h3 class="h4"><f:translate key="landingpage.howToContribute.subheader" /></h3>
-        <p class="mt-4"><f:translate key="landingpage.howToContribute.description" /></p>
-    </div>
-
-    <div class="full-width-section section-colored scroll-section">
-        <h2  id="section-3" class="h1 to-menu"><f:translate key="landingpage.whyContribute.header" /></h2>
-        <hr class="header" />
-        <h3 class="h4"><f:translate key="landingpage.whyContribute.subheader" /></h3>
-        <p class="mt-4"><f:translate key="landingpage.whyContribute.description" /></p>
+    <div class="modal fade" id="info-box-details" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Hier stehen die ausführlichen Informationen.</p>
+                </div>
+            </div>
+        </div>
     </div>
 
 </f:section>

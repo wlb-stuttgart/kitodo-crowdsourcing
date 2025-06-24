@@ -1,0 +1,74 @@
+{namespace wlb=Wlb\Crowdsourcing\ViewHelpers}
+
+<f:comment>
+    <f:debug>{_all}</f:debug>
+</f:comment>
+
+<wlb:userInfo as="userInfo" />
+
+<section class="container-fluid">
+
+    <div class="meta-nav py-2">
+            <div class="d-flex justify-content-end gap-3">
+                <a href="#" class="text-decoration-none text-secondary">Zur Website</a>
+                <a href="#" class="text-decoration-none text-secondary">Feedback</a>
+                <a href="#" class="text-decoration-none text-secondary">Datenschutz</a>
+                <a href="#" class="text-decoration-none text-secondary">Barrierefreiheit</a>
+                <a href="#" class="text-decoration-none text-secondary">Impressum</a>
+            </div>
+    </div>
+
+    <div class="main-nav-wrapper bg-gray">
+            <nav class="main-nav">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="logo">
+                        <a href="{settings.wlbWebsiteUrl}" target="_blank" aria-label="WLB-Stuttgart Website">
+                            <f:image src="EXT:crowdsourcing/Resources/Public/Icons/wlb-logo.svg" alt="WLB Logo" height="40"/>
+                        </a>
+                    </div>
+
+                    <div class="d-flex gap-4 main-nav-links">
+                        <f:link.action action="landingPage" class="{f:if(condition:'{currentView} == \'landingPage\'',then:'active',else:'inactive')}">
+                            <f:format.case mode="upper">
+                                <f:translate key="navigation.home" />
+                            </f:format.case>
+                        </f:link.action>
+
+                        <f:link.action action="listProcesses"
+                                       class="{f:if(condition:'!{userInfo}',then:'login',else:'')} {f:if(condition:'{currentView} == \'listProcesses\'',then:'active',else:'inactive')}">
+                            <f:format.case mode="upper">
+                                <f:translate key="navigation.poster" />
+                            </f:format.case>
+                        </f:link.action>
+
+                        <f:link.action action="dashboard"
+                                       class="{f:if(condition:'{currentView} == \'dashboard\'',then:'active',else:'inactive')}">
+                            <f:format.case mode="upper">
+                                <f:translate key="navigation.dashboard" />
+                            </f:format.case>
+                        </f:link.action>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <f:if condition="{userInfo}">
+                            <f:then>
+                                <f:link.page pageUid="{settings.crowdsourcingLogin}" additionalParams="{logintype: 'logout'}" class="btn login" title="Logout">
+                                    Abmelden
+                                </f:link.page>
+                                <f:image src="EXT:crowdsourcing/Resources/Public/Icons/avatar.svg" alt="WLB Logo" height="40"/>
+                            </f:then>
+                            <f:else>
+                                <a href="{f:uri.action(action:'listCampaigns')}" type="button" title="Login" class="btn login" data-bs-toggle="modal" data-bs-target="#loginModalX">
+                                    Anmelden
+                                </a>
+                                <a href="#" title="Register" class="btn btn-primary register">
+                                    Registrieren
+                                </a>
+                            </f:else>
+                        </f:if>
+                    </div>
+                </div>
+            </nav>
+    </div>
+
+</section>

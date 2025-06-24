@@ -7,125 +7,197 @@
 
 <f:section name="main">
 
-<div class="container">
+    <f:render partial="Workflow/Navigation" arguments="{_all}"/>
 
-    <!-- Search Area -->
-    <div class="row mb-4 mt-4">
-        <div class="col">
-            <f:form action="listProcesses"
-                    controller="Workflow"
-                    pluginName="Campaigns"
-                    method="post" name="searchForm" id="searchForm"
-                    class="align-items-center">
-                <!-- Search Input -->
-                <div class="form-group mb-0 search-container">
-                    <f:form.textfield name="query"
-                                      id="searchInput"
-                                      class="form-control"
-                                      placeholder="Enter search term"
-                                      aria-label="Search"
-                                      value="{query}" />
-                    <f:form.submit class="btn btn-primary searchSubmit" value="Suchen" />
-                </div>
-            </f:form>
-        </div>
-    </div>
+    <div class="container-fluid">
+        <div class="process-list-container">
+            <section class="search-section">
+                <f:form action="listProcesses"
+                        controller="Workflow"
+                        pluginName="Campaigns"
+                        method="post"
+                        name="searchForm"
+                        id="searchForm">
 
-    <!-- Facet area -->
-    <div class="row mb-4 mt-4">
-        <f:for each="{facets}" key="facetLabel" as="facetFields">
-            <f:for each="{facetFields}" key="facetField" as="facet">
-                <div class="col">
-                    <h3>{facetLabel}</h3>
-                    <ul class="facets">
-                    <f:for each="{facet}" key="facetName" as="value" iteration="iterator">
-                        <f:if condition="{facetCounters.{facetField}.{iterator.index}} != 0">
-                            <f:then>
-                                <li>
-                                    <f:if condition="{wlb:isFacetActive(facetValue: '{value}',facetField:'{facetField}', activeFacets:'{activeFacets}')}">
-                                        <f:then>
-                                            <v:variable.set name="facetActive" value="active"/>
-                                        </f:then>
-                                        <f:else>
-                                            <v:variable.set name="facetActive" value=""/>
-                                        </f:else>
-                                    </f:if>
-                                    <f:link.action action="listProcesses"
-                                                   arguments="{wlb:facetArgument(facetValue: '{value}', facetField:'{facetField}', activeFacets:'{activeFacets}')}"
-                                                   class="{facetActive}">
-                                        <f:if condition="{facetActive} == 'active'">
-                                            <f:then>
-                                                <i class="fa-solid fa-square-xmark"></i>
-                                            </f:then>
-                                            <f:else>
-                                                <i class="fa-regular fa-square"></i>
-                                            </f:else>
-                                        </f:if>
-                                        {value} ({facetCounters.{facetField}.{iterator.index}})
-                                    </f:link.action>
-                                </li>
-                            </f:then>
-                        </f:if>
-                    </f:for>
-                    </ul>
-                </div>
-            </f:for>
-        </f:for>
-    </div>
-
-    <ul class="list-unstyled row">
-        <f:for each="{processes}" as="process">
-        <li class="col-xl-2 col-lg-4 col-md-6 col-sm-6 mb-4">
-            <div class="card d-flex flex-column" style="height: 100%;">
-                <f:if condition="{process.images}">
-                    <f:then>
-                        <img src="{process.thumbsImageInfos.0.image}" class="card-img-top carousel-image" />
-                    </f:then>
-                    <f:else>
-                        <div class="card-img-left" style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; background-color: #e0e0e0; border: 0px solid #333;">
-                            <i class="fas fa-image" style="font-size: 50px; color: #999;" aria-label="Image not available"></i>
+                    <div class="row g-2">
+                        <div class="col">
+                            <f:form.textfield name="query"
+                                              id="searchInput"
+                                              class="form-control flex-grow-1"
+                                              placeholder="Enter search term"
+                                              aria-label="Search"
+                                              value="{query}" />
                         </div>
-                    </f:else>
-                </f:if>
+                        <div class="col-auto searchButtons">
+                            <a href="#"
+                               class="searchSubmit link-with-icon"
+                               onclick="document.getElementById('searchForm').submit();"
+                               aria-label="Search">
+                                <f:image src="EXT:crowdsourcing/Resources/Public/Icons/search.svg" aria-hidden="true" />
+                            </a>
+                            <a href="#"
+                               class="searchSubmit link-with-icon"
+                               onclick=""
+                               aria-label="Search">
+                                <f:image src="EXT:crowdsourcing/Resources/Public/Icons/filter.svg" aria-hidden="true" />
+                            </a>
+                            <a href="#"
+                               class="searchSubmit link-with-icon"
+                               onclick=""
+                               aria-label="Search">
+                                <f:image src="EXT:crowdsourcing/Resources/Public/Icons/sort.svg" aria-hidden="true" />
+                            </a>
+                        </div>
+                    </div>
+                </f:form>
+            </section>
 
-                <!-- Card content below the image -->
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">{process.title}</h5>
-                    <p><f:translate key="process.type.{process.type}" /></p>
+            <!-- Facet area -->
+            <section class="facets-section">
+                <div class="row mb-4 mt-4">
+                    <f:for each="{facets}" key="facetLabel" as="facetFields">
+                        <f:for each="{facetFields}" key="facetField" as="facet">
+                            <div class="col">
+                                <h3>{facetLabel}</h3>
+                                <ul class="facets">
+                                <f:for each="{facet}" key="facetName" as="value" iteration="iterator">
+                                    <f:if condition="{facetCounters.{facetField}.{iterator.index}} != 0">
+                                        <f:then>
+                                            <li>
+                                                <f:if condition="{wlb:isFacetActive(facetValue: '{value}',facetField:'{facetField}', activeFacets:'{activeFacets}')}">
+                                                    <f:then>
+                                                        <v:variable.set name="facetActive" value="active"/>
+                                                    </f:then>
+                                                    <f:else>
+                                                        <v:variable.set name="facetActive" value=""/>
+                                                    </f:else>
+                                                </f:if>
+                                                <f:link.action action="listProcesses"
+                                                               arguments="{wlb:facetArgument(facetValue: '{value}', facetField:'{facetField}', activeFacets:'{activeFacets}')}"
+                                                               class="{facetActive}">
+                                                    <f:if condition="{facetActive} == 'active'">
+                                                        <f:then>
+                                                            <i class="fa-solid fa-square-xmark"></i>
+                                                        </f:then>
+                                                        <f:else>
+                                                            <i class="fa-regular fa-square"></i>
+                                                        </f:else>
+                                                    </f:if>
+                                                    {value} ({facetCounters.{facetField}.{iterator.index}})
+                                                </f:link.action>
+                                            </li>
+                                        </f:then>
+                                    </f:if>
+                                </f:for>
+                                </ul>
+                            </div>
+                        </f:for>
+                    </f:for>
+                </div>
+            </section>
 
-                    <f:if condition="(!{process.feUser} || {process.feUser} == {currentUser}) && {editAllowedByCurrentUser.{process.uid}} && {process.state} != 'COMPLETED'">
-                        <f:then>
-                            <f:link.action action="editMetadata" arguments="{process: process}" class="btn btn-outline-secondary btn-sm">
-                                <f:if condition="{process.feUser} == {currentUser}">
+            <main class="process-list-section">
+                <ul class="list-unstyled row">
+                    <f:for each="{processes}" as="process">
+                    <li class="col-xl-2 col-lg-4 col-md-6 col-sm-6">
+                        <div class="card d-flex flex-column" style="height: 100%;">
+                                <div class="card-image">
+                                <f:if condition="{process.images}">
                                     <f:then>
-                                        Bearbeitung fortsetzen
+                                        <img src="{process.thumbsImageInfos.0.image}" class="card-img-top carousel-image" />
                                     </f:then>
                                     <f:else>
-                                        <f:translate key="process.button.edit" />
+                                        <div class="card-img-left" style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; background-color: #e0e0e0; border: 0px solid #333;">
+                                            <i class="fas fa-image" style="font-size: 50px; color: #999;" aria-label="Image not available"></i>
+                                        </div>
                                     </f:else>
                                 </f:if>
-                            </f:link.action>
-                        </f:then>
-                        <f:else>
-                            <f:if condition="{editAllowedByCurrentUser.{process.uid}}">
+                                </div>
+
+                                <div class="card-body">
+                                    <h5 class="card-title">{process.recordIdentifier}</h5>
+                                    <p><f:translate key="process.type.{process.type}" /></p>
+
+                                    <f:if condition="(!{process.feUser} || {process.feUser} == {currentUser}) && {editAllowedByCurrentUser.{process.uid}} && {process.state} != 'COMPLETED'">
+                                        <f:then>
+                                            <f:link.action action="editMetadata" arguments="{process: process}" class="btn btn-outline-secondary btn-sm">
+                                                <f:if condition="{process.feUser} == {currentUser}">
+                                                    <f:then>
+                                                        Bearbeitung fortsetzen
+                                                    </f:then>
+                                                    <f:else>
+                                                        <f:translate key="process.button.edit" />
+                                                    </f:else>
+                                                </f:if>
+                                            </f:link.action>
+                                        </f:then>
+                                        <f:else>
+                                            <f:if condition="{editAllowedByCurrentUser.{process.uid}}">
+                                                <f:then>
+                                                    <button class="btn btn-outline-secondary btn-sm" disabled>Aktuell in Bearbeitung</button>
+                                                </f:then>
+                                                <f:else>
+                                                    <button class="btn btn-outline-secondary btn-sm" disabled>Wurde bereits bearbeitet</button>
+                                                </f:else>
+                                            </f:if>
+                                        </f:else>
+                                    </f:if>
+                                </div>
+                        </div>
+
+                        <f:comment>
+                        <div class="card d-flex flex-column" style="height: 100%;">
+                            <f:if condition="{process.images}">
                                 <f:then>
-                                    <button class="btn btn-outline-secondary btn-sm" disabled>Aktuell in Bearbeitung</button>
+                                    <img src="{process.thumbsImageInfos.0.image}" class="card-img-top carousel-image" />
                                 </f:then>
                                 <f:else>
-                                    <button class="btn btn-outline-secondary btn-sm" disabled>Wurde bereits bearbeitet</button>
+                                    <div class="card-img-left" style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; background-color: #e0e0e0; border: 0px solid #333;">
+                                        <i class="fas fa-image" style="font-size: 50px; color: #999;" aria-label="Image not available"></i>
+                                    </div>
                                 </f:else>
                             </f:if>
 
-                        </f:else>
-                    </f:if>
+                            <!-- Card content below the image -->
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{process.recordIdentifier}</h5>
+                                <p><f:translate key="process.type.{process.type}" /></p>
 
-                </div>
-            </div>
-        </li>
-        </f:for>
-    </ul>
+                                <f:if condition="(!{process.feUser} || {process.feUser} == {currentUser}) && {editAllowedByCurrentUser.{process.uid}} && {process.state} != 'COMPLETED'">
+                                    <f:then>
+                                        <f:link.action action="editMetadata" arguments="{process: process}" class="btn btn-outline-secondary btn-sm">
+                                            <f:if condition="{process.feUser} == {currentUser}">
+                                                <f:then>
+                                                    Bearbeitung fortsetzen
+                                                </f:then>
+                                                <f:else>
+                                                    <f:translate key="process.button.edit" />
+                                                </f:else>
+                                            </f:if>
+                                        </f:link.action>
+                                    </f:then>
+                                    <f:else>
+                                        <f:if condition="{editAllowedByCurrentUser.{process.uid}}">
+                                            <f:then>
+                                                <button class="btn btn-outline-secondary btn-sm" disabled>Aktuell in Bearbeitung</button>
+                                            </f:then>
+                                            <f:else>
+                                                <button class="btn btn-outline-secondary btn-sm" disabled>Wurde bereits bearbeitet</button>
+                                            </f:else>
+                                        </f:if>
 
-</div>
+                                    </f:else>
+                                </f:if>
+
+                            </div>
+                        </div>
+                        </f:comment>
+                    </li>
+                    </f:for>
+                </ul>
+            </main>
+        </div>
+    </div>
 
 </f:section>
 </html>

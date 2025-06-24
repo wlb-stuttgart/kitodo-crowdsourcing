@@ -7,8 +7,8 @@ use \TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 // TODO: Can be added in the page resources but the config does not take any effect,
 // the plugin is not listed in the plugin list in the add content/plugin dialog.
 ExtensionManagementUtility::registerPageTSConfigFile(
-    'Crowdsourcing',
-    "Configuration/page.tsconfig",
+    'crowdsourcing',
+    "Configuration/TsConfig/all.tsconfig",
     'Crowdsourcing TSConfig'
 );
 

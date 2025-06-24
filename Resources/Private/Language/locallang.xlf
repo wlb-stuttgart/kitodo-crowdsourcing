@@ -5,6 +5,15 @@
 			<generator>LFEditor</generator>
 		</header>
 		<body>
+        <trans-unit id="navigation.home">
+		    <source>Home</source>
+		</trans-unit>
+		<trans-unit id="navigation.poster">
+		    <source>Plakate</source>
+		</trans-unit>
+		<trans-unit id="navigation.dashboard">
+		    <source>Dashboard</source>
+		</trans-unit>
 		<trans-unit id="process.type.poster">
 			<source>Poster</source>
 		</trans-unit>

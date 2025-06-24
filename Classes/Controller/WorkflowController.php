@@ -55,11 +55,17 @@ class WorkflowController extends ActionController
     protected function initializeAction()
     {
         parent::initializeAction();
-
-        //if (!$this->accessControlService->isCrowdsourcingUser()) {
-        //    die("Access denied");
-        //}
     }
+
+    /**
+     * @param \TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view
+     * @return void
+     */
+    protected function initializeView(\TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view)
+    {
+        $this->view->assign('currentView', preg_replace('/Action$/', '',  $this->actionMethodName));
+    }
+
 
     public function indexAction()
     {
@@ -72,6 +78,14 @@ class WorkflowController extends ActionController
     {
     }
 
+
+    public function initializeListCampaignsAction()
+    {
+        if (!$this->accessControlService->isCrowdsourcingUser()) {
+            die("Access denied");
+        }
+    }
+
     /**
      * @return void
      */
@@ -79,6 +93,23 @@ class WorkflowController extends ActionController
     {
         $campaigns = $this->campaignRepository->findByWorkflowState(Campaign::WORKFLOW_STATE_PUBLISHED);
         $this->view->assign('campaigns', $campaigns);
+    }
+
+
+    /**
+     * @return void
+     */
+    public function dashboardAction()
+    {
+    }
+
+
+
+    public function initializeListProcessesAction()
+    {
+        if (!$this->accessControlService->isCrowdsourcingUser()) {
+            die("Access denied");
+        }
     }
 
     /**

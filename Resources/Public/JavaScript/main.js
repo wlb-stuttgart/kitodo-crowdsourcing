@@ -7,6 +7,21 @@ var map = null;
 
 $( document ).ready(function() {
 
+    // Check if there is an action uri in local storage and redirect to it.
+    // This is used for the login modal.
+    var actionUri = localStorage.getItem("action-uri");
+    if (typeof actionUri !== undefined && actionUri !== null && actionUri !== "") {
+        if (typeof showLoginDialog !== 'undefined' && showLoginDialog) {
+            if (jQuery('#loginModal')) {
+                var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                loginModal.show();
+            }
+        } else {
+            localStorage.removeItem("action-uri");
+            window.location.href = actionUri;
+        }
+    }
+
     FontAwesomeConfig = {autoReplaceSvg: false}
 
     clickEvents();
@@ -20,6 +35,12 @@ $( document ).ready(function() {
     scrollButtons();
 
     tabNavigation();
+
+    loginAndRegisterModals();
+
+    initModalKeyboardSupport();
+
+    initDashbord();
 
 });
 
@@ -363,4 +384,118 @@ function generateSectionLinks() {
         $('.nav-links').append(`<a href="#${id}">${text}</a>`);
     });
 }
+
+function loginAndRegisterModals() {
+    if (typeof showLoginDialog !== 'undefined' && showLoginDialog) {
+        if (jQuery('#loginModal')) {
+            var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+        }
+    }
+
+    jQuery('.login').on('click', function(e){
+        if (jQuery('#loginModal')) {
+            var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+
+            // Store the action uri in local storage.
+            // This is used for the redirect after login modal.
+            var actionUri = jQuery(this).attr('href');
+            localStorage.setItem("action-uri", actionUri);
+
+            loginModal.show();
+            e.preventDefault();
+        }
+    });
+
+    // Clear storage when modal is closed
+    jQuery('#loginModal').on('hidden.bs.modal', function () {
+        localStorage.removeItem("action-uri");
+    });
+
+    // Clear storage when close button is clicked
+    jQuery('#loginModal .btn-close').on('click', function () {
+        localStorage.removeItem("action-uri");
+    });
+
+
+    if (jQuery('#registerModal')) {
+
+        if (typeof registrationProcessActive !== 'undefined' && registrationProcessActive) {
+            var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+            registerModal.show();
+        }
+
+        jQuery('.register').on('click', function(e){
+            var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+            registerModal.show();
+            e.preventDefault();
+        });
+
+        jQuery("#register-link").on("click", function(e) {
+            var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+            registerModal.show();
+            e.preventDefault();
+        })
+    }
+
+
+    // Listen for any modal being shown
+    document.addEventListener('show.bs.modal', function (event) {
+        // Get all currently open modals
+        const openModals = document.querySelectorAll('.modal.show');
+
+        // Loop through them and hide, unless it's the one being shown
+        openModals.forEach(function (modal) {
+            if (modal !== event.target) {
+                bootstrap.Modal.getInstance(modal)?.hide();
+            }
+        });
+    });
+}
+
+function initModalKeyboardSupport() {
+
+    $(document).on('keydown', '[data-bs-toggle="modal"][tabindex]', function(e) {
+        const $trigger = $(this);
+
+        switch(e.key) {
+            case 'Enter':
+            case ' ':
+                e.preventDefault();
+
+                // open modal
+                const targetSelector = $trigger.data('bs-target');
+                if (targetSelector) {
+                    const targetModal = document.querySelector(targetSelector);
+                    if (targetModal) {
+                        const modal = bootstrap.Modal.getOrCreateInstance(targetModal);
+                        modal.show();
+                    }
+                }
+                break;
+
+            case 'Escape':
+                // remove focus
+                $trigger.blur();
+                break;
+        }
+    });
+
+}
+
+function initDashbord() {
+
+    $('#dashboardInfoToggle').on('click', function() {
+
+        setTimeout(() => {
+            const expanded = $(this).attr('aria-expanded') === 'true';
+            $('#dashboardInfoToggle .arrowDown').toggle(!expanded);
+            $('#dashboardInfoToggle .arrowUp').toggle(expanded);
+        }, 10);
+    });
+
+
+}
+
+
 

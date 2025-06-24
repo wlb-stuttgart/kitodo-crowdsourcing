@@ -2,13 +2,13 @@
       xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers"
       data-namespace-typo3-fluid="true">
 
-<style>
-    body {
-        padding: 15px;
-    }
-</style>
+<f:layout name="Frontend"/>
 
-<div class="container-fluid">
+<f:section name="main">
+
+    <f:render partial="Workflow/Navigation" arguments="{_all}"/>
+
+<div class="container-fluid mt-4">
     <div class="row">
         <div class="col">
             <div>
@@ -177,3 +177,5 @@
     </div>
     <script src="{f:uri.resource(path:'EXT:crowdsourcing/Resources/Public/JavaScript/Backend/configuration.js')}"></script>
 </div>
+
+</f:section>

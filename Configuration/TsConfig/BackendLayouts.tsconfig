@@ -1,0 +1,25 @@
+mod {
+    web_layout {
+        BackendLayouts {
+            crowdsourcingLayout {
+                title = Crowdsourcing Layout
+                icon = EXT:my_extension/Resources/Public/Icons/backend-layout-custom.svg
+                config {
+                    backend_layout {
+                        colCount = 1
+                        rowCount = 1
+                        rows {
+                            1 {
+                                columns {
+                                    1 {
+                                        name = Crowdsourcing Content
+                                        colPos = 0
+                                    }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
