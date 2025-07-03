@@ -28,20 +28,20 @@
                     </div>
 
                     <div class="d-flex gap-4 main-nav-links">
-                        <f:link.action action="landingPage" class="{f:if(condition:'{currentView} == \'landingPage\'',then:'active',else:'inactive')}">
+                        <f:link.action id="landingPage" action="landingPage" class="{f:if(condition:'{currentView} == \'landingPage\'',then:'active',else:'inactive')}">
                             <f:format.case mode="upper">
                                 <f:translate key="navigation.home" />
                             </f:format.case>
                         </f:link.action>
 
-                        <f:link.action action="listProcesses"
+                        <f:link.action id="listProcesses" action="listProcesses"
                                        class="{f:if(condition:'!{userInfo}',then:'login',else:'')} {f:if(condition:'{currentView} == \'listProcesses\'',then:'active',else:'inactive')}">
                             <f:format.case mode="upper">
                                 <f:translate key="navigation.poster" />
                             </f:format.case>
                         </f:link.action>
 
-                        <f:link.action action="dashboard"
+                        <f:link.action id="dashboard" action="dashboard"
                                        class="{f:if(condition:'{currentView} == \'dashboard\'',then:'active',else:'inactive')}">
                             <f:format.case mode="upper">
                                 <f:translate key="navigation.dashboard" />
@@ -58,7 +58,7 @@
                                 <f:image src="EXT:crowdsourcing/Resources/Public/Icons/avatar.svg" alt="WLB Logo" height="40"/>
                             </f:then>
                             <f:else>
-                                <a href="{f:uri.action(action:'listCampaigns')}" type="button" title="Login" class="btn login" data-bs-toggle="modal" data-bs-target="#loginModalX">
+                                <a href="{f:uri.action(action:'landingPage')}" type="button" title="Login" class="btn login">
                                     Anmelden
                                 </a>
                                 <a href="#" title="Register" class="btn btn-primary register">

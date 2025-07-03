@@ -84,10 +84,9 @@
                     <p>General statistics content here.</p>
                 </section>
 
-                <section class="mt-3 dashboard-section dashboard-user-processes">
-                    <h2>Vorgänge</h2>
-                    <f:if condition="{userInfo}">
-                        <f:then>
+                <f:if condition="{userInfo}">
+                    <f:then>
+                        <section class="mt-3 dashboard-section dashboard-user-processes">
                             <div class="dashboard-processes-box-wrapper">
                                 <div class="row g-4">
                                     <div class="col-4">
@@ -107,21 +106,13 @@
                                     </div>
                                 </div>
                             </div>
-                        </f:then>
-                        <f:else>
-                            Zum Starten bitte
-                            <f:link.action action="dashboard"
-                                           class="{f:if(condition:'!{userInfo}',then:'login',else:'')} ">
-                                    anmelden
-                            </f:link.action>
-                        </f:else>
-                    </f:if>
-                </section>
-
-                <section class="mt-3 dashboard-section dashboard-user-statistic">
-                    <h2>User-Statistic</h2>
-                    <p>User statistics content here.</p>
-                </section>
+                        </section>
+                        <section class="mt-3 dashboard-section dashboard-user-statistic">
+                            <h2>User-Statistic</h2>
+                            <p>User statistics content here.</p>
+                        </section>
+                    </f:then>
+                </f:if>
             </div>
         </div>
     </div>

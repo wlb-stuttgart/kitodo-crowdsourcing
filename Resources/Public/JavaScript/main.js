@@ -7,21 +7,6 @@ var map = null;
 
 $( document ).ready(function() {
 
-    // Check if there is an action uri in local storage and redirect to it.
-    // This is used for the login modal.
-    var actionUri = localStorage.getItem("action-uri");
-    if (typeof actionUri !== undefined && actionUri !== null && actionUri !== "") {
-        if (typeof showLoginDialog !== 'undefined' && showLoginDialog) {
-            if (jQuery('#loginModal')) {
-                var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-                loginModal.show();
-            }
-        } else {
-            localStorage.removeItem("action-uri");
-            window.location.href = actionUri;
-        }
-    }
-
     FontAwesomeConfig = {autoReplaceSvg: false}
 
     clickEvents();
@@ -386,10 +371,24 @@ function generateSectionLinks() {
 }
 
 function loginAndRegisterModals() {
-    if (typeof showLoginDialog !== 'undefined' && showLoginDialog) {
-        if (jQuery('#loginModal')) {
-            var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-            loginModal.show();
+
+    // Check if there is an action uri in local storage and redirect to it.
+    // This is used for the login and the registration modal dialog.
+    var actionUri = localStorage.getItem("action-uri");
+
+    if (typeof actionUri !== undefined && actionUri !== null && actionUri !== "") {
+        if (typeof showLoginDialog !== 'undefined' && showLoginDialog) {
+            if (jQuery('#loginModal')) {
+                var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                loginModal.show();
+            }
+        } else if (isRegistrationProcessActive()) {
+            var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+            setRegistrationProcessActive();
+            registerModal.show();
+        } else {
+            localStorage.removeItem("action-uri");
+            window.location.href = actionUri;
         }
     }
 
@@ -399,75 +398,54 @@ function loginAndRegisterModals() {
 
             // Store the action uri in local storage.
             // This is used for the redirect after login modal.
-            var actionUri = jQuery(this).attr('href');
-            localStorage.setItem("action-uri", actionUri);
-
+            var activePage = jQuery('.main-nav-links a.active').first();
+            if (typeof activePage !== 'undefined' && activePage) {
+                localStorage.setItem("action-uri", activePage.attr('href'));
+            }
+            
             loginModal.show();
             e.preventDefault();
         }
     });
 
-    // Clear storage when modal is closed
     jQuery('#loginModal').on('hidden.bs.modal', function () {
-        localStorage.removeItem("action-uri");
-        window.location.href = '/';
+        redirectToActivePage();
     });
 
-    // Clear storage when close button is clicked
     jQuery('#loginModal .btn-close').on('click', function () {
-        localStorage.removeItem("action-uri");
-        window.location.href = '/';
+        redirectToActivePage();
     });
 
 
     if (jQuery('#registerModal')) {
 
-        if (jQuery("#registerModal").find('.error').length > 0) {
-            var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
-            registerModal.show();
-        }
-
-        let changeRegistration = localStorage.getItem("changeRegistration");
-
-        if (
-            (typeof changeRegistration !== undefined && changeRegistration === 'true') ||
-            (typeof registrationProcessActive !== 'undefined' && registrationProcessActive) ||
-            (jQuery("#registerModal").find('.error').length > 0)
-        ) {
-            var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
-            registerModal.show();
-        }
-
         jQuery('.register').on('click', function(e){
             var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
             registerModal.show();
-            localStorage.setItem("changeRegistration", "true");
+            setRegistrationProcessInactive();
+            saveActivePageUri();
             e.preventDefault();
         });
 
         jQuery("#register-link").on("click", function(e) {
             var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
             registerModal.show();
-            localStorage.setItem("changeRegistration", "true");
+            setRegistrationProcessActive();
+            saveActivePageUri();
             e.preventDefault();
         })
 
         jQuery('#registerModal').on('hidden.bs.modal', function () {
-            localStorage.removeItem("changeRegistration");
-            window.location.href = '/';
+            setRegistrationProcessInactive();
+            redirectToActivePage();
         });
 
         jQuery('#registerModal .btn-close').on('click', function () {
-            localStorage.removeItem("changeRegistration");
-            window.location.href = '/';
+            setRegistrationProcessInactive();
+            redirectToActivePage();
         });
 
-        //jQuery('#registerModal .preview-change-registration').on('click', function () {
-        //    localStorage.setItem("changeRegistration", "true");
-        //});
-
     }
-
 
     // Listen for any modal being shown
     document.addEventListener('show.bs.modal', function (event) {
@@ -483,7 +461,42 @@ function loginAndRegisterModals() {
     });
 }
 
-function initModalKeyboardSupport() {
+function redirectToActivePage()
+{
+    var activePage = jQuery('.main-nav-links a.active').first();
+    if (typeof activePage !== 'undefined' && activePage) {
+        var actionUri = activePage.attr('href');
+        window.location.href = actionUri;
+    } else {
+        window.location.href = "/";
+    }
+}
+
+function saveActivePageUri() {
+    // Store the action uri in local storage.
+    // This is used for the redirect after login modal.
+    var activePage = jQuery('.main-nav-links a.active').first();
+    if (typeof activePage !== 'undefined' && activePage) {
+        localStorage.setItem("action-uri", activePage.attr('href'));
+    }
+}
+
+function setRegistrationProcessActive() {
+    localStorage.setItem("registrationProcess", "true");
+}
+
+function setRegistrationProcessInactive() {
+    localStorage.removeItem("registrationProcess");
+}
+
+function isRegistrationProcessActive() {
+    return (localStorage.getItem("registrationProcess") === "true") ||
+        (typeof registrationProcessActive !== 'undefined' && registrationProcessActive) ||
+        (jQuery("#registerModal").find('.error').length > 0);
+}
+
+function initModalKeyboardSupport()
+{
 
     $(document).on('keydown', '[data-bs-toggle="modal"][tabindex]', function(e) {
         const $trigger = $(this);
