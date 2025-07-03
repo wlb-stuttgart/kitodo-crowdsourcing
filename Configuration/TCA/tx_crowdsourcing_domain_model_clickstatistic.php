@@ -1,0 +1,122 @@
+<?php
+defined('TYPO3') or die();
+
+return [
+    'ctrl' => [
+        'title' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_clickstatistic',
+        'label' => 'action_type',
+        'label_alt' => 'action_identifier',
+        'label_alt_force' => true,
+        'tstamp' => 'tstamp',
+        'crdate' => 'crdate',
+        'sortby' => 'crdate',
+        'delete' => 'deleted',
+        'enablecolumns' => [],
+        'searchFields' => 'action_type,action_identifier,uri',
+        'iconfile' => 'EXT:crowdsourcing/Resources/Public/Icons/tx_crowdsourcing_domain_model_clickstatistic.gif'
+    ],
+    'types' => [
+        '1' => ['showitem' => 'action_type,action_identifier,uri,ip_address,user_agent,fe_user_uid,process_uid,campaign_uid,session_id,additional_data'],
+    ],
+    'columns' => [
+        'ip_address' => [
+            'exclude' => true,
+            'label' => 'IP Address',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ],
+        ],
+        'user_agent' => [
+            'exclude' => true,
+            'label' => 'User Agent',
+            'config' => [
+                'type' => 'text',
+                'cols' => 40,
+                'rows' => 3,
+            ],
+        ],
+        'fe_user_uid' => [
+            'exclude' => true,
+            'label' => 'Frontend User',
+            'config' => [
+                'type' => 'input',
+                'size' => 10,
+                'eval' => 'int'
+            ],
+        ],
+        'action_type' => [
+            'exclude' => true,
+            'label' => 'Action Type',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim,required'
+            ],
+        ],
+        'action_identifier' => [
+            'exclude' => true,
+            'label' => 'Action Identifier',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim,required'
+            ],
+        ],
+        'uri' => [
+            'exclude' => true,
+            'label' => 'URI',
+            'config' => [
+                'type' => 'text',
+                'cols' => 40,
+                'rows' => 3,
+            ],
+        ],
+        'referrer' => [
+            'exclude' => true,
+            'label' => 'Referrer',
+            'config' => [
+                'type' => 'text',
+                'cols' => 40,
+                'rows' => 3,
+            ],
+        ],
+        'process_uid' => [
+            'exclude' => true,
+            'label' => 'Process',
+            'config' => [
+                'type' => 'input',
+                'size' => 10,
+                'eval' => 'int'
+            ],
+        ],
+        'campaign_uid' => [
+            'exclude' => true,
+            'label' => 'Campaign',
+            'config' => [
+                'type' => 'input',
+                'size' => 10,
+                'eval' => 'int'
+            ],
+        ],
+        'session_id' => [
+            'exclude' => true,
+            'label' => 'Session ID',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ],
+        ],
+        'additional_data' => [
+            'exclude' => true,
+            'label' => 'Additional Data',
+            'config' => [
+                'type' => 'text',
+                'cols' => 40,
+                'rows' => 5,
+            ],
+        ],
+    ],
+];

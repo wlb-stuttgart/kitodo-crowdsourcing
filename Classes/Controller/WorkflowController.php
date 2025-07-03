@@ -30,10 +30,10 @@ use Wlb\Crowdsourcing\Services\ProcessHistoryService;
 use Wlb\Crowdsourcing\Services\ProcessImportService;
 use Wlb\Crowdsourcing\Services\RulesetService;
 use Wlb\Crowdsourcing\Services\SearchService;
+use Wlb\Crowdsourcing\Services\StatisticService;
 
 class WorkflowController extends ActionController
 {
-
     public function __construct(
         private readonly CampaignRepository $campaignRepository,
         private readonly ProcessRepository $processRepository,
@@ -47,14 +47,21 @@ class WorkflowController extends ActionController
         private readonly ProcessHistoryService $processHistoryService,
         private readonly SolrIndexer $solrIndexer,
         private readonly ProcessImportService $processImportService,
-        private readonly RulesetService $rulesetService
-    )
-    {
+        private readonly RulesetService $rulesetService,
+        private readonly StatisticService $statisticService
+    ) {
     }
 
     protected function initializeAction()
     {
         parent::initializeAction();
+        
+        // log controller action
+        $this->statisticService->logClick(
+            'controller_action',
+            $this->actionMethodName,
+            $this->request->getAttribute('originalRequest') ?? $this->request
+        );
     }
 
     /**
@@ -63,21 +70,26 @@ class WorkflowController extends ActionController
      */
     protected function initializeView(\TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view)
     {
-        $this->view->assign('currentView', preg_replace('/Action$/', '',  $this->actionMethodName));
+        $this->view->assign('currentView', preg_replace('/Action$/', '', $this->actionMethodName));
     }
-
 
     public function indexAction()
     {
+        $this->statisticService->logClick(
+            'page_view',
+            'workflow_index',
+            $this->request->getAttribute('originalRequest') ?? $this->request
+        );
     }
 
-    /**
-     * @return void
-     */
     public function landingPageAction()
     {
+        $this->statisticService->logClick(
+            'page_view',
+            'landing_page',
+            $this->request->getAttribute('originalRequest') ?? $this->request
+        );
     }
-
 
     public function initializeListCampaignsAction()
     {
@@ -86,24 +98,29 @@ class WorkflowController extends ActionController
         }
     }
 
-    /**
-     * @return void
-     */
     public function listCampaignsAction()
     {
         $campaigns = $this->campaignRepository->findByWorkflowState(Campaign::WORKFLOW_STATE_PUBLISHED);
         $this->view->assign('campaigns', $campaigns);
+        
+        $this->statisticService->logClick(
+            'page_view',
+            'list_campaigns',
+            $this->request->getAttribute('originalRequest') ?? $this->request,
+            0,
+            0,
+            ['campaign_count' => count($campaigns)]
+        );
     }
 
-
-    /**
-     * @return void
-     */
     public function dashboardAction()
     {
+        $this->statisticService->logClick(
+            'page_view',
+            'dashboard',
+            $this->request->getAttribute('originalRequest') ?? $this->request
+        );
     }
-
-
 
     public function initializeListProcessesAction()
     {
@@ -113,11 +130,10 @@ class WorkflowController extends ActionController
     }
 
     /**
-     * @param string $query
+     * Lists processes based on the provided query and active facets, and prepares the data for rendering in the view.
+     *
+     * @param string $query The search query used to filter the listed processes. Default is an empty string.
      * @return void
-     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
-     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function listProcessesAction(string $query = '')
     {
@@ -127,7 +143,7 @@ class WorkflowController extends ActionController
         $this->view->assign('currentUser', $feUser);
 
         $facetsFields = $this->searchService->getFacetFields();
-        $activeFacets = $this->request->getArguments()['facet'];
+        $activeFacets = $this->request->getArguments()['facet'] ?? [];
         $searchResult = $this->searchService->searchProcesses($query, $facetsFields, $activeFacets);
         $processes = $searchResult['processes'];
         $facets = $searchResult['facets'];
@@ -141,7 +157,6 @@ class WorkflowController extends ActionController
                     $i = 0;
                     foreach ($facetsFields[$facetLabel][$fieldName] as $key => $facetValue) {
                         if ($i % 2 == 1) {
-                            // Save facet value counter and remove it from array
                             $facetValueCounter[$fieldName][] = $facetValue;
                             unset($facetsFields[$facetLabel][$fieldName][$key]);
                         }
@@ -172,10 +187,26 @@ class WorkflowController extends ActionController
 
         $this->view->assign("importedPath", $importedPath);
         $this->view->assign("query", $query);
+        
+        // log search action
+        $this->statisticService->logClick(
+            'search_action',
+            'list_processes',
+            $this->request->getAttribute('originalRequest') ?? $this->request,
+            0,
+            0,
+            [
+                'search_query' => $query,
+                'active_facets' => $activeFacets,
+                'result_count' => count($processes)
+            ]
+        );
     }
 
     /**
-     * @param Campaign $campaign
+     * Displays the details of a campaign.
+     *
+     * @param Campaign $campaign The campaign entity to be displayed.
      * @return void
      */
     public function showCampaignDetailsAction(Campaign $campaign)
@@ -187,12 +218,26 @@ class WorkflowController extends ActionController
         }
         $this->view->assign('importedPath', $importedPath);
         $this->view->assign('campaign', $campaign);
+        
+        // log campaign details view
+        $this->statisticService->logClick(
+            'page_view',
+            'campaign_details',
+            $this->request->getAttribute('originalRequest') ?? $this->request,
+            0,
+            $campaign->getUid(),
+            ['campaign_title' => $campaign->getTitle()]
+        );
     }
 
     /**
-     * @throws AspectNotFoundException
-     * @throws UnknownObjectException
-     * @throws IllegalObjectTypeException
+     * Handles the metadata editing action for a process.
+     * Assigns configuration, form values, and process details to the view.
+     * Logs the metadata edit action for statistics purposes.
+     *
+     * @param Process $process The process entity containing metadata to be edited
+     * @return ResponseInterface Returns the response object after processing the action
+     * @throws \Exception If the process is already taken, user is editing another process, or metadata configuration is missing
      */
     public function editMetadataAction(Process $process): ResponseInterface
     {
@@ -206,11 +251,10 @@ class WorkflowController extends ActionController
             throw new \Exception('Process already taken');
         }
 
-        // check if user is currently editing
-        $currentlyEditingProcess = $this->processRepository->findOneByFeUser($feUser);
-        if ($currentlyEditingProcess && $currentlyEditingProcess !== $process) {
-            // TODO: The user should be asked whether the process currently being processed should be released
-            throw new \Exception('User is already editing another process');
+        if ($currentlyEditingProcess = $this->processRepository->findOneByFeUser($feUser)) {
+            if ($currentlyEditingProcess !== $process) {
+                throw new \Exception('User is already editing another process');
+            }
         }
 
         $process->setFeUser($feUser);
@@ -284,14 +328,25 @@ class WorkflowController extends ActionController
         $this->view->assign('process', $process);
         $this->view->assign('formValues', $formValues);
 
+        // log metadata edit action
+        $this->statisticService->logWorkflowAction(
+            'edit_metadata',
+            $process,
+            $this->request->getAttribute('originalRequest') ?? $this->request,
+            ['process_type' => $processType]
+        );
+
         return $this->htmlResponse();
     }
 
     /**
-     * @throws UnknownObjectException
-     * @throws NoSuchArgumentException
-     * @throws IllegalObjectTypeException
-     * @throws \Exception
+     * Handles the saving of a form action by processing metadata, updating process states,
+     * managing process history, exporting data when necessary, and indexing the updated process.
+     *
+     * Depending on the request arguments, this method supports aborting, caching, and saving
+     * operations for a given process. It also performs necessary file operations and logs the action.
+     *
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function saveFormAction(): ResponseInterface
     {
@@ -300,23 +355,25 @@ class WorkflowController extends ActionController
         /* @var $process \Wlb\Crowdsourcing\Domain\Model\Process */
         $process = $this->processRepository->findByUid($processId);
 
+        $actionTaken = '';
+        
         if ($this->request->hasArgument('abort')) {
-            // TODO: Return last condition from processHistory
+            $actionTaken = 'abort';
             $process->resetFeUser();
-
             $lastHistoryProcess = $this->processHistoryRepository->getLastHistory($process->getRecordIdentifier());
             $data = $lastHistoryProcess->toArray();
-
             $this->processHistoryService->restoreFromArray($process, $data);
             $this->persistenceManager->persistAll();
         }
 
         if ($this->request->hasArgument('cache')) {
+            $actionTaken = 'cache';
             $process->updateMetadata($trustedMetadata);
             $this->persistenceManager->persistAll();
         }
 
         if ($this->request->hasArgument('save')) {
+            $actionTaken = 'save';
             $process->updateMetadata($trustedMetadata);
 
             $processHistory = new ProcessHistory();
@@ -375,6 +432,14 @@ class WorkflowController extends ActionController
         $this->solrIndexer->indexDocument($process);
 
         $this->processRepository->update($process);
+
+        // log form save action
+        $this->statisticService->logWorkflowAction(
+            $actionTaken,
+            $process,
+            $this->request->getAttribute('originalRequest') ?? $this->request,
+            ['metadata_fields' => count($trustedMetadata)]
+        );
 
         return (new ForwardResponse('index'));
     }
