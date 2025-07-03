@@ -410,17 +410,30 @@ function loginAndRegisterModals() {
     // Clear storage when modal is closed
     jQuery('#loginModal').on('hidden.bs.modal', function () {
         localStorage.removeItem("action-uri");
+        window.location.href = '/';
     });
 
     // Clear storage when close button is clicked
     jQuery('#loginModal .btn-close').on('click', function () {
         localStorage.removeItem("action-uri");
+        window.location.href = '/';
     });
 
 
     if (jQuery('#registerModal')) {
 
-        if (typeof registrationProcessActive !== 'undefined' && registrationProcessActive) {
+        if (jQuery("#registerModal").find('.error').length > 0) {
+            var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+            registerModal.show();
+        }
+
+        let changeRegistration = localStorage.getItem("changeRegistration");
+
+        if (
+            (typeof changeRegistration !== undefined && changeRegistration === 'true') ||
+            (typeof registrationProcessActive !== 'undefined' && registrationProcessActive) ||
+            (jQuery("#registerModal").find('.error').length > 0)
+        ) {
             var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
             registerModal.show();
         }
@@ -428,14 +441,31 @@ function loginAndRegisterModals() {
         jQuery('.register').on('click', function(e){
             var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
             registerModal.show();
+            localStorage.setItem("changeRegistration", "true");
             e.preventDefault();
         });
 
         jQuery("#register-link").on("click", function(e) {
             var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
             registerModal.show();
+            localStorage.setItem("changeRegistration", "true");
             e.preventDefault();
         })
+
+        jQuery('#registerModal').on('hidden.bs.modal', function () {
+            localStorage.removeItem("changeRegistration");
+            window.location.href = '/';
+        });
+
+        jQuery('#registerModal .btn-close').on('click', function () {
+            localStorage.removeItem("changeRegistration");
+            window.location.href = '/';
+        });
+
+        //jQuery('#registerModal .preview-change-registration').on('click', function () {
+        //    localStorage.setItem("changeRegistration", "true");
+        //});
+
     }
 
 
@@ -481,6 +511,18 @@ function initModalKeyboardSupport() {
         }
     });
 
+}
+
+function onModalCloseByEsc(modalId, escCallback, otherCallback) {
+    let escPressed = false;
+    const $modal = $('#' + modalId);
+
+    $modal.on('keydown', e => { escPressed = e.key === 'Escape'; });
+    $modal.on('hide.bs.modal', () => {
+        if (escPressed) escCallback && escCallback();
+        else otherCallback && otherCallback();
+        escPressed = false;
+    });
 }
 
 function initDashbord() {

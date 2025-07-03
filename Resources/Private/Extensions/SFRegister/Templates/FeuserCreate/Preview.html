@@ -1,0 +1,54 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="Default" />
+
+<f:section name="Main">
+
+	<script>
+		let registrationProcessActive = true;
+	</script>
+
+	<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title" id="exampleModalLabel">
+						Registrieren
+					</h2>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+
+				<div class="modal-body">
+					<f:form action="proxy" name="user" class="px-3" object="{user}" id="sfPreviewForm">
+						<div class="form-row">
+							<f:for each="{settings.fields.selected}" as="selectedField">
+								<f:if condition="{selectedField} !== 'submit' && {selectedField} !== 'change'">
+									<f:alias map="{options: '{settings.fields.configuration.{selectedField}}'}">
+										<f:render partial="Preview/{options.partial}" arguments="{user: user, fieldName: selectedField, options: options}"/>
+									</f:alias>
+								</f:if>
+							</f:for>
+						</div>
+					<div class="mandatory">
+						<f:format.raw><f:translate extensionName="sf_register" id="info_mandatory_fields"/></f:format.raw>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<f:alias map="{options: '{settings.fields.configuration.change}'}">
+						<f:render partial="Preview/Modal/{options.partial}" arguments="{user: user, fieldName: selectedField, options: options}"/>
+					</f:alias>
+					<f:alias map="{options: '{settings.fields.configuration.submit}'}">
+						<f:render partial="Preview/Modal/{options.partial}" arguments="{user: user, fieldName: selectedField, options: options}"/>
+					</f:alias>
+				</div>
+			</div>
+
+			</f:form>
+		</div>
+
+	</div>
+
+</f:section>
+
+</html>

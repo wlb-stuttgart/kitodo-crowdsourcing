@@ -13,14 +13,14 @@
         <f:else>
         </f:else>
     </f:security.ifAuthenticated>
-    
+
     <f:if condition="{messageKey} == 'error'">
         <script>
             var showLoginDialog = true;
         </script>
     </f:if>
 
-    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document" data-loginerror="{f:if(condition:'{cookieWarning} || {messageKey} == \'error\'',then:'true',else:'false')}">
             <div class="modal-content">
                 <div class="modal-header">

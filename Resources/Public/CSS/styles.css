@@ -446,12 +446,15 @@ h1 {
 }
 
 .form-control,
+#registerModal input,
 #loginModal input,
 #crowdsourcing .btn,
 #crowdsourcing-login .btn {
     border-radius: 0;
 }
 
+#registerModal .modal-header,
+#registerModal .modal-footer,
 #loginModal .modal-header,
 #loginModal .modal-footer {
     border: none;
@@ -462,17 +465,48 @@ h1 {
 #crowdsourcing .modal-footer,
 #crowdsourcing-login .modal-content,
 #crowdsourcing-login .modal-header,
-#crowdsourcing-login .modal-footer {
+#crowdsourcing-login .modal-footer,
+#registerModal .modal-content,
+#registerModal .modal-header,
+#registerModal .modal-footer {
     border-radius: 0;
 }
 
+#registerModal #bargraph {
+    display: none;
+}
+
+#registerModal .form-check {
+    padding-left: 0;
+}
+
+#registerModal .error {
+    color: red;
+    font-size: 12px;
+}
+
+#registerModal .formerrors {
+   display: none;
+}
+
+#registerModal .col-md-6 {
+    width: 100%;
+}
+
+#registerModal form {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
 #crowdsourcing .modal.fade .modal-dialog,
+#registerModal .modal-dialog,
 #crowdsourcing-login .modal.fade .modal-dialog {
     transform: translate(0, 100%);
     transition: transform 0.3s ease-out;
 }
 
 #crowdsourcing .modal.show .modal-dialog,
+#registerModal .modal-dialog,
 #crowdsourcing-login .modal.show .modal-dialog {
     transform: translate(0, 0);
 }

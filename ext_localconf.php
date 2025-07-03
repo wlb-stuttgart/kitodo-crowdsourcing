@@ -36,3 +36,9 @@ ExtensionUtility::configurePlugin(
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['locallangXMLOverride']['EXT:felogin/Resources/Private/Language/locallang.xlf'][] =
     'EXT:crowdsourcing/Resources/Private/Language/Overrides/locallang.xlf';
+
+
+// Override sf_register controller
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\Evoweb\SfRegister\Controller\FeuserCreateController::class] = [
+    'className' => \Wlb\Crowdsourcing\Controller\FeuserCreateController::class
+];
