@@ -1,15 +1,11 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
 
-<f:comment>
-	<f:render partial="Common/Navbar" arguments="{_all}"/>
-</f:comment>
-
 <main class="container mt-4">
 
 <div class="tx_evoweb_sfregister">
 	<f:security.ifAuthenticated>
 		<f:then>
-			<f:translate id="needTobBeLoggedOut"/>
+			<span style="display:none;"><f:translate id="needTobBeLoggedOut"/></span>
 		</f:then>
 		<f:else>
 			<f:render section="Main" />
