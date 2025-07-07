@@ -233,7 +233,7 @@ h1 {
 
 #crowdsourcing .landing-page-main .start-now-button {
     font-family: IBM Plex Sans Condensed, sans-serif;
-    font-size: 2.4rem;
+    font-size: 2.4rem !important;
     font-weight: var(--font-regular);
     line-height: inherit;
     letter-spacing: normal;
@@ -334,6 +334,7 @@ h1 {
 
 .process-list-container .process-list-section .card-image {
     padding: 0.5rem;
+    height: 300px;
 }
 
 
@@ -546,6 +547,12 @@ h1 {
 
 /* Metadata form */
 
+#nav-tabContent {
+    background: white;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    padding: 1.5rem;
+}
+
 .nav-tabs .nav-item.show .nav-link,
 .nav-tabs .nav-link.active {
     color: #000;
@@ -578,7 +585,6 @@ button.tab-error::after {
 
 .carousel-image {
     object-fit: cover;
-    height: 300px;
     width: 100%;
 }
 
