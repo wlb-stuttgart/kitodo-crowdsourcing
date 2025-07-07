@@ -7,7 +7,7 @@
 
     --color-btn-primary: #4BACC2;
     --color-black: #000;
-    --color-background: #CFCFCF;
+    --color-background: #D9DADB;
     --color-box-background: #FAF9F7;
 
 }
@@ -83,6 +83,9 @@
     src: url('../Fonts/ibm-plex-sans-condensed-v14-latin-600.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
+html {
+    font-size: 10px;
+}
 
 body {
     /* background-color: #e6e9ed; */
@@ -91,8 +94,8 @@ body {
 
     font-family: IBM Plex Sans, sans-serif;
     font-weight: var(--font-regular);
-    font-size: 16px;
-    line-height: inherit;
+    font-size: 1.8rem;
+    line-height: 1.5;
     color: #000;
 }
 
@@ -104,7 +107,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-size: 72px;
+    font-size: 7.2rem;
+}
+
+.h2, h2 {
+    font-size: 2.4rem;
+}
+
+.h3, h3 {
+    font-size: 2.4rem;
+}
+
+.h5, h5 {
+    font-size: 1.8rem;
+}
+
+.btn-group-sm > .btn, .btn-sm {
+    font-size: 1.6rem;
+    border-radius: 0;
 }
 
 #crowdsourcing .container-fluid {
@@ -124,7 +144,6 @@ h1 {
 
 .main-nav-links a {
     font-family: IBM Plex Sans Condensed, sans-serif;
-    font-size: 16px;
     font-weight: var(--font-semibold);
     letter-spacing: -0.02em;
     text-decoration: none;
@@ -148,7 +167,7 @@ h1 {
 .main-nav .login,
 .main-nav .register {
     font-family: IBM Plex Sans Condensed, sans-serif;
-    font-size: 16px;
+    font-size: 1.8rem;
     font-weight: var(--font-regular);
     letter-spacing: inherit;
 }
@@ -165,7 +184,10 @@ h1 {
     font-weight: var(--font-light);
     letter-spacing: inherit;
     text-decoration: none;
-    background-color: var(--color-background);
+}
+
+#crowdsourcing .meta-nav .text-secondary {
+    color: #000000 !important;
 }
 
 #crowdsourcing .main-nav {
@@ -199,7 +221,6 @@ h1 {
 }
 
 #crowdsourcing .landing-page-main .content-wrapper p {
-    font-size: 24px;
     letter-spacing: -0.02em;
     line-height: 36px;
     font-weight: var(--font-light);
@@ -212,7 +233,7 @@ h1 {
 
 #crowdsourcing .landing-page-main .start-now-button {
     font-family: IBM Plex Sans Condensed, sans-serif;
-    font-size: 24px;
+    font-size: 2.4rem;
     font-weight: var(--font-regular);
     line-height: inherit;
     letter-spacing: normal;
@@ -260,7 +281,7 @@ h1 {
 
 #crowdsourcing .landing-page-main .info-box h3 {
     font-family: IBM Plex Sans Condensed, sans-serif;
-    font-size: 16px;
+    font-size: 2.4rem;
     font-weight: var(--font-semibold);
     letter-spacing: normal;
     margin-bottom: 0.5rem;
@@ -278,7 +299,9 @@ h1 {
 }
 
 #searchInput {
-    background-color: var(--color-background);
+    background-color: white;
+    border: 2px solid var(--color-background);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .process-list-container .searchButtons a {
@@ -332,7 +355,7 @@ h1 {
 
     font-family: IBM Plex Sans, sans-serif;
     font-weight: var(--font-light);
-    font-size: 16px;
+    font-size: 1.8rem;
     line-height: 24px;
 
 }
@@ -451,6 +474,11 @@ h1 {
 #crowdsourcing .btn,
 #crowdsourcing-login .btn {
     border-radius: 0;
+    font-size: 1.8rem !important;
+}
+
+.form-control {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
 #registerModal .modal-header,
@@ -517,6 +545,22 @@ h1 {
 
 
 /* Metadata form */
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+    color: #000;
+    border-color: #fff;
+}
+
+.nav-link {
+    color: #000000;
+}
+
+.nav-link:focus,
+.nav-link:hover {
+    color: #6c757d;
+}
+
 
 button.tab-error::after {
     content: "";
