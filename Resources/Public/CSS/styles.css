@@ -334,9 +334,15 @@ h1 {
 
 .process-list-container .process-list-section .card-image {
     padding: 0.5rem;
-    height: 300px;
 }
 
+.process-list-container .process-list-section .card-image img {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: contain;
+    display: block;
+}
 
 #crowdsourcing .process-list-container {
     width: 100%;
