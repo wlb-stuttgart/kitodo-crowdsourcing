@@ -4,8 +4,10 @@
 	<f:security.ifAuthenticated>
 		<f:then>
 			<f:render partial="Workflow/Navigation" arguments="{_all}"/>
-			<main class="container-fluid my-5 user-settings">
-				<f:render section="Main" />
+			<main class="container-fluid mt-4">
+				<div class="mx-auto user-profile-container">
+					<f:render section="Main" />
+				</div>
 			</main>
 		</f:then>
 		<f:else>
