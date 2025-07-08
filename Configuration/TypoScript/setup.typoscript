@@ -27,11 +27,11 @@ plugin.tx_crowdsourcing_campaigns {
         wlbWebsiteUrl = https://www.wlb-stuttgart.de
 
         navigation {
-            crowdsourcingRoot = 7
+            crowdsourcingRoot = {$plugin.tx_crowdsourcing.settings.navigation.crowdsourcingRoot}
             user {
-                profile = 4
-                password = 11
-                delete = 9
+                profile =  {$plugin.tx_crowdsourcing.settings.navigation.user.profile}
+                password =  {$plugin.tx_crowdsourcing.settings.navigation.user.password}
+                delete = {$plugin.tx_crowdsourcing.settings.navigation.user.delete}
             }
         }
 

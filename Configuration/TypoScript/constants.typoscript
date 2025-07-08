@@ -10,11 +10,16 @@ plugin.tx_crowdsourcing {
         # cat=plugin.tx_crowdsourcing//a; type=integer; label=PID of the crowdsourcing frontend user group
         crowdsourcingUserGroup =
 
-        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Register PID
-        crowdsourcingRegister =
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Crowdsourcing root pageUid
+        navigation.crowdsourcingRoot =
 
-        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Login PID
-        crowdsourcingLogin =
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=User profile edit pageUid
+        navigation.user.profile =
+
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=User profile delete pageUid
+        navigation.user.delete =
+
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=User change password pageUid
+        navigation.user.password =
     }
 }
-
