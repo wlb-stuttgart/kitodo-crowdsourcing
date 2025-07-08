@@ -26,6 +26,16 @@ plugin.tx_crowdsourcing_campaigns {
 
         wlbWebsiteUrl = https://www.wlb-stuttgart.de
 
+        navigation {
+            crowdsourcingRoot = 7
+            user {
+                profile = 4
+                password = 11
+                delete = 9
+            }
+        }
+
+
     }
 }
 
@@ -44,7 +54,7 @@ page.includeJS {
 }
 
 page.includeJSFooter {
-    bootstrap = EXT:crowdsourcing/Resources/Public/JavaScript/Bootstrap/bootstrap.min.js
+    bootstrap = EXT:crowdsourcing/Resources/Public/JavaScript/Bootstrap/bootstrap.bundle.min.js
     datetimepicker = EXT:crowdsourcing/Resources/Public/JavaScript/Datetimepicker/jquery.datetimepicker.full.min.js
     main = EXT:crowdsourcing/Resources/Public/JavaScript/main.js
     #fontawesome = EXT:crowdsourcing/Resources/Public/JavaScript/Fontawesome/all.min.js

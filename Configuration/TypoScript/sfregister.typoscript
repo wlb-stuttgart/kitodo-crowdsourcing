@@ -38,6 +38,9 @@ plugin.tx_sfregister.settings {
          }
     }
 
+    navigation < plugin.tx_crowdsourcing_campaigns.settings.navigation
+
+
     crowdsourcingUserGroup = {$plugin.tx_crowdsourcing.settings.crowdsourcingUserGroup}
     crowdsourcingLogin = {$plugin.tx_crowdsourcing.settings.crowdsourcingLogin}
 
