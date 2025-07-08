@@ -295,7 +295,8 @@ h1 {
 #crowdsourcing .process-list-container .facets-section {
 }
 
-#crowdsourcing .process-list-container .process-list-section {
+#crowdsourcing .process-list-container .process-list-section .btn {
+    font-size: 1.6rem !important;
 }
 
 #searchInput {
@@ -339,9 +340,18 @@ h1 {
 .process-list-container .process-list-section .card-image img {
     width: 100%;
     height: auto;
-    max-height: 300px;
     object-fit: contain;
+    object-position: top;
     display: block;
+    max-height: 100%;
+}
+
+.process-list-container .process-list-section .card-image {
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #crowdsourcing .process-list-container {
