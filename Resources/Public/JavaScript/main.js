@@ -161,6 +161,7 @@ function openLayer() {
             zoom: 0,
             maxZoom: 6,
         }),
+        controls: [],
     });
 
     $('.ol-prev-image').on('click', function (evt) {
@@ -274,27 +275,61 @@ function clickEvents() {
 
     // image rotation
     $('#rotate-left').on('click', function (evt) {
+        var view = map.getView();
         // Get the current rotation
-        var currentRotation = map.getView().getRotation();
+        var currentRotation = view.getRotation();
 
         // Rotate by 90 degrees
         var newRotation = currentRotation - Math.PI / 2;
 
         // Set the new rotation
-        map.getView().setRotation(newRotation);
+        // view.setRotation(newRotation);
+        view.animate({ rotation: newRotation, duration: 250});
     });
 
     $('#rotate-right').on('click', function (evt) {
+        var view = map.getView();
         // Get the current rotation
-        var currentRotation = map.getView().getRotation();
+        var currentRotation =view.getRotation();
 
         // Rotate by 90 degrees
         var newRotation = currentRotation + Math.PI / 2;
 
         // Set the new rotation
-        map.getView().setRotation(newRotation);
+        //view.setRotation(newRotation);
+        view.animate({ rotation: newRotation, duration: 250});
     });
 
+    //zoom
+    $('#zoom-in').on('click', function (evt) {
+        var view = map.getView();
+        var zoom = view.getZoom();
+        view.animate({ zoom: zoom + 1, duration: 250});
+    });
+
+    $('#zoom-out').on('click', function (evt) {
+        var view = map.getView();
+        var zoom = view.getZoom();
+        view.animate({ zoom: zoom - 1, duration: 250});
+    });
+
+    $('#show-thumbnails').on('click', function (evt) {
+        $('#thumbnails').toggle();
+        $('#map').toggle();
+    });
+
+    $('#fullscreen').on('click', function (evt) {
+        var elem = $('#map')[0];
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
+        }
+    });
 
 }
 
