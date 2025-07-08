@@ -14,20 +14,20 @@
             <div>
                 <f:if condition="{processImagesInfo -> f:count()} > 1">
                     <f:then>
-                        <f:form.button class="ol-prev-image btn btn-primary mb-2 mt-2 p-3 fa-solid fa-arrow-left" type="button"></f:form.button>
-                        <f:form.button class="ol-next-image btn btn-primary mb-2 mt-2 p-3 fa-solid fa-arrow-right" type="button"></f:form.button>
+                        <f:form.button class="ol-prev-image btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-arrow-left" type="button"></f:form.button>
+                        <f:form.button class="ol-next-image btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-arrow-right" type="button"></f:form.button>
                     </f:then>
                 </f:if>
 
-                <button id="rotate-left" class="btn btn-primary mb-2 mt-2 p-3 fa-solid fa-rotate-left"></button>
-                <button id="rotate-right" class="btn btn-primary mb-2 mt-2 p-3 fa-solid fa-rotate-right"></button>
-                <button id="zoom-in" class="btn btn-primary mb-2 mt-2 p-3 fa-solid fa-plus"></button>
-                <button id="zoom-out" class="btn btn-primary mb-2 mt-2 p-3 fa-solid fa-minus"></button>
-                <button id="fullscreen" class="btn btn-primary mb-2 mt-2 p-3 fa-solid fa-maximize"></button>
+                <button id="rotate-left" class="btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-rotate-left"></button>
+                <button id="rotate-right" class="btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-rotate-right"></button>
+                <button id="zoom-in" class="btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-plus"></button>
+                <button id="zoom-out" class="btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-minus"></button>
+                <button id="fullscreen" class="btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-maximize"></button>
 
                 <f:if condition="{processImagesInfo -> f:count()} > 1">
                     <f:then>
-                        <button id="show-thumbnails" class="btn btn-primary mb-2 mt-2 p-3 fa-solid fa-images"></button>
+                        <button id="show-thumbnails" class="btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-images"></button>
 
                         <div id="thumbnails" style="padding: 20px; width: 100%; background-color: #FFFFFF; display: none;">
                             <f:for each="{process.thumbsImageInfos}" as="thumbImageInfo" iteration="index">
