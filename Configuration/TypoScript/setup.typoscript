@@ -24,9 +24,8 @@ plugin.tx_crowdsourcing_campaigns {
         crowdsourcingUserGroup = {$plugin.tx_crowdsourcing.settings.crowdsourcingUserGroup}
         crowdsourcingLogin = {$plugin.tx_crowdsourcing.settings.crowdsourcingLogin}
 
-        wlbWebsiteUrl = https://www.wlb-stuttgart.de
-
         navigation {
+            wlbWebsiteUrl = https://www.wlb-stuttgart.de
             crowdsourcingRoot = {$plugin.tx_crowdsourcing.settings.navigation.crowdsourcingRoot}
             user {
                 profile =  {$plugin.tx_crowdsourcing.settings.navigation.user.profile}
