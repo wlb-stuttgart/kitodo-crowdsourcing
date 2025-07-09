@@ -328,6 +328,8 @@ class WorkflowController extends ActionController
         $this->view->assign('process', $process);
         $this->view->assign('formValues', $formValues);
 
+        $this->view->assign('reportMail', ExtensionConfigurationService::getInstance()->getConfigurationValue('reportMail'));
+
         // log metadata edit action
         $this->statisticService->logWorkflowAction(
             'edit_metadata',

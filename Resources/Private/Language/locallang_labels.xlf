@@ -26,6 +26,9 @@
 			<trans-unit id="config.storage.storagePid">
 				<source>UID of the system folder to store datasets</source>
 			</trans-unit>
+			<trans-unit id="config.storage.reportMail">
+				<source>Mail adress for reporting messages</source>
+			</trans-unit>
 		</body>
   </file>
 </xliff>
