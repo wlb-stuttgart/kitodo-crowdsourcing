@@ -16,7 +16,8 @@ CREATE TABLE tx_crowdsourcing_domain_model_process (
     type                varchar(255),
     metadata            MEDIUMTEXT      DEFAULT '0' NOT NULL,
     campaign            int(11)         DEFAULT '0' NOT NULL,
-    fe_user             int(11)         DEFAULT '0' NOT NULL
+    fe_user             int(11)         DEFAULT '0' NOT NULL,
+    last_accessed       int(11)         DEFAULT '0' NOT NULL
 );
 
 CREATE TABLE tx_crowdsourcing_domain_model_processhistory (
@@ -27,7 +28,8 @@ CREATE TABLE tx_crowdsourcing_domain_model_processhistory (
     type                varchar(255),
     metadata            MEDIUMTEXT      DEFAULT '0' NOT NULL,
     campaign            int(11)         DEFAULT '0' NOT NULL,
-    fe_user             int(11)         DEFAULT '0' NOT NULL
+    fe_user             int(11)         DEFAULT '0' NOT NULL,
+    last_accessed       int(11)         DEFAULT '0' NOT NULL
 );
 
 CREATE TABLE tx_crowdsourcing_domain_model_metadataconfiguration (

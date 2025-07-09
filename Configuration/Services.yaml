@@ -13,6 +13,11 @@ services:
         command: 'crowdsourcing:import'
         description: 'A command to import processes with their data.'
         schedulable: true
+  Wlb\Crowdsourcing\Command\CleanupStaleProcessesCommand:
+    tags:
+      - name: 'console.command'
+        command: 'crowdsourcing:stale-processes'
+
   Wlb\Crowdsourcing\Domain\Model\FrontendUser:
     public: true
     tags:

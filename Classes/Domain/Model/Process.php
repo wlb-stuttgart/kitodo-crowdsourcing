@@ -57,6 +57,29 @@ class Process extends AbstractEntity
     protected $feUser;
 
     /**
+     * @var int|null
+     */
+    protected $lastAccessed = null;
+
+    /**
+     * @return int|null
+     */
+    public function getLastAccessed(): ?int
+    {
+        return $this->lastAccessed;
+    }
+
+    /**
+     * @param int $lastAccessed
+     * @return void
+     */
+    public function setLastAccessed(int $lastAccessed): void
+    {
+        $this->lastAccessed = $lastAccessed;
+    }
+
+
+    /**
      * Get the campaign associated with this process.
      *
      * @return \Wlb\Crowdsourcing\Domain\Model\Campaign
@@ -151,6 +174,7 @@ class Process extends AbstractEntity
     public function setFeUser(\Wlb\Crowdsourcing\Domain\Model\FrontendUser $feUser): void
     {
         $this->feUser = $feUser;
+        $this->lastAccessed = time();
     }
 
     public function hasFeUser(): bool
@@ -347,6 +371,7 @@ class Process extends AbstractEntity
             'metadata' => $this->getMetadata(),
             'campaign' => $this->getCampaign()?->getUid(),
             'feUser' => $this->getFeUser()?->getUid(),
+            'lastAccessed' => $this->getLastAccessed(),
         ];
     }
 }

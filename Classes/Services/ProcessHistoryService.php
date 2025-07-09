@@ -57,6 +57,10 @@ class ProcessHistoryService
                 $process->setFeUser($feUser);
             }
         }
+
+        if (isset($data['lastAccessed'])) {
+            $process->setLastAccessed($data['lastAccessed']);
+        }
     }
 
     public function hasUserAlreadyEdited(Process $process, FrontendUser $feUser)

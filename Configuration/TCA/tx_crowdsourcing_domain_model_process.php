@@ -26,7 +26,7 @@ $tca = [
         '1' => [
             'showitem' =>
                 '--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
-                    title, record_identifier, images, state, type, metadata, campaign, fe_user,
+                    title, record_identifier, images, state, type, metadata, campaign, fe_user, last_accessed,
                  --div--;LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.tabs.access,
                     --palette--;;hidden,
                     --palette--;;access,',
@@ -233,6 +233,14 @@ $tca = [
                 'foreign_table' => 'fe_users',
                 'minitems' => 0,
                 'maxitems' => 1,
+            ],
+        ],
+        'last_accessed' => [
+            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process.last_accessed',
+            'config' => [
+                'type' => 'input',
+                'size' => 20,
+                'eval' => 'int'
             ],
         ],
     ],
