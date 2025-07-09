@@ -246,9 +246,8 @@ function clickEvents() {
     $('button.addFormGroupField').on('click', function (evt) {
         // get next hidden field and show it
         evt.preventDefault();
-
-        var configElement = $(this).parent().prev('.metadataChildField');
-        var nextHidden = $(configElement).find('div:hidden').first();
+        
+        var nextHidden = $(this).parent().parent().find('.metadataChildField div:hidden').first();
         nextHidden.show();
     });
 
