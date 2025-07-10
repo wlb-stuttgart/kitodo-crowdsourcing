@@ -97,6 +97,62 @@
                     Du machst Informationen zugänglich, die sonst verloren gehen könnten – und gibst Protesten eine dokumentierte Stimme in der Geschichte.
                     So trägst du dazu bei, politische Ausdrucksformen langfristig zu bewahren, kritisch zu reflektieren und öffentlich verfügbar zu machen.</target>
         </trans-unit>
+        <trans-unit id="feuser.password.error.minlength">
+            <source>
+                be at least %d characters long
+            </source>
+            <target>
+                mindestens %d Zeichen lang sein
+            </target>
+        </trans-unit>
+        <trans-unit id="feuser.password.error.uppercase">
+            <source>
+                contain at least one uppercase letter
+            </source>
+            <target>
+                mindestens einen Großbuchstaben enthalten
+            </target>
+        </trans-unit>
+        <trans-unit id="feuser.password.error.lowercase">
+            <source>
+                contain at least one lowercase letter
+            </source>
+            <target>
+                mindestens einen Kleinbuchstaben enthalten
+            </target>
+        </trans-unit>
+        <trans-unit id="feuser.password.error.number">
+            <source>
+                contain at least one number
+            </source>
+            <target>
+                mindestens eine Zahl enthalten
+            </target>
+        </trans-unit>
+        <trans-unit id="feuser.password.error.symbol">
+            <source>
+                contain at least one special characters
+            </source>
+            <target>
+                mindestens ein Sonderzeichen enthalten
+            </target>
+        </trans-unit>
+        <trans-unit id="feuser.password.error.message">
+            <source>
+                The password must %s.
+            </source>
+            <target>
+                Das Passwort muss %s.
+            </target>
+        </trans-unit>
+        <trans-unit id="feuser.password.message.rules">
+            <source>
+                The password must be at least %d characters long, contain at least one uppercase letter, contain at least one lowercase letter, contain at least one number, contain at least one special character.
+            </source>
+            <target>
+                Das Passwort muss mindestens %d Zeichen lang sein , mindestens einen Großbuchstaben enthalten, mindestens einen Kleinbuchstaben enthalten , mindestens eine Zahl enthalten , mindestens ein Sonderzeichen enthalten.
+            </target>
+        </trans-unit>
 		</body>
 	</file>
 </xliff>

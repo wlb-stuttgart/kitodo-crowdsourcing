@@ -35,7 +35,10 @@ ExtensionUtility::configurePlugin(
 );
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['locallangXMLOverride']['EXT:felogin/Resources/Private/Language/locallang.xlf'][] =
-    'EXT:crowdsourcing/Resources/Private/Language/Overrides/locallang.xlf';
+    'EXT:crowdsourcing/Resources/Private/Language/Overrides/felogin/locallang.xlf';
+
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['locallangXMLOverride']['EXT:sf_register/Resources/Private/Language/locallang.xlf'][] =
+    'EXT:crowdsourcing/Resources/Private/Language/Overrides/sf_register/locallang.xlf';
 
 
 // Override sf_register controller

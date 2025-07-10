@@ -1,0 +1,56 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+{namespace wlb=Wlb\Crowdsourcing\ViewHelpers}
+
+<f:layout name="Modal" />
+
+<f:section name="main">
+
+    <f:security.ifAuthenticated>
+        <f:then>
+        </f:then>
+        <f:else>
+        </f:else>
+    </f:security.ifAuthenticated>
+
+    <script>
+        var showLoginDialog = true;
+    </script>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="recoceryModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document" data-loginerror="{f:if(condition:'{cookieWarning} || {messageKey} == \'error\'',then:'true',else:'false')}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="recoceryModalLabel">
+                        <f:render partial="RenderLabelOrMessage" arguments="{key: 'forgot_header'}"/>
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <f:render partial="RenderLabelOrMessage" arguments="{key: 'forgot_reset_message'}"/>
+                    </p>
+
+                    <f:render partial="ValidationErrors"/>
+
+                    <f:form id="feloginRecoverySubmit" action="recovery" method="post">
+                        <fieldset>
+                            <div>
+                                <label for="userIdentifier"><f:translate key="enter_your_data"/></label>
+                                <f:form.textfield class="form-control" name="userIdentifier"/>
+                            </div>
+                        </fieldset>
+                    </f:form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-secondary" name="submit" form="feloginRecoverySubmit">{f:translate(key: 'reset_password')}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</f:section>
+
+</html>

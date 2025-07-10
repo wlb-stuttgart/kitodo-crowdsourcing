@@ -17,6 +17,9 @@
                 <source>Next</source>
                 <target>Weiter</target>
             </trans-unit>
+             <trans-unit id="consent_publish_username_stats">
+                            <source>Next</source>
+             </trans-unit>
 		</body>
 
 	</file>

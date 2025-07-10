@@ -411,7 +411,7 @@ function loginAndRegisterModals() {
     var actionUri = localStorage.getItem("action-uri");
 
     if (typeof actionUri !== undefined && actionUri !== null && actionUri !== "") {
-        if (typeof showLoginDialog !== 'undefined' && showLoginDialog) {
+        if (isLoginProcessActive()) {
             if (jQuery('#loginModal')) {
                 var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
                 loginModal.show();
@@ -423,6 +423,11 @@ function loginAndRegisterModals() {
         } else {
             localStorage.removeItem("action-uri");
             window.location.href = actionUri;
+        }
+    } else {
+        if (isLoginProcessActive()) {
+            var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
         }
     }
 
@@ -449,6 +454,11 @@ function loginAndRegisterModals() {
     jQuery('#loginModal .btn-close').on('click', function () {
         redirectToActivePage();
     });
+
+    jQuery('#passwordRecoveryLink').on('click', function(e){
+      // localStorage.setItem("action-uri", jQuery(this).attr('href'));
+    });
+
 
 
     if (jQuery('#registerModal')) {
@@ -527,6 +537,11 @@ function isRegistrationProcessActive() {
     return (localStorage.getItem("registrationProcess") === "true") ||
         (typeof registrationProcessActive !== 'undefined' && registrationProcessActive) ||
         (jQuery("#registerModal").find('.error').length > 0);
+}
+
+function isLoginProcessActive() {
+    return (typeof showLoginDialog !== 'undefined' && showLoginDialog) ||
+        (jQuery(".typo3-messages").length > 0);
 }
 
 function initModalKeyboardSupport()

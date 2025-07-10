@@ -66,6 +66,41 @@
                     You’re making knowledge accessible that might otherwise be lost—and giving past protests a documented voice in history.
                     Your input helps preserve and reflect on political expression—and keeps it available for future generations.</source>
         </trans-unit>
+        <trans-unit id="feuser.password.error.minlength">
+            <source>
+                be at least %d characters long
+            </source>
+        </trans-unit>
+        <trans-unit id="feuser.password.error.uppercase">
+            <source>
+                contain at least one uppercase letter
+            </source>
+        </trans-unit>
+        <trans-unit id="feuser.password.error.lowercase">
+            <source>
+                contain at least one lowercase letter
+            </source>
+        </trans-unit>
+        <trans-unit id="feuser.password.error.number">
+            <source>
+                contain at least one number
+            </source>
+        </trans-unit>
+        <trans-unit id="feuser.password.error.symbol">
+            <source>
+                contain at least one special characters
+            </source>
+        </trans-unit>
+        <trans-unit id="feuser.password.error.message">
+            <source>
+                The password must %s.
+            </source>
+        </trans-unit>
+        <trans-unit id="feuser.password.message.rules">
+            <source>
+                The password must be at least %d characters long, contain at least one uppercase letter, contain at least one lowercase letter, contain at least one number, contain at least one special character.
+            </source>
+        </trans-unit>
 		</body>
 	</file>
 </xliff>

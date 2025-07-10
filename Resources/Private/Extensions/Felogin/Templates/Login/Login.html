@@ -45,12 +45,12 @@
 
                     <f:if condition="{onSubmit}">
                         <f:then>
-                            <f:form id="feloginSubmit" class="form-controld" target="_top" fieldNamePrefix="" action="login" onsubmit="{onSubmit}" additionalAttributes="{spellcheck: 'false'}">
+                            <f:form id="feloginSubmit" class="form-controlX" target="_top" fieldNamePrefix="" action="login" onsubmit="{onSubmit}" additionalAttributes="{spellcheck: 'false'}">
                                 <f:render section="content" arguments="{_all}"/>
                             </f:form>
                         </f:then>
                         <f:else>
-                            <f:form id="feloginSubmit" class="form-controld" target="_top" fieldNamePrefix="" action="login" additionalAttributes="{spellcheck: 'false'}">
+                            <f:form id="feloginSubmit" class="form-controlX" target="_top" fieldNamePrefix="" action="login" additionalAttributes="{spellcheck: 'false'}">
                                 <f:render section="content" arguments="{_all}"/>
                             </f:form>
                         </f:else>
@@ -58,16 +58,9 @@
 
                     <f:if condition="{settings.showForgotPassword}">
                         <p>
-                            <f:link.action action="recovery" controller="PasswordRecovery">
+                            <f:link.action action="recovery" controller="PasswordRecovery" id="passwordRecoveryLink">
                                 <f:render partial="RenderLabelOrMessage" arguments="{key: 'forgot_header'}"/>
                             </f:link.action>
-                        </p>
-                    </f:if>
-
-
-                    <f:if condition="{settings.showForgotPassword}">
-                        <p>
-                            <a href="#">Hilfe</a>
                         </p>
                     </f:if>
 

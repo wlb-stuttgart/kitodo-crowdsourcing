@@ -15,8 +15,26 @@ plugin.tx_felogin_login {
     }
 
     settings {
+        email {
+          templateName = PasswordRecovery
+          templateRootPaths.20 = EXT:crowdsourcing/Resources/Private/Extensions/Felogin/Email/Templates/
+          layoutRootPaths.20 = EXT:crowdsourcing/Resources/Private/Extensions/Felogin/Layouts/
+        }
+
         crowdsourcingUserGroup = {$plugin.tx_crowdsourcing.settings.crowdsourcingUserGroup}
         crowdsourcingRegister =  {$plugin.tx_crowdsourcing.settings.crowdsourcingRegister}
+
+        passwordValidators {
+              10 = TYPO3\CMS\Extbase\Validation\Validator\NotEmptyValidator
+              20 {
+                className = Wlb\Crowdsourcing\Validation\Validator\PasswordValidator
+                    options {
+                        minimum = 12
+                    }
+              }
+         }
+        # Needed for the message hint in the default template
+        newPasswordMinLength =  12
     }
 }
 

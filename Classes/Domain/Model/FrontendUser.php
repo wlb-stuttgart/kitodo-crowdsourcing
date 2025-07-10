@@ -5,17 +5,48 @@ namespace Wlb\Crowdsourcing\Domain\Model;
 class FrontendUser extends \Evoweb\SfRegister\Domain\Model\FrontendUser
 {
     /**
-     * @var string
+     * @var bool
      */
-    Protected string $extending;
+    protected bool $consentPublishUsernameEdits;
 
-    public function getExtending(): string
+    /**
+     * @var bool
+     */
+    protected bool $consentPublishUsernameStats;
+
+    /**
+     * @return bool
+     */
+    public function isConsentPublishUsernameEdits(): bool
     {
-        return $this->extending;
+        return $this->consentPublishUsernameEdits;
     }
 
-    public function setExtending(string $extending): void
+    /**
+     * @param bool $consentPublishUsernameEdits
+     */
+    public function setConsentPublishUsernameEdits(bool $consentPublishUsernameEdits): void
     {
-        $this->extending = $extending;
+        $this->consentPublishUsernameEdits = $consentPublishUsernameEdits;
     }
+
+    /**
+     * @return bool
+     */
+    public function isConsentPublishUsernameStats(): bool
+    {
+        return $this->consentPublishUsernameStats;
+    }
+
+    /**
+     * @param bool $consentPublishUsernameStats
+     * @return void
+     */
+    public function setConsentPublishUsernameStats(bool $consentPublishUsernameStats): void
+    {
+        $this->consentPublishUsernameStats = $consentPublishUsernameStats;
+    }
+
+
+
 }

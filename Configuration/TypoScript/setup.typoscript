@@ -16,7 +16,6 @@ plugin.tx_crowdsourcing {
   persistence {
     storagePid = {$plugin.tx_crowdsourcing.persistence.storagePid}
   }
-
 }
 
 plugin.tx_crowdsourcing_campaigns {
@@ -33,8 +32,6 @@ plugin.tx_crowdsourcing_campaigns {
                 delete = {$plugin.tx_crowdsourcing.settings.navigation.user.delete}
             }
         }
-
-
     }
 }
 

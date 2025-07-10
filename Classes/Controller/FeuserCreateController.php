@@ -12,7 +12,12 @@ class FeuserCreateController extends SfRegisterFeuserCreateController
 
     public function saveAction(FrontendUser $user): ResponseInterface
     {
-        return new HtmlResponse($this->view->render());
-        //return parent::saveAction($user);
+        $regristrationDeactivated = $this->settings['regristrationDeactivated'] ?? false;
+
+        if ($regristrationDeactivated) {
+            return new HtmlResponse($this->view->render());
+        }
+
+        return parent::saveAction($user);
     }
 }

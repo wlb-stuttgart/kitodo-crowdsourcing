@@ -4,9 +4,9 @@
         <ul>
             <f:for each="{validationResults.flattenedErrors}" as="errors" key="propertyPath">
                 <li>{propertyPath}
-                    <ul>
+                    <ul class="typo3-messages">
                         <f:for each="{errors}" as="error">
-                            <li>{error.code}: {error}</li>
+                            <li class="alert alert-danger"><p class="alert-message">{error}</p></li>
                         </f:for>
                     </ul>
                 </li>

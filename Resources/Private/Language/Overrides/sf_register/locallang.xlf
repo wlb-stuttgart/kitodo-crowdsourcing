@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2025-06-17T10:00:00Z">
+		<header>
+			<generator>LFEditor</generator>
+		</header>
+		<body>
+             <trans-unit id="consentPublishUsernameEdits">
+                <source>Consent to the publication of the username in connection with edited objects</source>
+             </trans-unit>
+             <trans-unit id="consentPublishUsernameStats">
+                <source>Consent to the publication of the username in statistical surveys and analyses</source>
+             </trans-unit>
+		</body>
+	</file>
+</xliff>

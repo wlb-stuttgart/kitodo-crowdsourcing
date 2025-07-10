@@ -3,8 +3,11 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2025-04-16T09:30:00Z" product-name="crowdsourcing">
 		<header/>
 		<body>
-            <trans-unit id="extending">
-                <source>Your Field Label</source>
+            <trans-unit id="consent_publish_username_stats">
+                <source>Consent to publish username for stats</source>
+            </trans-unit>
+            <trans-unit id="consent_publish_username_edits">
+                <source>Consent to publish username for edits</source>
             </trans-unit>
 		</body>
 	</file>

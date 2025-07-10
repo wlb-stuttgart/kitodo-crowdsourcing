@@ -41,7 +41,8 @@ CREATE TABLE tx_crowdsourcing_domain_model_metadataconfiguration (
 # Table structure for table 'fe_users'
 #
 CREATE TABLE fe_users (
-    extending varchar(60) DEFAULT '',
+    consent_publish_username_stats tinyint(1) unsigned DEFAULT '0' NOT NULL,
+    consent_publish_username_edits tinyint(1) unsigned DEFAULT '0' NOT NULL
 );
 
 CREATE TABLE tx_crowdsourcing_domain_model_clickstatistic (

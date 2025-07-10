@@ -13,12 +13,17 @@ plugin.tx_sfregister.view.partialRootPaths {
   51 = EXT:crowdsourcing/Resources/Private/Partials/
 }
 
-
 plugin.tx_sfregister.settings.fields.configuration {
-   extending {
-      partial = Extending
-      backendLabel = LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_be.xlf:extending
-   }
+
+    consentPublishUsernameStats {
+        partial = Checkbox
+        backendLabel = LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_be.xlf:consent_publish_username_stats
+    }
+
+    consentPublishUsernameEdits {
+        partial = Checkbox
+        backendLabel = LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_be.xlf:consent_publish_username_edits
+    }
 }
 
 plugin.tx_sfregister.settings {
@@ -28,6 +33,20 @@ plugin.tx_sfregister.settings {
             2 = "StringLength", options={"minimum": 8, "maximum": 80}
             3 = "Wlb.Crowdsourcing:UniqueUsername"
        }
+
+       email {
+            1 = "Evoweb.SfRegister:Required"
+       }
+    }
+
+    validation.create.password {
+            1 = "Evoweb.SfRegister:Required"
+            2 = "Wlb.Crowdsourcing:Password"
+    }
+
+    validation.password.password {
+            1 = "Evoweb.SfRegister:Required"
+            2 = "Wlb.Crowdsourcing:Password"
     }
 
     validation.edit {
@@ -43,5 +62,4 @@ plugin.tx_sfregister.settings {
 
     crowdsourcingUserGroup = {$plugin.tx_crowdsourcing.settings.crowdsourcingUserGroup}
     crowdsourcingLogin = {$plugin.tx_crowdsourcing.settings.crowdsourcingLogin}
-
 }
