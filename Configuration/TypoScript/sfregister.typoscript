@@ -33,10 +33,6 @@ plugin.tx_sfregister.settings {
             2 = "StringLength", options={"minimum": 8, "maximum": 80}
             3 = "Wlb.Crowdsourcing:UniqueUsername"
        }
-
-       email {
-            1 = "Evoweb.SfRegister:Required"
-       }
     }
 
     validation.create.password {
@@ -55,6 +51,10 @@ plugin.tx_sfregister.settings {
             2 = "StringLength", options={"minimum": 8, "maximum": 80}
             3 = "Wlb.Crowdsourcing:UniqueUsername"
          }
+        email {
+            1 = "Evoweb.SfRegister:Required"
+        }
+
     }
 
     navigation < plugin.tx_crowdsourcing_campaigns.settings.navigation
