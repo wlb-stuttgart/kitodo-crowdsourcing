@@ -67,7 +67,19 @@ lib.crowdsourcingMetaNavigation {
     NO = 1
     NO {
       wrapItemAndSub = <li class="nav-item ms-3">|</li>
-      ATagParams = class="text-decoration-none text-secondary"
+      ATagParams.cObject = COA
+            ATagParams.cObject {
+              10 = TEXT
+              10 {
+                field = target
+                if.isTrue.field = target
+                wrap = target="|"
+              }
+
+              20 = TEXT
+              20.value = class="text-decoration-none text-secondary"
+              20.noTrimWrap = | ||
+            }
     }
 
   }
