@@ -62,4 +62,8 @@ plugin.tx_sfregister.settings {
 
     crowdsourcingUserGroup = {$plugin.tx_crowdsourcing.settings.crowdsourcingUserGroup}
     crowdsourcingLogin = {$plugin.tx_crowdsourcing.settings.crowdsourcingLogin}
+
+    privacyLink = {$plugin.tx_crowdsourcing.settings.crowdsourcingPrivacyLink}
+    gtcLink = {$plugin.tx_crowdsourcing.settings.crowdsourcingGtcLink}
+
 }

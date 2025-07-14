@@ -8,6 +8,23 @@
 		<label for="{fieldName}" class="custom-control-label">
 			<f:translate id="{fieldName}" />
 			<f:render partial="Required" arguments="{field: fieldName}" />
+
+			<f:if condition="{fieldName} == 'privacy'">
+				<f:link.typolink parameter="{settings.privacyLink}"
+								 target="_blank"
+								 additionalAttributes="{rel:'noopener'}">
+					[Info]
+				</f:link.typolink>
+			</f:if>
+
+			<f:if condition="{fieldName} == 'gtc'">
+				<f:link.typolink parameter="{settings.gtcLink}"
+								 target="_blank"
+								 additionalAttributes="{rel:'noopener'}">
+					[Info]
+				</f:link.typolink>
+			</f:if>
+
 		</label>
 	</div>
 	<f:render partial="FieldError" arguments="{for: 'user', field: fieldName}" />

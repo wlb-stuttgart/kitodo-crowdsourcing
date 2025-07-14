@@ -560,6 +560,25 @@ h1 {
     width: 100%;
 }
 
+#registerModal .modal-body .form-check {
+    display: block;
+}
+
+#registerModal .modal-body .custom-checkbox {
+    display: flex;
+    align-items: flex-start;
+}
+
+#registerModal .modal-body .custom-control-input {
+    margin-top: 0.45rem;
+    margin-right: 0.5rem;
+}
+
+#registerModal .modal-body .custom-control-label {
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+
 #registerModal form {
     padding-left: 0 !important;
     padding-right: 0 !important;
