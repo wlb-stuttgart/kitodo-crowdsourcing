@@ -57,6 +57,25 @@ page.includeJSFooter {
 }
 
 
+lib.crowdsourcingMetaNavigation = HMENU
+lib.crowdsourcingMetaNavigation {
+  special = directory
+  special.value = {$plugin.tx_crowdsourcing.settings.navigation.metaNavigation}
+
+  1 = TMENU
+  1 {
+    NO = 1
+    NO {
+      wrapItemAndSub = <li class="nav-item ms-3">|</li>
+      ATagParams = class="text-decoration-none text-secondary"
+    }
+
+  }
+
+  wrap = <ul class="nav">|</ul>
+}
+
+
 module.tx_crowdsourcing {
     settings {
         # Add the remote CSS file

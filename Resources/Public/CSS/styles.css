@@ -195,6 +195,10 @@ h1 {
     text-decoration: none;
 }
 
+#crowdsourcing .meta-nav ul li {
+    list-style: none;
+}
+
 #crowdsourcing .meta-nav .text-secondary {
     color: #000000 !important;
 }

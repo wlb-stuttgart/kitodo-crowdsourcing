@@ -13,6 +13,9 @@ plugin.tx_crowdsourcing {
         # cat=plugin.tx_crowdsourcing//a; type=integer; label=Crowdsourcing root pageUid
         navigation.crowdsourcingRoot =
 
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Crowdsourcing root pageUid for the meta navigation tree
+        navigation.metaNavigation =
+
         # cat=plugin.tx_crowdsourcing//a; type=integer; label=User profile edit pageUid
         navigation.user.profile =
 
