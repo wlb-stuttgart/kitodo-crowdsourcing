@@ -1,0 +1,6 @@
+module.tx_crowdsourcing {
+    persistence {
+        # cat=plugin.tx_crowdsourcing//a; type=string; label=Default storage PID
+        storagePid =
+    }
+}

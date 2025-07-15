@@ -136,6 +136,10 @@ class WorkflowController extends ActionController
 
         }
 
+        /** @var Campaign $campaign */
+        $campaign = $this->campaignRepository->findAll()->getFirst();
+
+        $this->view->assign('campaign', $campaign);
         $this->view->assign('currentProcess', $currentProcess);
 
     }
