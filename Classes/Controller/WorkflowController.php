@@ -127,13 +127,14 @@ class WorkflowController extends ActionController
         /** @var FrontendUser $user */
         $feUser = $this->frontendUserRepository->findByUid($userId);
 
-        $currentProcess = $this->processRepository->findCurrentProcessByFeUser($feUser);
+        if ($feUser) {
+            $currentProcess = $this->processRepository->findCurrentProcessByFeUser($feUser);
 
-        if ($currentProcess) {
-            if ($this->processHistoryService->hasUserAlreadyEdited($currentProcess, $feUser)) {
-                $currentProcess = null;
+            if ($currentProcess) {
+                if ($this->processHistoryService->hasUserAlreadyEdited($currentProcess, $feUser)) {
+                    $currentProcess = null;
+                }
             }
-
         }
 
         /** @var Campaign $campaign */
