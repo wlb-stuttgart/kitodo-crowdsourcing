@@ -210,6 +210,17 @@ class WorkflowController extends ActionController
 
         $this->view->assign("importedPath", $importedPath);
         $this->view->assign("query", $query);
+
+        if ($this->request->getArguments()['errorMessage'] === 'editAnotherProcess') {
+            $this->view->assign('errorMessage', 'editAnotherProcess');
+            // get current edit process
+            $editingByCurrentUser = $this->processRepository->findCurrentProcessByFeUser($feUser);
+            $this->view->assign('processCurrentUserEditing', $editingByCurrentUser);
+
+
+        } else if ($this->request->getArguments()['errorMessage'] === 'processTaken') {
+            $this->view->assign('errorMessage', 'processTaken');
+        }
         
         // log search action
         $this->statisticService->logClick(
@@ -271,12 +282,14 @@ class WorkflowController extends ActionController
         $processType = $process->getType();
 
         if ($process->hasFeUser() && $process->getFeUser() !== $feUser) {
-            throw new \Exception('Process already taken');
+//            throw new \Exception('Process already taken');
+            $this->redirect('listProcesses', null, null, ['errorMessage' => 'processTaken']);
         }
 
         if ($currentlyEditingProcess = $this->processRepository->findOneByFeUser($feUser)) {
             if ($currentlyEditingProcess !== $process) {
-                throw new \Exception('User is already editing another process');
+//                throw new \Exception('User is already editing another process');
+                $this->redirect('listProcesses', null, null, ['errorMessage' => 'editAnotherProcess']);
             }
         }
 

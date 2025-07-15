@@ -12,6 +12,29 @@
     <div class="container-fluid">
         <div class="process-list-container">
             <section class="search-section">
+
+                <f:if condition="{errorMessage}">
+                    <f:then>
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>Warnung</strong>
+                            <f:if condition="{errorMessage} === 'editAnotherProcess'">
+                                <f:then>
+                                    Sie haben bereits ein Vorgang in Bearbeitung. Möchten Sie die Bearbeitung fortsetzen?
+                                    <f:link.action action="editMetadata" arguments="{process: processCurrentUserEditing}" class="btn btn-outline-secondary btn-sm mt-auto">
+                                        Fortsetzen
+                                    </f:link.action>
+                                </f:then>
+                            </f:if>
+                            <f:if condition="{errorMessage} === 'processTaken'">
+                                <f:then>
+                                    Prozess wird bereits bearbeitet
+                                </f:then>
+                            </f:if>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </f:then>
+                </f:if>
+
                 <f:form action="listProcesses"
                         controller="Workflow"
                         pluginName="Campaigns"
