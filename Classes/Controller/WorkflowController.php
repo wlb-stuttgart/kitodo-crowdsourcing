@@ -13,9 +13,11 @@ use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
 use TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Common\Solr\SolrSearcher;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
+use Wlb\Crowdsourcing\Domain\Model\FrontendUser;
 use Wlb\Crowdsourcing\Domain\Model\MetadataConfiguration;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Model\ProcessHistory;
@@ -120,6 +122,22 @@ class WorkflowController extends ActionController
             'dashboard',
             $this->request->getAttribute('originalRequest') ?? $this->request
         );
+
+        $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
+        /** @var FrontendUser $user */
+        $feUser = $this->frontendUserRepository->findByUid($userId);
+
+        $currentProcess = $this->processRepository->findCurrentProcessByFeUser($feUser);
+
+        if ($currentProcess) {
+            if ($this->processHistoryService->hasUserAlreadyEdited($currentProcess, $feUser)) {
+                $currentProcess = null;
+            }
+
+        }
+
+        $this->view->assign('currentProcess', $currentProcess);
+
     }
 
     public function initializeListProcessesAction()
@@ -444,5 +462,23 @@ class WorkflowController extends ActionController
         );
 
         return (new ForwardResponse('index'));
+    }
+
+    public function editRandomProcessAction()
+    {
+        $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
+        /** @var FrontendUser $user */
+        $feUser = $this->frontendUserRepository->findByUid($userId);
+        do {
+            $process = $this->processRepository->findRandomForNonCurrentUser($feUser);
+            if ($process) {
+                if ($this->processHistoryService->hasUserAlreadyEdited($process, $feUser)) {
+                    $process = null;
+                }
+            }
+        } while (!$process);
+
+        $this->redirect('editMetadata', 'Workflow', 'Crowdsourcing', ['process' => $process->getUid()]);
+
     }
 }

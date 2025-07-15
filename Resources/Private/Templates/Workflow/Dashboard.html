@@ -11,7 +11,6 @@
 
     <wlb:userInfo as="userInfo" />
 
-
     <div class="container-fluid mt-3 dashboard">
         <div class="row">
             <div class="col-lg-12 mb-3">
@@ -90,27 +89,48 @@
                             <div class="dashboard-processes-box-wrapper">
                                 <div class="row g-4">
                                     <div class="col-4">
-                                        <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                                            <h3>Weiter / Neu Erfassen</h3>
-                                        </div>
+                                        <f:if condition="{currentProcess}">
+                                            <f:then>
+                                                <f:link.action action="editMetadata" arguments="{process: currentProcess}">
+                                                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                                                        <h3>Weiter bearbeiten</h3>
+                                                    </div>
+                                                </f:link.action>
+                                            </f:then>
+                                            <f:else>
+                                                <f:link.action action="listProcesses"
+                                                               arguments="{wlb:facetArgument(facetValue: 'NEW', facetField:'state_faceting', activeFacets:'')}">
+                                                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                                                        <h3>Neu Erfassen</h3>
+                                                    </div>
+                                                </f:link.action>
+                                            </f:else>
+                                        </f:if>
                                     </div>
                                     <div class="col-4">
-                                        <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                                            <h3>Korrigieren</h3>
-                                        </div>
+                                        <f:link.action action="listProcesses"
+                                                       arguments="{wlb:facetArgument(facetValue: 'CORRECTION', facetField:'state_faceting', activeFacets:'')}">
+                                            <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                                                <h3>Korrigieren</h3>
+                                            </div>
+                                        </f:link.action>
                                     </div>
                                     <div class="col-4">
-                                        <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                                            <h3>Zufälliges Plakat</h3>
-                                        </div>
+                                        <f:link.action action="editRandomProcess">
+                                            <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                                                <h3>Zufälliges Plakat</h3>
+                                            </div>
+                                        </f:link.action>
                                     </div>
                                 </div>
                             </div>
                         </section>
-                        <section class="mt-3 dashboard-section dashboard-user-statistic">
-                            <h2>User-Statistic</h2>
-                            <p>User statistics content here.</p>
+                        <f:comment>
+                            <section class="mt-3 dashboard-section dashboard-user-statistic">
+                                <h2>User-Statistic</h2>
+                                <p>User statistics content here.</p>
                         </section>
+                        </f:comment>
                     </f:then>
                 </f:if>
             </div>

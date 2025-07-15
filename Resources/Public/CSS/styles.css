@@ -325,6 +325,11 @@ h1 {
     text-decoration: none;
 }
 
+.process-list-container .process-list-filter-btn,
+.process-list-container .process-list-sort-btn {
+    display: none;
+}
+
 .process-list-container .searchButtons a img {
     margin-top: 8px;
     margin-left: 8px;
@@ -423,6 +428,10 @@ h1 {
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
+}
+
+.dashboard-user-processes a {
+    text-decoration: none !important;
 }
 
 .dashboard-user-processes .info-box:focus {

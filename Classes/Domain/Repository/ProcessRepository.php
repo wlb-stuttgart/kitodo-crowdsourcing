@@ -2,8 +2,12 @@
 
 namespace Wlb\Crowdsourcing\Domain\Repository;
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use Wlb\Crowdsourcing\Domain\Model\FrontendUser;
+use Wlb\Crowdsourcing\Domain\Model\Process;
 
 class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 {
@@ -48,4 +52,76 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         return $query->execute()->toArray();
     }
+
+
+    /**
+     * Finds the current process associated with the given front-end user.
+     *
+     * @param FrontendUser $feUser The front-end user to find the current process for.
+     * @return array The current process details associated with the given front-end user.
+     */
+    public function findCurrentProcessByFeUser(FrontendUser $feUser): ?Process
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->equals('feUser', $feUser->getUid())
+        );
+        $query->setOrderings([
+            'lastAccessed' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
+        ]);
+        $query->setLimit(1);
+
+        return $query->execute()->getFirst();
+    }
+
+    /**
+     * @param FrontendUser $feUser
+     * @return Process|null
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Random\RandomException
+     */
+    public function findRandomForNonCurrentUser(FrontendUser $feUser): ?Process
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_process');
+
+        $minMax = $connection->executeQuery(
+            'SELECT MIN(uid) AS min_uid, MAX(uid) AS max_uid
+             FROM tx_crowdsourcing_domain_model_process
+             WHERE fe_user != ? OR fe_user IS NULL',
+            [$feUser->getUid()]
+        )->fetchAssociative();
+
+        if (!$minMax || !$minMax['min_uid'] || !$minMax['max_uid']) {
+            return null;
+        }
+
+        $randomUid = random_int((int)$minMax['min_uid'], (int)$minMax['max_uid']);
+
+        $queryBuilder = $connection->createQueryBuilder();
+        $queryBuilder
+            ->select('*')
+            ->from('tx_crowdsourcing_domain_model_process')
+            ->where(
+                $queryBuilder->expr()->gte('uid', ':randomUid'),
+                $queryBuilder->expr()->orX(
+                    $queryBuilder->expr()->eq('fe_user', 0),
+                    $queryBuilder->expr()->isNull('fe_user')
+                )
+            )
+            ->setParameter('randomUid', $randomUid)
+            ->setParameter('feUserId', $feUser->getUid())
+            ->setMaxResults(1);
+
+        $process = $queryBuilder->executeQuery()->fetchAssociative();
+        if ($process) {
+            return $this->findByUid($process['uid']);
+        }
+
+        return null;
+    }
+
 }
