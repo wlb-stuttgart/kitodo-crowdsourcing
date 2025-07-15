@@ -157,7 +157,7 @@ function openLayer() {
         target: 'map',
         view: new ol.View({
             projection: projection,
-            center: [1000, 1000],
+            center: [imageLayer.getSource().getImageExtent()[2]/2, imageLayer.getSource().getImageExtent()[3]/2],
             zoom: 0,
             maxZoom: 6,
         }),
