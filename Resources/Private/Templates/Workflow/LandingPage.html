@@ -9,8 +9,8 @@
 
     <main class="container-fluid my-5 landing-page-main">
         <div class="content-wrapper">
-            <h1>Protest sichtbar machen</h1>
-            <p> Kampagne wurde am TT.MM.YYYY eröffnet.</p>
+            <h1><f:translate key="landingpage.header"/></h1>
+            <f:format.html><f:translate key="landingpage.subheader"/></f:format.html>
             <f:link.action action="dashboard" class="btn btn-lg btn-primary start-now-button">
                     Jetzt Starten
             </f:link.action>
@@ -18,53 +18,32 @@
 
         <div class="info-box-wrapper">
             <div class="row g-4">
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                        <h3>Worum geht's?</h3>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                        <h3>Wie mitmachen?</h3>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                        <h3>Wozu tragen die Ergebnisse bei?</h3>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                        <h3>Was passiert mit den Ergebnissen?</h3>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                        <h3>Was passiert mit den Ergebnissen?</h3>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2">
-
-                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                        <h3>FAQs</h3>
-                    </div>
-                </div>
+               <f:for each="{infoBoxes}" as="infoBox" key="infoBoxKey">
+                   <div class="col-6 col-md-4 col-lg-2">
+                       <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-{infoBoxKey}" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                           <h3>{infoBox.header}</h3>
+                       </div>
+                   </div>
+               </f:for>
             </div>
         </div>
     </main>
 
-    <div class="modal fade" id="info-box-details" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+
+    <f:for each="{infoBoxes}" as="infoBox" key="infoBoxKey">
+    <div class="modal fade" id="info-box-{infoBoxKey}" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered info-box-modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h3>{infoBox.header}</h3> <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Hier stehen die ausführlichen Informationen.</p>
+                    <f:format.html>{infoBox.bodytext}</f:format.html>
                 </div>
             </div>
         </div>
     </div>
+    </f:for>
 
 </f:section>
 

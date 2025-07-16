@@ -7,6 +7,8 @@ use \DOMXPath;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
@@ -50,7 +52,8 @@ class WorkflowController extends ActionController
         private readonly SolrIndexer $solrIndexer,
         private readonly ProcessImportService $processImportService,
         private readonly RulesetService $rulesetService,
-        private readonly StatisticService $statisticService
+        private readonly StatisticService $statisticService,
+        private readonly ConnectionPool $connectionPool
     ) {
     }
 
@@ -91,6 +94,19 @@ class WorkflowController extends ActionController
             'landing_page',
             $this->request->getAttribute('originalRequest') ?? $this->request
         );
+
+        $infoBoxes = [];
+        if (isset($this->settings['infoBox'])) {
+            foreach ($this->settings['infoBox'] as $key => $contentUid) {
+                if (is_numeric($contentUid)) {
+                    $infoBoxes[$key]  = $this->getContentForInfoBox((int)$contentUid);
+                }
+            }
+        }
+
+        $this->view->assign('infoBoxes', $infoBoxes);
+
+
     }
 
     public function initializeListCampaignsAction()
@@ -498,5 +514,26 @@ class WorkflowController extends ActionController
 
         $this->redirect('editMetadata', 'Workflow', 'Crowdsourcing', ['process' => $process->getUid()]);
 
+    }
+
+    /**
+     * @param int $uid
+     * @return array
+     * @throws \Doctrine\DBAL\Driver\Exception
+     */
+    private function getContentForInfoBox(int $uid): array
+    {
+        $connection = $this->connectionPool->getConnectionForTable('tt_content');
+
+        $contentElement = $connection->select(
+            ['header', 'bodytext'],
+            'tt_content',
+            ['uid' => $uid]
+        )->fetchAllAssociative();
+
+        if ($contentElement) {
+            $contentElement = $contentElement[0];
+        }
+        return $contentElement;
     }
 }

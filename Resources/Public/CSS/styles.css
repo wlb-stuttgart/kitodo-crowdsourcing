@@ -300,6 +300,14 @@ h1 {
     margin-bottom: 0.5rem;
 }
 
+#crowdsourcing .info-box-modal ul {
+    padding-left: 16px;
+}
+
+#crowdsourcing .info-box-modal li {
+    list-style: disc !important;
+}
+
 #crowdsourcing .process-list-container .search-section {
     padding-top: 16px;
 
@@ -419,6 +427,11 @@ h1 {
     font-family: IBM Plex Sans Condensed, sans-serif;
     font-weight: var(--font-semibold);
     font-size: 24px;
+}
+
+#crowdsourcing .dashboard-info .multi-column {
+    column-count: 2;
+    column-gap: 20px;
 }
 
 .dashboard-user-processes .info-box {
@@ -717,6 +730,11 @@ ul.facets li a:hover {
 @media (max-width: 768px) {
     .user-profile-container {
         max-width: 100%;
+    }
+
+    #crowdsourcing .dashboard-info .multi-column {
+        column-count: 1;
+        column-gap: 0px;
     }
 }
 

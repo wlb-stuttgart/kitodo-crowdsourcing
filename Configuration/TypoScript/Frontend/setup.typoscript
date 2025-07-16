@@ -32,6 +32,16 @@ plugin.tx_crowdsourcing_campaigns {
                 delete = {$plugin.tx_crowdsourcing.settings.navigation.user.delete}
             }
         }
+
+        infoBox {
+            topic = {$plugin.tx_crowdsourcing.settings.infoBox.topic}
+            participation = {$plugin.tx_crowdsourcing.settings.infoBox.participation}
+            actions = {$plugin.tx_crowdsourcing.settings.infoBox.actions}
+            nextSteps = {$plugin.tx_crowdsourcing.settings.infoBox.nextSteps}
+            impact = {$plugin.tx_crowdsourcing.settings.infoBox.impact}
+            faqs = {$plugin.tx_crowdsourcing.settings.infoBox.faqs}
+        }
+
     }
 }
 

@@ -30,5 +30,23 @@ plugin.tx_crowdsourcing {
 
          # cat=plugin.tx_crowdsourcing//a; type=integer; label=GTC/AGB link or pageUid
         crowdsourcingGtcLink =
+
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Topic info box uid
+        infoBox.topic =
+
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Participation info box uid
+        infoBox.participation =
+
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Actions info box uid
+        infoBox.actions =
+
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Next steps info box uid
+        infoBox.nextSteps =
+
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Impact info box uid
+        infoBox.impact =
+
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=FAQs info box uid
+        infoBox.faqs =
     }
 }
