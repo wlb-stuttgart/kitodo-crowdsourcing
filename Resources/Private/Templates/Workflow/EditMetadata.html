@@ -143,6 +143,13 @@
                                                                             </div>
                                                                         </div>
                                                                     </f:for>
+                                                                    <f:if condition="{metadata.helptext}">
+                                                                        <f:then>
+                                                                            <div class="form-text">
+                                                                                {metadataChild.helptext}
+                                                                            </div>
+                                                                        </f:then>
+                                                                    </f:if>
                                                                     <f:if condition="{metadataChild.minOccurs} < {metadataChild.maxOccurs}">
                                                                         <f:then>
                                                                             <div style="display: block;">
