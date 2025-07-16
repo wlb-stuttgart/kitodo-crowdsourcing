@@ -11,7 +11,9 @@ $( document ).ready(function() {
 
     clickEvents();
 
-    openLayer();
+    if ($('#map').length > 0) {
+        openLayer();
+    }
 
     datePicker();
 
