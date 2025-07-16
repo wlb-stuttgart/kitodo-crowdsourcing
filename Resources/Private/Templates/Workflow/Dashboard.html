@@ -19,44 +19,14 @@
                        data-bs-toggle="collapse" href="#collapseInfo" role="button"
                        aria-expanded="false" aria-controls="collapseInfo" id="q">
                         <f:comment><span>Was ist die Sammlung Hill?</span></f:comment>
-                        <span>Lorem ipsum dolor sit amet</span>
+                        <span><f:translate key="dashboard.infoHeader" /></span>
                     </a>
 
                     <div class="collapse mt-2" id="collapseInfo">
                         <div class="col-2-text">
-                        <f:comment>
-                        <p>
-                            Die Württembergische Landesbibliothek besitzt mehr als 55000 Plakate aus vielen Ländern,
-                            Kontinenten und Zeiträumen zu politischen und sozialwen Protesten seit Ender der 1060er Jahre.
-                            Die Plakate stammen aus der Umwelt- und Anti-Atomkraftbewegung,
-                            aus der Friedensbewegung und der Frauenbewegung, es geht um Migration, Antifaschismus, Menschenrechte und vieles mehr.
-                            Sie alle gehören zur Sammlung des renommierten Plakatsammlers Thomas Hill, die die WLB im Herbst 2022 erworben hat.
+                        <p class="multi-column">
+                            <f:translate key="dashboard.infoDescription" />
                         </p>
-                        <p>
-                            Tauchen Sie ein in eine faszinierende Epoche der Zeitgeschichte,
-                            entdecken Sie Plakate, die seit ihrer Entstehung
-                            nicht mehr in der Öffentlichkeit gezeigt wurden!
-                            Damit die Plakate nicht in unserem Archiv verstauben,
-                            sondern für alle im Internat sichtbar werden, brauchen wir Ihre Unterstützung.
-                            Helfen Sie, die Plakate zu erschließen, teilen Sie Ihr Wissen mit uns und vielen Interessierten weltweit!
-                            Sie sichern damit nicht nur das
-                            kulturelle Erbe, sondern unterstützen die
-                            Wissenschaft bei der Erforschung der Protestbewegungen.
-
-                        </p>
-                        </f:comment>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </p>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </p>
                         </div>
                     </div>
                 </section>
@@ -99,7 +69,7 @@
                                             <f:then>
                                                 <f:link.action action="editMetadata" arguments="{process: currentProcess}">
                                                     <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                                                        <h3>Weiter bearbeiten</h3>
+                                                        <h3>Bearbeitung fortsetzen</h3>
                                                     </div>
                                                 </f:link.action>
                                             </f:then>
@@ -107,7 +77,7 @@
                                                 <f:link.action action="listProcesses"
                                                                arguments="{wlb:facetArgument(facetValue: 'NEW', facetField:'state_faceting', activeFacets:'')}">
                                                     <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                                                        <h3>Neu Erfassen</h3>
+                                                        <h3>Neues Plakat bearbeiten </h3>
                                                     </div>
                                                 </f:link.action>
                                             </f:else>
@@ -117,7 +87,7 @@
                                         <f:link.action action="listProcesses"
                                                        arguments="{wlb:facetArgument(facetValue: 'CORRECTION', facetField:'state_faceting', activeFacets:'')}">
                                             <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                                                <h3>Korrigieren</h3>
+                                                <h3>Plakat korrigieren</h3>
                                             </div>
                                         </f:link.action>
                                     </div>
