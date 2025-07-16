@@ -310,6 +310,13 @@ class WorkflowController extends ActionController
             $sorted = [];
 
             foreach ($dbConfigArray[$processType] as $fieldName => $meta) {
+                if ($meta['minOccurs'] === '') {
+                    $meta['minOccurs'] = 0;
+                }
+                if ($meta['maxOccurs'] === '') {
+                    $meta['maxOccurs'] = 1;
+                }
+
                 $tab = $meta['tab'] === '' ? 'default' : $meta['tab'];
                 if (!isset($sorted[$tab])) {
                     $sorted[$tab] = [];
