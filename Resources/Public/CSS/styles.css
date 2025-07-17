@@ -605,6 +605,13 @@ h1 {
     margin-right: 0.5rem;
 }
 
+#registerModal .modal-body #sfrForm .custom-control-label {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 1.2;
+    padding-left: 0.3rem;
+}
+
 #sfrForm .custom-control-label {
     margin-top: -0.45rem;
     margin-bottom: 0;
