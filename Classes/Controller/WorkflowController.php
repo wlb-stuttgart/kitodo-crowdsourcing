@@ -236,6 +236,8 @@ class WorkflowController extends ActionController
 
         } else if ($this->request->getArguments()['errorMessage'] === 'processTaken') {
             $this->view->assign('errorMessage', 'processTaken');
+        } else if ($this->request->getArguments()['errorMessage'] === 'noRandomProcessAvailable') {
+            $this->view->assign('errorMessage', 'noRandomProcessAvailable');
         }
         
         // log search action
@@ -510,17 +512,12 @@ class WorkflowController extends ActionController
         $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
         /** @var FrontendUser $user */
         $feUser = $this->frontendUserRepository->findByUid($userId);
-        do {
-            $process = $this->processRepository->findRandomForNonCurrentUser($feUser);
-            if ($process) {
-                if ($this->processHistoryService->hasUserAlreadyEdited($process, $feUser)) {
-                    $process = null;
-                }
-            }
-        } while (!$process);
-
-        $this->redirect('editMetadata', 'Workflow', 'Crowdsourcing', ['process' => $process->getUid()]);
-
+        $process = $this->processRepository->findRandomForNonCurrentUser($feUser);
+        if ($process) {
+            $this->redirect('editMetadata', 'Workflow', 'Crowdsourcing', ['process' => $process->getUid()]);
+        } else {
+            $this->redirect('listProcesses', null, null, ['errorMessage' => 'noRandomProcessAvailable']);
+        }
     }
 
     /**

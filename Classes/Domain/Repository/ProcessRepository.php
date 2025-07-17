@@ -83,42 +83,117 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @throws \Doctrine\DBAL\Exception
      * @throws \Random\RandomException
      */
+    public function findRandomForNonCurrentUsedr(FrontendUser $feUser): ?Process
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_process');
+
+        $subQueryBuilder = $connection->createQueryBuilder();
+        $subQueryBuilder
+            ->select('record_identifier')
+            ->from('tx_crowdsourcing_domain_model_processhistory')
+            ->where(
+                $subQueryBuilder->expr()->eq('fe_user', ':feUserUid')
+            );
+
+        $minPid = 1;
+        $maxPidQuery = $connection->createQueryBuilder();
+        $maxPid = (int)$maxPidQuery->select('uid')->from('tx_crowdsourcing_domain_model_process')->execute()->rowCount();
+        $attempts = 10;
+        $randomProcess = null;
+
+            for ($i = 0; $i < $attempts; $i++) {
+            $randomPid = random_int($minPid, $maxPid);
+
+            $queryBuilder = $connection->createQueryBuilder();
+            $queryBuilder
+                ->select('*')
+                ->from('tx_crowdsourcing_domain_model_process')
+                ->where(
+                    $queryBuilder->expr()->or(
+                        $queryBuilder->expr()->eq('fe_user', 0),
+                        $queryBuilder->expr()->isNull('fe_user')
+                    )
+                )
+                ->andWhere( $queryBuilder->expr()->eq('uid', ':uid'))
+                ->andWhere(
+                    $queryBuilder->expr()->notIn('record_identifier', $subQueryBuilder->getSQL())
+                )
+                ->setMaxResults(1)
+                ->setParameter('uid', $randomPid)
+                ->setParameter('feUserUid', $feUser->getUid());
+
+            $process = $queryBuilder->execute()->fetchAssociative();
+            if ($process !== false) {
+                $randomProcess = $process;
+                break;
+            }
+        }
+
+
+        if ($process) {
+            return $this->findByUid($process['uid']);
+        }
+
+        return null;
+    }
+
+
     public function findRandomForNonCurrentUser(FrontendUser $feUser): ?Process
     {
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tx_crowdsourcing_domain_model_process');
 
-        $minMax = $connection->executeQuery(
-            'SELECT MIN(uid) AS min_uid, MAX(uid) AS max_uid
-             FROM tx_crowdsourcing_domain_model_process
-             WHERE fe_user != ? OR fe_user IS NULL',
-            [$feUser->getUid()]
-        )->fetchAssociative();
+        $subQueryBuilder = $connection->createQueryBuilder();
+        $subQueryBuilder
+            ->select('a.record_identifier')
+            ->from('tx_crowdsourcing_domain_model_process', 'a')
+            ->join('a', 'tx_crowdsourcing_domain_model_processhistory', 'b',
+                $subQueryBuilder->expr()->eq(
+                    'b.record_identifier',
+                    $subQueryBuilder->quoteIdentifier('a.record_identifier')
+                ))
+            ->where(
+                $subQueryBuilder->expr()->eq('b.fe_user', ':feUserUid')
+            );
 
-        if (!$minMax || !$minMax['min_uid'] || !$minMax['max_uid']) {
-            return null;
+        $minId = $connection->fetchOne('SELECT MIN(uid) FROM tx_crowdsourcing_domain_model_process');
+        $maxId = $connection->fetchOne('SELECT MAX(uid) FROM tx_crowdsourcing_domain_model_process');
+
+        $attempts = 100;
+        $randomProcess = null;
+
+        for ($i = 0; $i < $attempts; $i++) {
+            $randomUid = random_int($minId, $maxId);
+
+            $queryBuilder = $connection->createQueryBuilder();
+            $queryBuilder
+                ->select('*')
+                ->from('tx_crowdsourcing_domain_model_process')
+                ->where(
+                    $queryBuilder->expr()->or(
+                        $queryBuilder->expr()->eq('fe_user', 0),
+                        $queryBuilder->expr()->isNull('fe_user')
+                    )
+                )
+                ->andWhere( $queryBuilder->expr()->eq('uid', ':uid'))
+                ->andWhere(
+                    $queryBuilder->expr()->notIn('record_identifier', $subQueryBuilder->getSQL())
+                )
+                ->setMaxResults(1)
+                ->setParameter('uid', $randomUid)
+                ->setParameter('feUserUid', $feUser->getUid());
+
+            $process = $queryBuilder->execute()->fetchAssociative();
+
+            if ($process !== false) {
+                $randomProcess = $process;
+                break;
+            }
         }
 
-        $randomUid = random_int((int)$minMax['min_uid'], (int)$minMax['max_uid']);
-
-        $queryBuilder = $connection->createQueryBuilder();
-        $queryBuilder
-            ->select('*')
-            ->from('tx_crowdsourcing_domain_model_process')
-            ->where(
-                $queryBuilder->expr()->gte('uid', ':randomUid'),
-                $queryBuilder->expr()->orX(
-                    $queryBuilder->expr()->eq('fe_user', 0),
-                    $queryBuilder->expr()->isNull('fe_user')
-                )
-            )
-            ->setParameter('randomUid', $randomUid)
-            ->setParameter('feUserId', $feUser->getUid())
-            ->setMaxResults(1);
-
-        $process = $queryBuilder->executeQuery()->fetchAssociative();
-        if ($process) {
-            return $this->findByUid($process['uid']);
+        if ($randomProcess) {
+            return $this->findByUid($randomProcess['uid']);
         }
 
         return null;

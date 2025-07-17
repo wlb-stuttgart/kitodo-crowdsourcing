@@ -30,6 +30,11 @@
                                     Prozess wird bereits bearbeitet
                                 </f:then>
                             </f:if>
+                            <f:if condition="{errorMessage} === 'noRandomProcessAvailable'">
+                                <f:then>
+                                    Es konnte kein zufälliger Prozess ausgewählt werden.
+                                </f:then>
+                            </f:if>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </f:then>
