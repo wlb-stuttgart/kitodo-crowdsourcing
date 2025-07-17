@@ -31,7 +31,7 @@ ExtensionUtility::configurePlugin(
 );
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserTSConfig(
-    '@import \'EXT:crowdsourcing/Configuration/TypoScript/sfregister.typoscript\''
+    '@import \'EXT:crowdsourcing/Configuration/TypoScript/Frontend/sfregister.typoscript\''
 );
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['locallangXMLOverride']['EXT:felogin/Resources/Private/Language/locallang.xlf'][] =

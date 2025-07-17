@@ -13,18 +13,6 @@ plugin.tx_sfregister.view.partialRootPaths {
   51 = EXT:crowdsourcing/Resources/Private/Partials/
 }
 
-plugin.tx_sfregister.settings.fields.configuration {
-
-    consentPublishUsernameStats {
-        partial = Checkbox
-        backendLabel = LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_be.xlf:consent_publish_username_stats
-    }
-
-    consentPublishUsernameEdits {
-        partial = Checkbox
-        backendLabel = LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_be.xlf:consent_publish_username_edits
-    }
-}
 
 plugin.tx_sfregister.settings {
     validation.create {
@@ -74,4 +62,16 @@ plugin.tx_sfregister.settings {
     privacyLink = {$plugin.tx_crowdsourcing.settings.crowdsourcingPrivacyLink}
     gtcLink = {$plugin.tx_crowdsourcing.settings.crowdsourcingGtcLink}
 
+    fields.configuration {
+
+        consentPublishUsernameStats {
+            partial = Checkbox
+            backendLabel = LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_be.xlf:consent_publish_username_stats
+        }
+
+        consentPublishUsernameEdits {
+            partial = Checkbox
+            backendLabel = LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_be.xlf:consent_publish_username_edits
+        }
+    }
 }
