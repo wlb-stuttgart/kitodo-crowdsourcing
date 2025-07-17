@@ -565,6 +565,7 @@ h1 {
     display: none;
 }
 
+#sfrForm .form-check,
 #registerModal .form-check {
     padding-left: 0;
 }
@@ -582,10 +583,12 @@ h1 {
     width: 100%;
 }
 
+#sfrForm .form-check,
 #registerModal .modal-body .form-check {
     display: block;
 }
 
+#sfrForm .custom-checkbox,
 #registerModal .modal-body .custom-checkbox {
     display: flex;
     align-items: flex-start;
@@ -596,10 +599,18 @@ h1 {
     margin-right: 0.5rem;
 }
 
-#registerModal .modal-body .custom-control-label {
+#sfrForm .custom-control-label {
+    margin-top: -0.45rem;
+    margin-bottom: 0;
+    line-height: 1.2;
+    padding-left: 1rem;
+}
+
+#registerModal .modal-body {
     margin-bottom: 0;
     line-height: 1.2;
 }
+
 
 #registerModal form {
     padding-left: 0 !important;
