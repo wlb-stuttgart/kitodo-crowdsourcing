@@ -42,7 +42,7 @@
                                        pluginName="campaigns"
                                        controller="Workflow"
                                        action="listProcesses"
-                                       class="{f:if(condition:'!{userInfo}',then:'login',else:'')} {f:if(condition:'{currentView} == \'listProcesses\'',then:'active',else:'inactive')}">
+                                       class="{f:if(condition:'!{userInfo}',then:'loginRequired',else:'')} {f:if(condition:'{currentView} == \'listProcesses\'',then:'active',else:'inactive')}">
                             <f:format.case mode="upper">
                                 <f:translate extensionName="crowdsourcing" key="navigation.poster" />
                             </f:format.case>

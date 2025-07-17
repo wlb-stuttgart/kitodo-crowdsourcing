@@ -411,6 +411,7 @@ function loginAndRegisterModals() {
     // Check if there is an action uri in local storage and redirect to it.
     // This is used for the login and the registration modal dialog.
     var actionUri = localStorage.getItem("action-uri");
+    var nextActionUri = localStorage.getItem("next-action-uri");
 
     if (typeof actionUri !== undefined && actionUri !== null && actionUri !== "") {
         if (isLoginProcessActive()) {
@@ -423,6 +424,10 @@ function loginAndRegisterModals() {
             setRegistrationProcessActive();
             registerModal.show();
         } else {
+            if (nextActionUri !== undefined && nextActionUri !== null && nextActionUri !== "") {
+                actionUri = nextActionUri;
+            }
+            localStorage.removeItem("next-action-uri");
             localStorage.removeItem("action-uri");
             window.location.href = actionUri;
         }
@@ -433,27 +438,33 @@ function loginAndRegisterModals() {
         }
     }
 
-    jQuery('.login').on('click', function(e){
+    jQuery('.login, .loginRequired').on('click', function(e){
         if (jQuery('#loginModal')) {
             var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
 
             // Store the action uri in local storage.
             // This is used for the redirect after login modal.
+            if (jQuery(this).hasClass('loginRequired')) {
+                localStorage.setItem("next-action-uri", jQuery(this).attr('href'));
+            }
+
             var activePage = jQuery('.main-nav-links a.active').first();
             if (typeof activePage !== 'undefined' && activePage) {
                 localStorage.setItem("action-uri", activePage.attr('href'));
             }
-            
+
             loginModal.show();
             e.preventDefault();
         }
     });
 
     jQuery('#loginModal').on('hidden.bs.modal', function () {
+        localStorage.removeItem("next-action-uri");
         redirectToActivePage();
     });
 
     jQuery('#loginModal .btn-close').on('click', function () {
+        localStorage.removeItem("next-action-uri");
         redirectToActivePage();
     });
 
