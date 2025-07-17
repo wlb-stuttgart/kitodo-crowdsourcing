@@ -45,6 +45,14 @@ plugin.tx_sfregister.settings {
             2 = "Wlb.Crowdsourcing:Password"
     }
 
+    validation.create.passwordRepeat {
+        1 = "Evoweb.SfRegister:Required"
+    }
+
+    validation.password.passwordRepeat {
+        1 = "Evoweb.SfRegister:Required"
+    }
+
     validation.edit {
          username {
             1 = "Evoweb.SfRegister:Required"
