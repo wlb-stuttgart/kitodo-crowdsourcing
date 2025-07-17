@@ -20,25 +20,30 @@ plugin.tx_sfregister.settings {
             1 = "Evoweb.SfRegister:Required"
             2 = "StringLength", options={"minimum": 8, "maximum": 80}
             3 = "Wlb.Crowdsourcing:UniqueUsername"
-       }
-    }
+        }
 
-    validation.create.password {
+        password {
             1 = "Evoweb.SfRegister:Required"
             2 = "Wlb.Crowdsourcing:Password"
+        }
+
+        passwordRepeat {
+            1 = "Evoweb.SfRegister:Required"
+        }
+
+        firstName >
+        lastName >
     }
 
-    validation.password.password {
+    validation.password {
+        password {
             1 = "Evoweb.SfRegister:Required"
             2 = "Wlb.Crowdsourcing:Password"
-    }
+        }
 
-    validation.create.passwordRepeat {
-        1 = "Evoweb.SfRegister:Required"
-    }
-
-    validation.password.passwordRepeat {
-        1 = "Evoweb.SfRegister:Required"
+        passwordRepeat {
+            1 = "Evoweb.SfRegister:Required"
+        }
     }
 
     validation.edit {
@@ -51,6 +56,8 @@ plugin.tx_sfregister.settings {
             1 = "Evoweb.SfRegister:Required"
         }
 
+        firstName >
+        lastName >
     }
 
     navigation < plugin.tx_crowdsourcing_campaigns.settings.navigation
