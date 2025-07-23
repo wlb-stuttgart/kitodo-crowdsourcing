@@ -99,32 +99,32 @@
                                         <f:if condition="{currentProcess}">
                                             <f:then>
                                                 <f:link.action action="editMetadata" arguments="{process: currentProcess}">
-                                                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                                                    <div class="action-box p-4" tabindex="0" role="button" aria-label="Klicken Sie für ...">
                                                         <h3>Bearbeitung fortsetzen</h3>
                                                     </div>
                                                 </f:link.action>
                                             </f:then>
                                             <f:else>
-                                                <f:link.action action="listProcesses"
-                                                               arguments="{wlb:facetArgument(facetValue: 'NEW', facetField:'state_faceting', activeFacets:'')}">
-                                                    <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                                                        <h3>Neues Plakat bearbeiten </h3>
-                                                    </div>
-                                                </f:link.action>
+                                                <div class="action-box p-4 disabled"
+                                                     tabindex="0"
+                                                     aria-disabled="true"
+                                                     title="Zurzeit nicht verfügbar">
+                                                    <h3>Bearbeitung fortsetzen</h3>
+                                                </div>
                                             </f:else>
                                         </f:if>
                                     </div>
                                     <div class="col-4">
                                         <f:link.action action="listProcesses"
-                                                       arguments="{wlb:facetArgument(facetValue: 'CORRECTION', facetField:'state_faceting', activeFacets:'')}">
-                                            <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
-                                                <h3>Plakat korrigieren</h3>
+                                                       arguments="{wlb:facetArgument(facetValue: 'NEW', facetField:'state_faceting', activeFacets:'')}">
+                                            <div class="action-box p-4" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                                                <h3>Neues Plakat bearbeiten </h3>
                                             </div>
                                         </f:link.action>
                                     </div>
                                     <div class="col-4">
                                         <f:link.action action="editRandomProcess">
-                                            <div class="info-box p-4" data-bs-toggle="modal" data-bs-target="#info-box-details" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                                            <div class="action-box p-4" tabindex="0" role="button" aria-label="Klicken Sie für ...">
                                                 <h3>Zufälliges Plakat</h3>
                                             </div>
                                         </f:link.action>

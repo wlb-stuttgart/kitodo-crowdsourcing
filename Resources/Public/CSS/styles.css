@@ -434,7 +434,7 @@ h1 {
     column-gap: 20px;
 }
 
-.dashboard-user-processes .info-box {
+.dashboard-user-processes .action-box {
         background-color: var(--color-btn-primary);
         aspect-ratio: 1;
         cursor: pointer;
@@ -447,11 +447,11 @@ h1 {
     text-decoration: none !important;
 }
 
-.dashboard-user-processes .info-box:focus {
+.dashboard-user-processes .action-box:focus {
     transform: translateY(-3px);
 }
 
-.dashboard-user-processes .info-box::after {
+.dashboard-user-processes .action-box::after {
     content: '';
     position: absolute;
     width: 16px;
@@ -465,18 +465,24 @@ h1 {
     fill: white;
 }
 
-.dashboard-user-processes .info-box:hover {
+.dashboard-user-processes .action-box:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.dashboard-user-processes .info-box h3 {
+.dashboard-user-processes .action-box h3 {
     font-family: IBM Plex Sans Condensed, sans-serif;
     font-size: 16px;
     font-weight: var(--font-semibold);
     color: white;
     letter-spacing: normal;
     margin-bottom: 0.5rem;
+}
+
+.dashboard-user-processes .action-box.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 

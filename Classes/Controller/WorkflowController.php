@@ -239,7 +239,16 @@ class WorkflowController extends ActionController
         } else if ($this->request->getArguments()['errorMessage'] === 'noRandomProcessAvailable') {
             $this->view->assign('errorMessage', 'noRandomProcessAvailable');
         }
-        
+
+        if ($this->request->getArguments()['currentProcess'] !== null) {
+            $this->view->assign('currentProcess', $this->request->getArguments()['currentProcess']);
+        }
+
+        if ($this->request->getArguments()['requestedProcess'] !== null) {
+            $this->view->assign('requestedProcess', $this->request->getArguments()['requestedProcess']);
+        }
+
+
         // log search action
         $this->statisticService->logClick(
             'search_action',
@@ -307,7 +316,16 @@ class WorkflowController extends ActionController
         if ($currentlyEditingProcess = $this->processRepository->findOneByFeUser($feUser)) {
             if ($currentlyEditingProcess !== $process) {
 //                throw new \Exception('User is already editing another process');
-                $this->redirect('listProcesses', null, null, ['errorMessage' => 'editAnotherProcess']);
+                $this->redirect(
+                    'listProcesses',
+                    null,
+                    null,
+                    [
+                        'errorMessage' => 'editAnotherProcess',
+                        'currentProcess' => $currentlyEditingProcess->getUid(),
+                        'requestedProcess' => $process->getUid()
+                    ]
+                );
             }
         }
 
@@ -409,9 +427,15 @@ class WorkflowController extends ActionController
      * Depending on the request arguments, this method supports aborting, caching, and saving
      * operations for a given process. It also performs necessary file operations and logs the action.
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return void
+     * @throws IllegalObjectTypeException
+     * @throws NoSuchArgumentException
+     * @throws UnknownObjectException
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
-    public function saveFormAction(): ResponseInterface
+    public function saveFormAction()
     {
         $trustedMetadata = $this->request->getArgument('metadata');
         $processId = $this->request->getArgument('process');
@@ -422,11 +446,7 @@ class WorkflowController extends ActionController
         
         if ($this->request->hasArgument('abort')) {
             $actionTaken = 'abort';
-            $process->resetFeUser();
-            $lastHistoryProcess = $this->processHistoryRepository->getLastHistory($process->getRecordIdentifier());
-            $data = $lastHistoryProcess->toArray();
-            $this->processHistoryService->restoreFromArray($process, $data);
-            $this->persistenceManager->persistAll();
+            $this->resetProcessFromHistory($process);
         }
 
         if ($this->request->hasArgument('cache')) {
@@ -504,8 +524,9 @@ class WorkflowController extends ActionController
             ['metadata_fields' => count($trustedMetadata)]
         );
 
-        return (new ForwardResponse('index'));
+        $this->redirect('listProcesses', null, null);
     }
+
 
     public function editRandomProcessAction()
     {
@@ -519,6 +540,22 @@ class WorkflowController extends ActionController
             $this->redirect('listProcesses', null, null, ['errorMessage' => 'noRandomProcessAvailable']);
         }
     }
+
+
+    /**
+     * @param Process $currentProcess
+     * @param Process $newProcess
+     * @return void
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     */
+    public function abortAndEditNewProcessAction(Process $currentProcess, Process $newProcess): void
+    {
+        $this->resetProcessFromHistory($currentProcess);
+        $this->solrIndexer->indexDocument($currentProcess);
+        $this->processRepository->update($currentProcess);
+        $this->redirect('editMetadata', 'Workflow', 'Crowdsourcing', ['process' => $newProcess->getUid()]);
+    }
+
 
     /**
      * @param int $uid
@@ -539,5 +576,14 @@ class WorkflowController extends ActionController
             $contentElement = $contentElement[0];
         }
         return $contentElement;
+    }
+
+    private function resetProcessFromHistory($process)
+    {
+        $process->resetFeUser();
+        $lastHistoryProcess = $this->processHistoryRepository->getLastHistory($process->getRecordIdentifier());
+        $data = $lastHistoryProcess->toArray();
+        $this->processHistoryService->restoreFromArray($process, $data);
+        $this->persistenceManager->persistAll();
     }
 }

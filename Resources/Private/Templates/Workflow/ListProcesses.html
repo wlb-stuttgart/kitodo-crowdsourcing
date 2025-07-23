@@ -12,17 +12,26 @@
     <div class="container-fluid">
         <div class="process-list-container">
             <section class="search-section">
-
                 <f:if condition="{errorMessage}">
                     <f:then>
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                             <strong>Warnung</strong>
                             <f:if condition="{errorMessage} === 'editAnotherProcess'">
                                 <f:then>
-                                    Sie haben bereits ein Vorgang in Bearbeitung. Möchten Sie die Bearbeitung fortsetzen?
+                                    Sie haben bereits einen Vorgang in Bearbeitung. Möchten Sie die Bearbeitung fortsetzen?
                                     <f:link.action action="editMetadata" arguments="{process: processCurrentUserEditing}" class="btn btn-outline-secondary btn-sm mt-auto">
                                         Fortsetzen
                                     </f:link.action>
+                                    <f:if condition="{requestedProcess}">
+                                        <f:then>
+                                            <f:link.action action="abortAndEditNewProcess" arguments="{currentProcess: currentProcess, newProcess: requestedProcess}" class="btn btn-outline-secondary btn-sm mt-auto">
+                                                Abbrechen
+                                            </f:link.action>
+                                        </f:then>
+                                        <f:else>
+                                        </f:else>
+                                    </f:if>
+
                                 </f:then>
                             </f:if>
                             <f:if condition="{errorMessage} === 'processTaken'">
