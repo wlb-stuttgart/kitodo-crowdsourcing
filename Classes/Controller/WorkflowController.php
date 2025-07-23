@@ -361,7 +361,7 @@ class WorkflowController extends ActionController
             }
 
             // set default at the end
-            asort($sorted);
+            ksort($sorted);
             $defaultValues = $sorted['default'];
             unset($sorted['default']);
             $sorted['default'] = $defaultValues;
