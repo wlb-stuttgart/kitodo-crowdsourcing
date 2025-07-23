@@ -7,15 +7,15 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Manage Your Campaigns</h4>
-                        <p>Here is a list of your existing campaigns. You can search, assign processes, edit, or delete them.</p>
+                        <h4>Kampagnen verwalten</h4>
+                        <p></p>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="searchCampaign" class="form-label">Search Campaigns</label>
-                                    <input type="text" class="form-control" id="searchCampaign" placeholder="Search by name..." onkeyup="filterCampaigns()">
+                                    <label for="searchCampaign" class="form-label">Suchen</label>
+                                    <input type="text" class="form-control" id="searchCampaign" placeholder="Suchbegriff..." onkeyup="filterCampaigns()">
                                 </div>
                             </div>
                         </div>
@@ -27,8 +27,8 @@
                             </colgroup>
                             <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Actions</th>
+                                <th>Titel</th>
+                                <th>Aktionen</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -38,32 +38,32 @@
                                     <td>{campaign.title}</td>
                                     <td>
                                         <f:link.action action="listProcesses" arguments="{campaign: campaign}" class="btn btn-primary btn-sm">
-                                            Processes
+                                            Vorgänge
                                         </f:link.action>
 
                                         <f:link.action action="edit" arguments="{campaign: campaign}" class="btn btn-info btn-sm">
-                                            Edit
+                                            Bearbeiten
                                         </f:link.action>
 
                                         <f:if condition="{campaign.new}">
                                             <f:link.action action="publish" arguments="{campaign: campaign, page: currentPage}" class="btn btn-warning btn-sm">
-                                                Publish
+                                                Veröffentlichen
                                             </f:link.action>
                                         </f:if>
 
                                         <f:if condition="{campaign.published}">
                                             <f:link.action action="close" arguments="{campaign: campaign, page: currentPage}" class="btn btn-warning btn-sm">
-                                                Close
+                                                Schließen
                                             </f:link.action>
                                         </f:if>
 
                                         <f:if condition="{campaign.closed}">
                                             <f:link.action action="reopen" arguments="{campaign: campaign, page: currentPage}" class="btn btn-warning btn-sm">
-                                                Unclose and Publish
+                                                Erneut veröffentlichen
                                             </f:link.action>
                                         </f:if>
 
-                                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                                        <a href="#" class="btn btn-danger btn-sm">Löschen</a>
                                     </td>
                                 </tr>
                             </f:for>
@@ -73,7 +73,7 @@
 
                         <div class="pagination">
                             <f:if condition="{currentPage} > 1">
-                                <a href="{f:uri.action(action: 'list', arguments: {page: previousPage})}" class="btn btn-secondary btn-sm">Previous</a>
+                                <a href="{f:uri.action(action: 'list', arguments: {page: previousPage})}" class="btn btn-secondary btn-sm">Vorherige</a>
                             </f:if>
 
                             <f:for each="{pageNumbers}" as="page">
@@ -83,12 +83,12 @@
                             </f:for>
 
                             <f:if condition="{currentPage} < {totalPages}">
-                                <a href="{f:uri.action(action: 'list', arguments: {page: nextPage})}" class="btn btn-secondary btn-sm">Next</a>
+                                <a href="{f:uri.action(action: 'list', arguments: {page: nextPage})}" class="btn btn-secondary btn-sm">Nächste</a>
                             </f:if>
                         </div>
 
                         <div class="alert alert-info d-none" role="alert" id="noCampaignsAlert">
-                            <strong>Info!</strong> You have no campaigns to manage at the moment.
+                            <strong>Info!</strong> Keine Kampagnen vorhanden.
                         </div>
 
                         <f:link.action action="new" class="btn btn-primary btn-block">+</f:link.action>

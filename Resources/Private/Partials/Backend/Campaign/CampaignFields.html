@@ -1,14 +1,15 @@
 <div class="form-group">
-    <label for="campaignTitle">Campaign Name</label>
+    <label for="campaignTitle">Titel</label>
     <f:form.textfield
             property="title"
             class="form-control"
             id="campaignTitle"
-            placeholder="Enter a campaign title"
+            placeholder=""
             required = "1" />
 </div>
 
-<div class="form-group">
+<f:comment>
+<div class="form-group mt-3">
     <label for="campaignSubtitle">Subtitle</label>
 
     <f:form.textarea
@@ -19,7 +20,9 @@
             rows="4"
             required = "0" />
 </div>
+</f:comment>
 
+<f:comment>
 <div class="form-group">
     <label for="campaignShortDescription">Short description</label>
 
@@ -31,27 +34,28 @@
             rows="4"
             required = "1" />
 </div>
+</f:comment>
 
-<div class="form-group">
-    <label for="campaignDescription">Description</label>
+<div class="form-group mt-3">
+    <label for="campaignDescription">Beschreibung</label>
 
     <f:form.textarea
             property="description"
             class="form-control"
             id="campaignDescription"
-            placeholder="Enter a description of the campaign"
+            placeholder=""
             rows="8"
             required = "1" />
 </div>
 
-<div class="form-group">
+<div class="form-group mt-3 mb-3">
     <f:if condition="{campaign.image}">
         <f:image image="{campaign.imageObject}" class="img-fluid w-100" alt="" width="770c" height="517c"
                  additionalAttributes='{style: "object-fit: cover; height: 400px; object-position: center;"}'/>
     </f:if>
 </div>
 
-<div class="form-group">
-    <label for="file">Upload your file:</label>
+<div class="form-group mt-3 mb-3">
+    <label for="file">Bild hochladen:</label>
     <f:form.upload type="file" name="uploadFile" id="file" />
 </div>

@@ -12,8 +12,7 @@
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header text-center">
-                        <h4>Create a New Campaign</h4>
-                        <p>Fill in the details below to create a new campaign</p>
+                        <h4>Kampagne bearbeiten</h4>
                     </div>
                     <div class="card-body">
                         <f:form action="update" object="{campaign}" objectName="campaign" method="post" enctype="multipart/form-data">
@@ -23,11 +22,11 @@
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <f:form.submit name="createCampaign" value="Update Campaign" class="btn btn-primary w-100" />
+                                        <f:form.submit name="createCampaign" value="Speichern" class="btn btn-primary w-100" />
                                     </div>
 
                                     <div class="col-md-6">
-                                        <button type="button" class="btn btn-secondary w-100" onclick="window.history.back();">Cancel</button>
+                                        <button type="button" class="btn btn-secondary w-100" onclick="window.history.back();">Abbrechen</button>
                                     </div>
                                 </div>
                             </div>
