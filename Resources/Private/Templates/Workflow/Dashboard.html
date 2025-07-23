@@ -56,7 +56,38 @@
             <div class="col-lg-6 mt-3">
                 <section class="mt-0 dashboard-section dashboard-general-statistic">
                     <h2>Statistik</h2>
-                    <p>General statistics content here.</p>
+                    <div class="card shadow-sm mt-3">
+                        <div class="card-body">
+                            <div class="row row-cols-2 row-cols-md-3 g-3 text-left">
+
+                                <div class="col">
+                                    <div class="text-muted small" style="white-space: normal;">Gesamt</div>
+                                    <div class="fs-4 fw-bold text-primary">{statistic.countAll}</div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="text-muted small" style="white-space: normal;">Neu</div>
+                                    <div class="fs-4 fw-bold text-success">{statistic.countNew}</div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="text-muted small" style="white-space: normal;">Korrektur</div>
+                                    <div class="fs-4 fw-bold text-warning">{statistic.countCorrection}</div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="text-muted small" style="white-space: normal;">Endkorrektur</div>
+                                    <div class="fs-4 fw-bold text-secondary">{statistic.countFinalCorrection}</div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="text-muted small" style="white-space: normal;">Abgeschlossen</div>
+                                    <div class="fs-4 fw-bold text-dark">{statistic.countCompleted}</div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
                 <f:if condition="{userInfo}">

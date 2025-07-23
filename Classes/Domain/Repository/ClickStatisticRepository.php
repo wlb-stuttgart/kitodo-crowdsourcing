@@ -103,7 +103,7 @@ class ClickStatisticRepository extends Repository
         $query = $this->createQuery();
         $query->statement('
             SELECT action_type, COUNT(*) as click_count
-            FROM tx_crowdsourcing_click_statistics
+            FROM tx_crowdsourcing_domain_model_clickstatistic
             WHERE deleted = 0
             GROUP BY action_type
             ORDER BY click_count DESC
@@ -123,7 +123,7 @@ class ClickStatisticRepository extends Repository
         $query = $this->createQuery();
         $query->statement('
             SELECT DATE(FROM_UNIXTIME(crdate)) as date, COUNT(*) as click_count
-            FROM tx_crowdsourcing_click_statistics
+            FROM tx_crowdsourcing_domain_model_clickstatistic
             WHERE deleted = 0 AND crdate >= ' . $startDate . '
             GROUP BY DATE(FROM_UNIXTIME(crdate))
             ORDER BY date DESC

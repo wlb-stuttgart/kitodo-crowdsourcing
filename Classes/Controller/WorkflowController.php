@@ -15,7 +15,6 @@ use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
 use TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Common\Solr\SolrSearcher;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
@@ -156,6 +155,7 @@ class WorkflowController extends ActionController
         /** @var Campaign $campaign */
         $campaign = $this->campaignRepository->findAll()->getFirst();
 
+        $this->view->assign('statistic', $this->statisticService->getStatistics());
         $this->view->assign('campaign', $campaign);
         $this->view->assign('currentProcess', $currentProcess);
 
