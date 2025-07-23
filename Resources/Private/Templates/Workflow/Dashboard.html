@@ -98,8 +98,8 @@
                                     <div class="col-4">
                                         <f:if condition="{currentProcess}">
                                             <f:then>
-                                                <f:link.action action="editMetadata" arguments="{process: currentProcess}">
-                                                    <div class="action-box p-4" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                                                <f:link.action action="editMetadata" tabindex="0"  role="button" aria-label="Klicken Sie für ..." arguments="{process: currentProcess}">
+                                                    <div class="action-box p-4">
                                                         <h3>Bearbeitung fortsetzen</h3>
                                                     </div>
                                                 </f:link.action>
@@ -115,16 +115,16 @@
                                         </f:if>
                                     </div>
                                     <div class="col-4">
-                                        <f:link.action action="listProcesses"
+                                        <f:link.action action="listProcesses" tabindex="0" role="button" aria-label="Klicken Sie für ..."
                                                        arguments="{wlb:facetArgument(facetValue: 'NEW', facetField:'state_faceting', activeFacets:'')}">
-                                            <div class="action-box p-4" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                                            <div class="action-box p-4">
                                                 <h3>Neues Plakat bearbeiten </h3>
                                             </div>
                                         </f:link.action>
                                     </div>
                                     <div class="col-4">
-                                        <f:link.action action="editRandomProcess">
-                                            <div class="action-box p-4" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                                        <f:link.action action="editRandomProcess" tabindex="0" role="button" aria-label="Klicken Sie für ...">
+                                            <div class="action-box p-4">
                                                 <h3>Zufälliges Plakat</h3>
                                             </div>
                                         </f:link.action>
