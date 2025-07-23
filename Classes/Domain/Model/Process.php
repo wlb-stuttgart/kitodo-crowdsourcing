@@ -222,12 +222,15 @@ class Process extends AbstractEntity
 
     }
 
+    /**
+     * @return string[]
+     */
     public function getMetadataForDisplay()
     {
         $xml = simplexml_load_string($this->metadata);
         $xml->registerXPathNamespace('kitodo', 'http://meta.kitodo.org/v1/');
-        $values = $xml->xpath("//kitodo:metadata[@name='signature']");
-        return ['signature' => (string)$values[0]];
+        $values = $xml->xpath("//kitodo:metadata[@name='Signatur']");
+        return ['signatur' => (string)$values[0]];
     }
 
     public function getThumbsImageInfos()
