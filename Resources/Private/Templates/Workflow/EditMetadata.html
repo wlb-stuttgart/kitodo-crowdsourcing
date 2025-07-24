@@ -1,5 +1,5 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-      xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers"
+      xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers" xmlns:wlb="http://typo3.org/ns/Wlb/Crowdsourcing/ViewHelpers"
       data-namespace-typo3-fluid="true">
 
 <f:layout name="Frontend"/>
@@ -146,7 +146,7 @@
                                                                     <f:if condition="{metadata.helptext}">
                                                                         <f:then>
                                                                             <div class="form-text">
-                                                                                <f:format.html>{metadataChild.helptext}</f:format.html>
+                                                                                <wlb:bbcodeToHtml>{metadataChild.helptext}</wlb:bbcodeToHtml>
                                                                             </div>
                                                                         </f:then>
                                                                     </f:if>
@@ -176,7 +176,7 @@
                                         <f:if condition="{metadata.helptext}">
                                             <f:then>
                                                 <div class="form-text">
-                                                    <f:format.html>{metadata.helptext}</f:format.html>
+                                                    <wlb:bbcodeToHtml>{metadata.helptext}</wlb:bbcodeToHtml>
                                                 </div>
                                             </f:then>
                                         </f:if>
