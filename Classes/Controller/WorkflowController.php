@@ -495,7 +495,13 @@ class WorkflowController extends ActionController
                 $xpathDoc = new \DOMXPath($xmlDoc);
 
                 $xmlDataNode = $xpathDoc->query('//mets:xmlData');
-                $xmlDataNode->item(0)->removeChild($xmlDataNode->item(0)->firstChild);
+                $xmlDataFirstNode = $xmlDataNode->item(0);
+
+                if ($xmlDataFirstNode->nodeType === XML_ELEMENT_NODE) {
+                    $xmlDataFirstNode->removeChild($xmlDataFirstNode->getElementsByTagName('kitodo:kitodo')->item(0));
+                } else {
+                    throw new \Exception('Error: XML Data node is not an element node:' . $process->getRecordIdentifier());
+                }
 
                 $dbDoc = new \DOMDocument();
                 $dbDoc->loadXML($metadata);
