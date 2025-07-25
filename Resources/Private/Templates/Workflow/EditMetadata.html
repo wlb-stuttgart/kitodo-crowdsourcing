@@ -130,7 +130,7 @@
                                                                                 <f:if condition="{j} >= {metadataChild.minOccurs}">
                                                                                     <f:then>
                                                                                         <f:render partial="Workflow/FormFieldRendering" arguments="{_all}"/>
-                                                                                        <div class="input-group-text deleteField" style="cursor: pointer;">
+                                                                                        <div class="input-group-text deleteChildField" style="cursor: pointer;">
                                                                                             <span class="fa-solid fa-trash"></span>
                                                                                         </div>
                                                                                     </f:then>
@@ -150,7 +150,7 @@
                                                                             </div>
                                                                         </f:then>
                                                                     </f:if>
-                                                                    <f:if condition="{metadataChild.minOccurs} < {metadataChild.maxOccurs}">
+                                                                    <f:if condition="{metadataChild.minOccurs} < {metadataChild.maxOccurs} && {metadataChild.maxOccurs} > 1">
                                                                         <f:then>
                                                                             <div style="display: block;">
                                                                                 <f:form.button class="addFormGroupField btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"></f:form.button>
@@ -168,9 +168,18 @@
 
                                         <f:if condition="{metadata.minOccurs} < {metadata.maxOccurs}">
                                             <f:then>
-                                                <div style="display: block;">
-                                                    <f:form.button class="{f:if(condition: '!{metadata.children}', then: 'addFormField', else: 'addGroup')} btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"></f:form.button>
-                                                </div>
+                                                <f:if condition="!{metadata.children} && {metadata.maxOccurs} > 1">
+                                                    <f:then>
+                                                        <div style="display: block;">
+                                                            <f:form.button class="addFormField btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"></f:form.button>
+                                                        </div>
+                                                    </f:then>
+                                                    <f:else>
+                                                        <div style="display: block;">
+                                                            <f:form.button class="addGroup btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"></f:form.button>
+                                                        </div>
+                                                    </f:else>
+                                                </f:if>
                                             </f:then>
                                         </f:if>
                                         <f:if condition="{metadata.helptext}">

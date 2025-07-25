@@ -188,13 +188,13 @@ function clickEvents() {
 
     // Hide all empty input fields which are not required
     $('input.processForm:not([required]):not([data-required="1"])').each(function () {
-        if ($(this).val() === '') {
+        if ($(this).val() === '' && $(this).data('max') !== 1) {
             $(this).parent().hide();
         }
     });
 
     $('select.processForm:not([required]):not([data-required="1"])').each(function () {
-        if ($(this).val() === '') {
+        if ($(this).val() === '' && $(this).data('max') !== 1) {
             $(this).parent().hide();
         }
     });
@@ -221,6 +221,14 @@ function clickEvents() {
         var configElement = $(this).closest('.metadata-group');
         var nextHidden = $(configElement).find('div:hidden').first();
         nextHidden.show();
+
+        // Duplicate code is needed
+        var nextHidden = $(configElement).find('div:hidden').first();
+        // Hide the next button if there is no next hidden field
+        if (nextHidden.next().length === 0) {
+            $(this).hide();
+        }
+
     });
 
     // Click event for adding new group
@@ -236,21 +244,42 @@ function clickEvents() {
         var requiredFields = configElement.find('input[data-required="1"]');
         requiredFields.attr('required', 'true');
 
+        nextHidden = $(configElement).find('div.metadata-group:hidden').first();
+        // Hide the next button if there is no next hidden field
+        if (nextHidden.length === 0) {
+            $(this).hide();
+        }
+
+    });
+
+    // Click event for hiding form field and empty this field
+    $('.deleteChildField').on('click', function (evt) {
+        $(this).closest('.input-group').hide();
+        $(this).siblings('input').val('');
+        $(this).closest('.child-metadata-field').find('button.addFormGroupField').show();
     });
 
     // Click event for hiding form field and empty this field
     $('.deleteField').on('click', function (evt) {
         $(this).closest('.input-group').hide();
         $(this).siblings('input').val('');
+        $(this).closest('.metadata-group').find('button.addFormField').show();
     });
 
     // Click event for adding new groups
     $('button.addFormGroupField').on('click', function (evt) {
         // get next hidden field and show it
         evt.preventDefault();
-        
-        var nextHidden = $(this).parent().parent().find('.metadataChildField div:hidden').first();
+
+        var nextHidden = $(this).closest('.child-metadata-field').find('.metadataChildField div.input-group:hidden').first();
         nextHidden.show();
+
+        // Duplicate code is needed
+        nextHidden = $(this).closest('.child-metadata-field').find('.metadataChildField div.input-group:hidden').first();
+        // Hide the next button if there is no next hidden field
+        if (nextHidden.length === 0) {
+            $(this).hide();
+        }
     });
 
     // Click event for hiding form groups
@@ -261,6 +290,8 @@ function clickEvents() {
 
         var requiredFields = metadataGroup.find('input[required]');
         requiredFields.removeAttr('required');
+
+        $(this).closest('.metadata-group.form-group').find('button.addGroup').show();
     });
 
     // Validate form
