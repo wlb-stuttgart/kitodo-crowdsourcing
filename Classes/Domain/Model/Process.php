@@ -351,8 +351,12 @@ class Process extends AbstractEntity
                         } else {
                             $sxe->addChild('kitodo:metadata', $subMetadata)->addAttribute('name', $metadataKey);
                         }
-                        $i++;
+                    } else {
+                        if (array_key_exists($i, $availableElements)) {
+                            $availableElements[$i][0] = '';
+                        }
                     }
+                    $i++;
                 }
             }
         }
