@@ -160,7 +160,7 @@ function openLayer() {
         view: new ol.View({
             projection: projection,
             center: [imageLayer.getSource().getImageExtent()[2]/2, imageLayer.getSource().getImageExtent()[3]/2],
-            zoom: 0,
+            zoom: 1,
             maxZoom: 6,
         }),
         controls: [],
