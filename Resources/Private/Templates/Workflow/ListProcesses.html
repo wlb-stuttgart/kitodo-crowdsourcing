@@ -169,12 +169,21 @@
                                             </f:link.action>
                                         </f:then>
                                         <f:else>
-                                            <f:if condition="{editAllowedByCurrentUser.{process.uid}}">
+                                            <f:if condition="{process.state} == 'COMPLETED'}">
                                                 <f:then>
-                                                    <button class="btn btn-outline-secondary btn-sm mt-auto" disabled>Aktuell in Bearbeitung</button>
+                                                    <f:link.action action="showProcessDetails" arguments="{process: process}" class="btn btn-outline-secondary btn-sm mt-auto">
+                                                        Betrachten
+                                                    </f:link.action>
                                                 </f:then>
                                                 <f:else>
-                                                    <button class="btn btn-outline-secondary btn-sm mt-auto" disabled>Wurde bereits bearbeitet</button>
+                                                    <f:if condition="{editAllowedByCurrentUser.{process.uid}}">
+                                                        <f:then>
+                                                            <button class="btn btn-outline-secondary btn-sm mt-auto" disabled>Aktuell in Bearbeitung</button>
+                                                        </f:then>
+                                                        <f:else>
+                                                            <button class="btn btn-outline-secondary btn-sm mt-auto" disabled>Wurde bereits bearbeitet</button>
+                                                        </f:else>
+                                                    </f:if>
                                                 </f:else>
                                             </f:if>
                                         </f:else>

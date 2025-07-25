@@ -1,0 +1,186 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers" xmlns:wlb="http://typo3.org/ns/Wlb/Crowdsourcing/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:layout name="Frontend"/>
+
+<f:section name="main">
+
+    <f:render partial="Workflow/Navigation" arguments="{_all}"/>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col">
+                <div>
+                    <f:if condition="{processImagesInfo -> f:count()} > 1">
+                        <f:then>
+                            <f:form.button class="ol-prev-image btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-arrow-left" type="button"></f:form.button>
+                            <f:form.button class="ol-next-image btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-arrow-right" type="button"></f:form.button>
+                        </f:then>
+                    </f:if>
+
+                    <button id="rotate-left" class="btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-rotate-left"></button>
+                    <button id="rotate-right" class="btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-rotate-right"></button>
+                    <button id="zoom-in" class="btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-plus"></button>
+                    <button id="zoom-out" class="btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-minus"></button>
+                    <button id="fullscreen" class="btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-maximize"></button>
+
+                    <f:if condition="{processImagesInfo -> f:count()} > 1">
+                        <f:then>
+                            <button id="show-thumbnails" class="btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-images"></button>
+
+                            <div id="thumbnails" style="padding: 20px; width: 100%; background-color: #FFFFFF; display: none;">
+                                <f:for each="{process.thumbsImageInfos}" as="thumbImageInfo" iteration="index">
+                                    <img src="{thumbImageInfo.image}" width="300" class="p-2"/>
+                                </f:for>
+                            </div>
+                        </f:then>
+                    </f:if>
+
+                    <div id="map" class="map" data-sourcecount="0" style="width: 100%;height: 1000px;"></div>
+
+                    <f:for each="{processImagesInfo}" as="imageInfo" iteration="index">
+                        <div class="processimages" data-path="{imageInfo.image}" data-height="{imageInfo.height}" data-width="{imageInfo.width}"></div>
+                    </f:for>
+                </div>
+            </div>
+            <div class="col">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <f:for each="{dbConfigTabSorted.{process.type}}" as="tab" key="tabName" iteration="tabIterator">
+                            <f:if condition="{tabIterator.isFirst}">
+                                <f:then>
+                                    <f:variable name="activeTabClass">active</f:variable>
+                                    <f:variable name="ariaSelected">true</f:variable>
+                                </f:then>
+                                <f:else>
+                                    <f:variable name="activeTabClass"></f:variable>
+                                    <f:variable name="ariaSelected">false</f:variable>
+                                </f:else>
+                            </f:if>
+                            <button class="nav-link {activeTabClass}" id="nav-{tabIterator.index}-tab" data-bs-toggle="tab" data-bs-target="#nav-{tabIterator.index}" type="button" role="tab" aria-controls="nav-{tabIterator.index}" aria-selected="{ariaSelected}">
+                                {tabName}
+                            </button>
+                        </f:for>
+                    </div>
+                </nav>
+
+
+                    <div class="tab-content" id="nav-tabContent">
+                        <f:for each="{dbConfigTabSorted.{process.type}}" as="tab" key="tabName" iteration="tabIterator">
+                            <f:if condition="{tabIterator.isFirst}">
+                                <f:then>
+                                    <f:variable name="activeTabClass">show active</f:variable>
+                                </f:then>
+                                <f:else>
+                                    <f:variable name="activeTabClass"></f:variable>
+                                </f:else>
+                            </f:if>
+                            <div class="tab-pane fade {activeTabClass}" id="nav-{tabIterator.index}" role="tabpanel" aria-labelledby="nav-{tabIterator.index}-tab" tabindex="0">
+                                <f:for each="{tab}" as="metadata" key="metadataId">
+                                    <f:if condition="{metadata.active}">
+                                        <div id="{metadataId}" class="form-group metadata-group metadatafield-{metadataId} pb-4 {f:if(condition: '{metadata.children}', then: 'group-with-children')}">
+                                            <label for="meta-{metadataId}">
+                                                {metadata.label} ({metadata.minOccurs} / {metadata.maxOccurs})
+                                            </label>
+
+                                            <f:variable name="maxOccurs">{metadata.maxOccurs - 1}</f:variable>
+                                            <f:for each="{v:iterator.range(low: 0, high: maxOccurs)}" as="i">
+                                                <f:if condition="!{metadata.children}">
+                                                    <f:then>
+                                                        <div class="input-group pb-2">
+                                                            <f:if condition="{i} >= {metadata.minOccurs}">
+                                                                <f:then>
+                                                                    <f:render partial="Workflow/showMetadataOnly" arguments="{_all}"/>
+                                                                </f:then>
+                                                                <f:else>
+                                                                    <f:variable name="required">1</f:variable>
+                                                                    <f:render partial="Workflow/showMetadataOnly" arguments="{_all}"/>
+                                                                    <f:variable name="required">0</f:variable>
+                                                                </f:else>
+                                                            </f:if>
+                                                        </div>
+                                                    </f:then>
+                                                    <f:else>
+                                                        <div class="card metadata-group child-group">
+                                                            <div class="card-body"
+                                                                 data-required="{f:if(condition: '{i} >= {metadata.minOccurs}', then: '0', else: '1')}">
+
+                                                                <f:for each="{metadata.children}" as="metadataChild" key="metadataChildId">
+                                                                    <div class="child-metadata-field">
+                                                                        <label for="meta-{metadataChildId}">
+                                                                            {metadataChild.label} ({metadataChild.minOccurs} / {metadataChild.maxOccurs})
+                                                                        </label>
+                                                                        <f:variable name="child">1</f:variable>
+                                                                        <f:variable name="maxOccurs">{metadataChild.maxOccurs - 1}</f:variable>
+                                                                        <f:for each="{v:iterator.range(low: 0, high: maxOccurs)}" as="j">
+                                                                            <div class="metadataChildField">
+                                                                                <div class="input-group pb-2">
+                                                                                    <f:if condition="{j} >= {metadataChild.minOccurs}">
+                                                                                        <f:then>
+                                                                                            <f:render partial="Workflow/showMetadataOnly" arguments="{_all}"/>
+                                                                                        </f:then>
+                                                                                        <f:else>
+                                                                                            <f:variable name="required">1</f:variable>
+                                                                                            <f:render partial="Workflow/showMetadataOnly" arguments="{_all}"/>
+                                                                                            <f:variable name="required">0</f:variable>
+                                                                                        </f:else>
+                                                                                    </f:if>
+                                                                                </div>
+                                                                            </div>
+                                                                        </f:for>
+                                                                        <f:if condition="{metadata.helptext}">
+                                                                            <f:then>
+                                                                                <div class="form-text">
+                                                                                    <wlb:bbcodeToHtml>{metadataChild.helptext}</wlb:bbcodeToHtml>
+                                                                                </div>
+                                                                            </f:then>
+                                                                        </f:if>
+                                                                    </div>
+                                                                </f:for>
+                                                            </div>
+                                                        </div>
+                                                        <f:variable name="child">0</f:variable>
+                                                    </f:else>
+                                                </f:if>
+                                            </f:for>
+
+                                            <f:if condition="{metadata.helptext}">
+                                                <f:then>
+                                                    <div class="form-text">
+                                                        <wlb:bbcodeToHtml>{metadata.helptext}</wlb:bbcodeToHtml>
+                                                    </div>
+                                                </f:then>
+                                            </f:if>
+                                        </div>
+                                    </f:if>
+                                </f:for>
+                            </div>
+                        </f:for>
+                    </div>
+                    <div>
+                        <div class="mt-3 mb-3">
+                            <button id="prevBtn" class="btn btn-secondary">Zurück</button>
+                            <button id="nextBtn" class="btn btn-primary">Weiter</button>
+                        </div>
+                    </div>
+                    <f:if condition="{reportMail}">
+                        <f:then>
+                            <div class="mt-3 mb-3 text-end">
+                                <a id="report" href="mailto:{reportMail}?subject=Report ID {process.recordIdentifier}"
+                                   class="btn btn-secondary">Melden</a>
+                            </div>
+                        </f:then>
+                    </f:if>
+                <div>
+                    <f:link.action action="listProcesses" class="btn btn-warning">
+                        Zurück zur Liste
+                    </f:link.action>
+                </div>
+
+            </div>
+        </div>
+        <script src="{f:uri.resource(path:'EXT:crowdsourcing/Resources/Public/JavaScript/Backend/configuration.js')}"></script>
+    </div>
+
+</f:section>

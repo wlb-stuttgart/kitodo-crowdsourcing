@@ -342,30 +342,7 @@ class WorkflowController extends ActionController
 
             $this->view->assign('dbConfig', $dbConfigArray);
 
-            // configuration preprocessing (tabs and active metadata)
-            $sorted = [];
-
-            foreach ($dbConfigArray[$processType] as $fieldName => $meta) {
-                if ($meta['minOccurs'] === '') {
-                    $meta['minOccurs'] = 0;
-                }
-                if ($meta['maxOccurs'] === '') {
-                    $meta['maxOccurs'] = 1;
-                }
-
-                $tab = $meta['tab'] === '' ? 'default' : $meta['tab'];
-                if (!isset($sorted[$tab])) {
-                    $sorted[$tab] = [];
-                }
-                $sorted[$tab][$fieldName] = $meta;
-            }
-
-            // set default at the end
-            ksort($sorted);
-            $defaultValues = $sorted['default'];
-            unset($sorted['default']);
-            $sorted['default'] = $defaultValues;
-            $dbConfigArraySorted[$processType] = $sorted;
+            $dbConfigArraySorted = $this->sortMetadataByTabs($dbConfigArray, $processType);
 
             $this->view->assign('dbConfigTabSorted', $dbConfigArraySorted);
 
@@ -375,6 +352,27 @@ class WorkflowController extends ActionController
 
         $this->view->assign('rulesetDefinitions', $this->rulesetService->getRulesetDefinitions());
 
+        $formValues = $this->loadFormValues($dbConfigArray, $process);
+
+        // Get images as base64 with width and height info
+        $this->view->assign("processImagesInfo", $process->getImageInfos());
+        $this->view->assign('process', $process);
+        $this->view->assign('formValues', $formValues);
+
+        $this->view->assign('reportMail', ExtensionConfigurationService::getInstance()->getConfigurationValue('reportMail'));
+
+        // log metadata edit action
+        $this->statisticService->logWorkflowAction(
+            'edit_metadata',
+            $process,
+            $this->request->getAttribute('originalRequest') ?? $this->request,
+            ['process_type' => $processType]
+        );
+
+        return $this->htmlResponse();
+    }
+
+    public function loadFormValues($dbConfigArray, $process) {
         // build value array for each active configuration
         $formValues = [];
 
@@ -402,6 +400,70 @@ class WorkflowController extends ActionController
             }
         }
 
+        return $formValues;
+    }
+
+    public function sortMetadataByTabs($dbConfigArray, $processType) {
+        // configuration preprocessing (tabs and active metadata)
+        $sorted = [];
+
+        foreach ($dbConfigArray[$processType] as $fieldName => $meta) {
+            if ($meta['minOccurs'] === '') {
+                $meta['minOccurs'] = 0;
+            }
+            if ($meta['maxOccurs'] === '') {
+                $meta['maxOccurs'] = 1;
+            }
+
+            $tab = $meta['tab'] === '' ? 'default' : $meta['tab'];
+            if (!isset($sorted[$tab])) {
+                $sorted[$tab] = [];
+            }
+            $sorted[$tab][$fieldName] = $meta;
+        }
+
+        // set default at the end
+        ksort($sorted);
+        $defaultValues = $sorted['default'];
+        unset($sorted['default']);
+        $sorted['default'] = $defaultValues;
+        $dbConfigArraySorted[$processType] = $sorted;
+
+        return $dbConfigArraySorted;
+    }
+
+
+    public function showProcessDetailsAction(Process $process): ResponseInterface
+    {
+        $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
+        /** @var FrontendUser $user */
+        $feUser = $this->frontendUserRepository->findByUid($userId);
+
+        $processType = $process->getType();
+
+        // TODO check if process is on last state otherwise redirect
+
+
+        $queryResult = $this->metadataConfigurationRepository->findAll();
+        if ($queryResult->count() !== 0) {
+            /** @var MetadataConfiguration $dbConfiguration */
+            $dbConfiguration = $queryResult->getFirst();
+            $dbConfigArray = json_decode($dbConfiguration->getJson(), true);
+
+            $this->view->assign('dbConfig', $dbConfigArray);
+
+            $dbConfigArraySorted = $this->sortMetadataByTabs($dbConfigArray, $processType);
+
+            $this->view->assign('dbConfigTabSorted', $dbConfigArraySorted);
+
+        } else {
+            throw new \Exception('Metadata configuration missing');
+        }
+
+        $this->view->assign('rulesetDefinitions', $this->rulesetService->getRulesetDefinitions());
+
+        $formValues = $this->loadFormValues($dbConfigArray, $process);
+
         // Get images as base64 with width and height info
         $this->view->assign("processImagesInfo", $process->getImageInfos());
         $this->view->assign('process', $process);
@@ -411,7 +473,7 @@ class WorkflowController extends ActionController
 
         // log metadata edit action
         $this->statisticService->logWorkflowAction(
-            'edit_metadata',
+            'show_metadata',
             $process,
             $this->request->getAttribute('originalRequest') ?? $this->request,
             ['process_type' => $processType]
