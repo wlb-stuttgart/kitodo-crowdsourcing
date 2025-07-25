@@ -498,7 +498,7 @@ class WorkflowController extends ActionController
                 $xmlDataFirstNode = $xmlDataNode->item(0);
 
                 if ($xmlDataFirstNode->nodeType === XML_ELEMENT_NODE) {
-                    $xmlDataFirstNode->removeChild($xmlDataFirstNode->getElementsByTagName('kitodo:kitodo')->item(0));
+                    $xmlDataFirstNode->removeChild($xmlDataFirstNode->getElementsByTagName('kitodo')->item(0));
                 } else {
                     throw new \Exception('Error: XML Data node is not an element node:' . $process->getRecordIdentifier());
                 }
