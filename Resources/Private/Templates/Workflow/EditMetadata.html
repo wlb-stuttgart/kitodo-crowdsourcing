@@ -150,10 +150,12 @@
                                                                             </div>
                                                                         </f:then>
                                                                     </f:if>
-                                                                    <f:if condition="{metadataChild.minOccurs} < {metadataChild.maxOccurs} && {metadataChild.maxOccurs} > 1">
+                                                                    <f:if condition="{metadataChild.minOccurs} < {metadataChild.maxOccurs}">
                                                                         <f:then>
                                                                             <div style="display: block;">
-                                                                                <f:form.button class="addFormGroupField btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"></f:form.button>
+                                                                                <f:form.button class="addFormGroupField btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"
+                                                                                               style="display: {f:if(condition: '{metadataChild.maxOccurs} > 1', then: 'block', else: 'none')};">
+                                                                                </f:form.button>
                                                                             </div>
                                                                         </f:then>
                                                                     </f:if>
@@ -168,10 +170,12 @@
 
                                         <f:if condition="{metadata.minOccurs} < {metadata.maxOccurs}">
                                             <f:then>
-                                                <f:if condition="!{metadata.children} && {metadata.maxOccurs} > 1">
+                                                <f:if condition="!{metadata.children}">
                                                     <f:then>
                                                         <div style="display: block;">
-                                                            <f:form.button class="addFormField btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"></f:form.button>
+                                                            <f:form.button class="addFormField btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"
+                                                                           style="display: {f:if(condition: '{metadataChild.maxOccurs} > 1', then: 'block', else: 'none')};">
+                                                            </f:form.button>
                                                         </div>
                                                     </f:then>
                                                     <f:else>
