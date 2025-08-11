@@ -5,7 +5,6 @@ namespace Wlb\Crowdsourcing\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * ViewHelper zum Konvertieren von BBCode-Links in HTML-Links
@@ -17,8 +16,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class BbcodeToHtmlViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
@@ -34,20 +31,14 @@ class BbcodeToHtmlViewHelper extends AbstractViewHelper
         $this->registerArgument('class', 'string', 'CSS-Klasse für die Links', false, '');
     }
 
+
     /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
      * @return string
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ): string {
-        $text = $arguments['text'] ?? $renderChildrenClosure();
-        $target = $arguments['target'] ?? '';
-        $cssClass = $arguments['class'] ?? '';
+    public function render(): string {
+        $text = $this->arguments['text'] ?? $this->renderChildren();
+        $target = $this->arguments['target'] ?? '';
+        $cssClass = $this->arguments['class'] ?? '';
 
         if (empty($text)) {
             return '';

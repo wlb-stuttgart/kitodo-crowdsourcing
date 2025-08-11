@@ -10,6 +10,10 @@ use TYPO3\CMS\Core\Http\HtmlResponse;
 class FeuserCreateController extends SfRegisterFeuserCreateController
 {
 
+    /**
+     * @param FrontendUser $user
+     * @return ResponseInterface
+     */
     public function saveAction(FrontendUser $user): ResponseInterface
     {
         $regristrationDeactivated = $this->settings['regristrationDeactivated'] ?? false;

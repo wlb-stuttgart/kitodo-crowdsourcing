@@ -38,11 +38,13 @@ class CampaignController extends ActionController
      * Shows the form to edit an existing campaign.
      *
      * @param Campaign $campaign
-     * @return void
+     * @return ResponseInterface
      */
-    public function editAction(Campaign $campaign)
+    public function editAction(Campaign $campaign): ResponseInterface
     {
         $this->view->assign('campaign', $campaign);
+
+        return $this->htmlResponse();
     }
 
     /**
@@ -50,27 +52,33 @@ class CampaignController extends ActionController
      *
      * @param Campaign $campaign
      * @param array $uploadFile
-     * @return void
+     * @return ResponseInterface
+     * @throws \TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
-    public function updateAction(Campaign $campaign, $uploadFile = [])
+    public function updateAction(Campaign $campaign, $uploadFile = []): ResponseInterface
     {
         if ($uploadFile) {
             $this->saveAndUploadFile($campaign, $uploadFile);
         }
 
         $this->campaignRepository->update($campaign);
-        $this->redirect('list');
+        return $this->redirect('list');
     }
 
     /**
      * Shows the form to create a new campaign.
      *
-     * @return void
+     * @return ResponseInterface
      */
-    public function newAction()
+    public function newAction(): ResponseInterface
     {
         $campaign = new Campaign();
         $this->view->assign('campaign', $campaign);
+
+        return $this->htmlResponse();
     }
 
     /**
@@ -78,25 +86,27 @@ class CampaignController extends ActionController
      *
      * @param Campaign $campaign
      * @param array $uploadFile
-     * @return void
+     * @return ResponseInterface
+     * @throws \TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
-    public function createAction(Campaign $campaign, $uploadFile = [])
+    public function createAction(Campaign $campaign, $uploadFile = []): ResponseInterface
     {
         if ($uploadFile) {
             $this->saveAndUploadFile($campaign, $uploadFile);
         }
 
         $this->campaignRepository->add($campaign);
-        $this->redirect('list');
+        return $this->redirect('list');
     }
 
 
     /**
      * @param int $page
-     * @return void
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException
+     * @return ResponseInterface
      */
-    public function listAction(int $page = 0)
+    public function listAction(int $page = 0): ResponseInterface
     {
         $currentPage = $page > 0 ? $page : 1;
         $itemsPerPage = 10;
@@ -116,13 +126,17 @@ class CampaignController extends ActionController
         $this->view->assign('pageNumbers', $pageNumbers);
         $this->view->assign('previousPage', $previousPage);
         $this->view->assign('nextPage', $nextPage);
+
+        return $this->htmlResponse();
     }
 
     /**
      * @param Campaign $campaign
-     * @return void
+     * @return ResponseInterface
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
      */
-    public function listProcessesAction(Campaign $campaign)
+    public function listProcessesAction(Campaign $campaign): ResponseInterface
     {
         $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
         if (substr($importedPath, -1) !== '/') {
@@ -134,17 +148,20 @@ class CampaignController extends ActionController
         //$this->view->assign("search", $search);
         $this->view->assign("campaign", $campaign);
         $this->view->assign("documents", $campaign->getProcesses());
+
+        return $this->htmlResponse();
     }
 
 
     /**
      * @param Campaign $campaign
      * @param int $processUid
-     * @return void
+     * @return ResponseInterface
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
      */
-    public function editProcessesAction(Campaign $campaign, int $processUid = 0) {
+    public function editProcessesAction(Campaign $campaign, int $processUid = 0): ResponseInterface
+    {
 
         $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
         if (substr($importedPath, -1) !== '/') {
@@ -157,6 +174,8 @@ class CampaignController extends ActionController
         $this->view->assign("processes", $processes);
         $this->view->assign("currentCampaign", $campaign);
         $this->view->assign("processUid", $processUid);
+
+        return $this->htmlResponse();
     }
 
     /*
@@ -174,9 +193,12 @@ class CampaignController extends ActionController
     /**
      * @param Process $process
      * @param Campaign $campaign
-     * @return void
+     * @return ResponseInterface
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
-    public function addProcessToCampaignAction(Process $process, Campaign $campaign)
+    public function addProcessToCampaignAction(Process $process, Campaign $campaign): ResponseInterface
     {
         $assignedCampaign = $process->getCampaign();
         if ($assignedCampaign) {
@@ -187,7 +209,7 @@ class CampaignController extends ActionController
         $campaign->addProcess($process);
         $this->campaignRepository->update($campaign);
 
-        $this->redirect('editProcesses', null, null, [
+        return $this->redirect('editProcesses', null, null, [
             "campaign" => $campaign,
             "processUid" => $process->getUid()
         ]);
@@ -196,9 +218,12 @@ class CampaignController extends ActionController
     /**
      * @param Process $process
      * @param Campaign $campaign
-     * @return void
+     * @return ResponseInterface
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
-    public function removeProcessFromCampaignAction(Process $process, Campaign $campaign)
+    public function removeProcessFromCampaignAction(Process $process, Campaign $campaign): ResponseInterface
     {
         $assignedCampaign = $process->getCampaign();
         if ($assignedCampaign) {
@@ -207,31 +232,55 @@ class CampaignController extends ActionController
 
         $this->campaignRepository->update($campaign);
 
-        $this->redirect('editProcesses', null, null, [
+        return $this->redirect('editProcesses', null, null, [
             "campaign" => $campaign,
             "processUid" => $process->getUid()
         ]);
     }
 
-    public function publishAction(Campaign $campaign, int $page)
+    /**
+     * @param Campaign $campaign
+     * @param int $page
+     * @return ResponseInterface
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     */
+    public function publishAction(Campaign $campaign, int $page): ResponseInterface
     {
         $campaign->changeWorkflowState(Campaign::WORKFLOW_STATE_PUBLISHED);
         $this->campaignRepository->update($campaign);
-        $this->redirect('list', null, null, ['page' => $page]);
+        return $this->redirect('list', null, null, ['page' => $page]);
     }
 
-    public function closeAction(Campaign $campaign, int $page)
+    /**
+     * @param Campaign $campaign
+     * @param int $page
+     * @return ResponseInterface
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     */
+    public function closeAction(Campaign $campaign, int $page): ResponseInterface
     {
         $campaign->changeWorkflowState(Campaign::WORKFLOW_STATE_CLOSED);
         $this->campaignRepository->update($campaign);
-        $this->redirect('list', null, null, ['page' => $page]);
+        return $this->redirect('list', null, null, ['page' => $page]);
     }
 
-    public function reopenAction(Campaign $campaign, int $page)
+    /**
+     * @param Campaign $campaign
+     * @param int $page
+     * @return ResponseInterface
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     */
+    public function reopenAction(Campaign $campaign, int $page): ResponseInterface
     {
         $campaign->changeWorkflowState(Campaign::WORKFLOW_STATE_PUBLISHED);
         $this->campaignRepository->update($campaign);
-        $this->redirect('list', null, null, ['page' => $page]);
+        return $this->redirect('list', null, null, ['page' => $page]);
     }
 
     /**

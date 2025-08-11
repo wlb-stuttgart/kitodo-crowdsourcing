@@ -27,7 +27,8 @@ ExtensionUtility::configurePlugin(
     'Crowdsourcing',
     'Campaigns',
     [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'landingPage, dashboard, listCampaigns, showCampaignDetails, listProcesses, editMetadata, saveForm, editRandomProcess, abortAndEditNewProcess, showProcessDetails'],
-    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'landingPage, dashboard, listCampaigns, showCampaignDetails, listProcesses, editMetadata, saveForm, editRandomProcess, abortAndEditNewProcess, showProcessDetails']
+    [\Wlb\Crowdsourcing\Controller\WorkflowController::class => 'landingPage, dashboard, listCampaigns, showCampaignDetails, listProcesses, editMetadata, saveForm, editRandomProcess, abortAndEditNewProcess, showProcessDetails'],
+    'CType'
 );
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserTSConfig(

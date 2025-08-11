@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
  */
 class UniqueUsernameValidator extends AbstractValidator
 {
-    public function isValid($value)
+    public function isValid($value): void
     {
         $user = $GLOBALS['TSFE']->fe_user->user;
         $username = $user['username'] ?? '';

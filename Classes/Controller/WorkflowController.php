@@ -56,7 +56,11 @@ class WorkflowController extends ActionController
     ) {
     }
 
-    protected function initializeAction()
+
+    /**
+     * @return void
+     */
+    protected function initializeAction(): void
     {
         parent::initializeAction();
         
@@ -69,24 +73,33 @@ class WorkflowController extends ActionController
     }
 
     /**
-     * @param \TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view
+     * @param \TYPO3Fluid\Fluid\View\ViewInterface $view
      * @return void
      */
-    protected function initializeView(\TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view)
+    protected function initializeView($view): void
     {
         $this->view->assign('currentView', preg_replace('/Action$/', '', $this->actionMethodName));
     }
 
-    public function indexAction()
+    /**
+     * @return ResponseInterface
+     */
+    public function indexAction(): ResponseInterface
     {
         $this->statisticService->logClick(
             'page_view',
             'workflow_index',
             $this->request->getAttribute('originalRequest') ?? $this->request
         );
+
+        return $this->htmlResponse();
     }
 
-    public function landingPageAction()
+    /**
+     * @return ResponseInterface
+     * @throws \Doctrine\DBAL\Driver\Exception
+     */
+    public function landingPageAction(): ResponseInterface
     {
         $this->statisticService->logClick(
             'page_view',
@@ -105,9 +118,12 @@ class WorkflowController extends ActionController
 
         $this->view->assign('infoBoxes', $infoBoxes);
 
-
+        return $this->htmlResponse();
     }
 
+    /**
+     * @return void
+     */
     public function initializeListCampaignsAction()
     {
         if (!$this->accessControlService->isCrowdsourcingUser()) {
@@ -115,7 +131,10 @@ class WorkflowController extends ActionController
         }
     }
 
-    public function listCampaignsAction()
+    /**
+     * @return ResponseInterface
+     */
+    public function listCampaignsAction(): ResponseInterface
     {
         $campaigns = $this->campaignRepository->findByWorkflowState(Campaign::WORKFLOW_STATE_PUBLISHED);
         $this->view->assign('campaigns', $campaigns);
@@ -128,9 +147,15 @@ class WorkflowController extends ActionController
             0,
             ['campaign_count' => count($campaigns)]
         );
+
+        return $this->htmlResponse();
     }
 
-    public function dashboardAction()
+    /**
+     * @return ResponseInterface
+     * @throws AspectNotFoundException
+     */
+    public function dashboardAction(): ResponseInterface
     {
         $this->statisticService->logClick(
             'page_view',
@@ -159,8 +184,12 @@ class WorkflowController extends ActionController
         $this->view->assign('campaign', $campaign);
         $this->view->assign('currentProcess', $currentProcess);
 
+        return $this->htmlResponse();
     }
 
+    /**
+     * @return void
+     */
     public function initializeListProcessesAction()
     {
         if (!$this->accessControlService->isCrowdsourcingUser()) {
@@ -172,9 +201,13 @@ class WorkflowController extends ActionController
      * Lists processes based on the provided query and active facets, and prepares the data for rendering in the view.
      *
      * @param string $query The search query used to filter the listed processes. Default is an empty string.
-     * @return void
+     * @return ResponseInterface
+     * @throws AspectNotFoundException
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function listProcessesAction(string $query = '')
+    public function listProcessesAction(string $query = ''): ResponseInterface
     {
         $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
         /** @var FrontendUser $user */
@@ -262,15 +295,19 @@ class WorkflowController extends ActionController
                 'result_count' => count($processes)
             ]
         );
+
+        return $this->htmlResponse();
     }
 
     /**
      * Displays the details of a campaign.
      *
      * @param Campaign $campaign The campaign entity to be displayed.
-     * @return void
+     * @return ResponseInterface
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
      */
-    public function showCampaignDetailsAction(Campaign $campaign)
+    public function showCampaignDetailsAction(Campaign $campaign): ResponseInterface
     {
         $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
         if (substr($importedPath, -1) !== '/') {
@@ -289,6 +326,8 @@ class WorkflowController extends ActionController
             $campaign->getUid(),
             ['campaign_title' => $campaign->getTitle()]
         );
+
+        return $this->htmlResponse();
     }
 
     /**
@@ -433,6 +472,13 @@ class WorkflowController extends ActionController
     }
 
 
+    /**
+     * @param Process $process
+     * @return ResponseInterface
+     * @throws AspectNotFoundException
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
+     */
     public function showProcessDetailsAction(Process $process): ResponseInterface
     {
         $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
@@ -489,7 +535,7 @@ class WorkflowController extends ActionController
      * Depending on the request arguments, this method supports aborting, caching, and saving
      * operations for a given process. It also performs necessary file operations and logs the action.
      *
-     * @return void
+     * @return ResponseInterface
      * @throws IllegalObjectTypeException
      * @throws NoSuchArgumentException
      * @throws UnknownObjectException
@@ -497,7 +543,7 @@ class WorkflowController extends ActionController
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
-    public function saveFormAction()
+    public function saveFormAction(): ResponseInterface
     {
         $trustedMetadata = $this->request->getArgument('metadata');
         $processId = $this->request->getArgument('process');
@@ -592,36 +638,41 @@ class WorkflowController extends ActionController
             ['metadata_fields' => count($trustedMetadata)]
         );
 
-        $this->redirect('listProcesses', null, null);
+        return $this->redirect('listProcesses', null, null);
     }
 
-
-    public function editRandomProcessAction()
+    /**
+     * @return ResponseInterface
+     * @throws AspectNotFoundException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     */
+    public function editRandomProcessAction(): ResponseInterface
     {
         $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
         /** @var FrontendUser $user */
         $feUser = $this->frontendUserRepository->findByUid($userId);
         $process = $this->processRepository->findRandomForNonCurrentUser($feUser);
         if ($process) {
-            $this->redirect('editMetadata', 'Workflow', 'Crowdsourcing', ['process' => $process->getUid()]);
+            return $this->redirect('editMetadata', 'Workflow', 'Crowdsourcing', ['process' => $process->getUid()]);
         } else {
-            $this->redirect('listProcesses', null, null, ['errorMessage' => 'noRandomProcessAvailable']);
+            return $this->redirect('listProcesses', null, null, ['errorMessage' => 'noRandomProcessAvailable']);
         }
     }
-
 
     /**
      * @param Process $currentProcess
      * @param Process $newProcess
-     * @return void
+     * @return ResponseInterface
+     * @throws IllegalObjectTypeException
+     * @throws UnknownObjectException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
-    public function abortAndEditNewProcessAction(Process $currentProcess, Process $newProcess): void
+    public function abortAndEditNewProcessAction(Process $currentProcess, Process $newProcess): ResponseInterface
     {
         $this->resetProcessFromHistory($currentProcess);
         $this->solrIndexer->indexDocument($currentProcess);
         $this->processRepository->update($currentProcess);
-        $this->redirect('editMetadata', 'Workflow', 'Crowdsourcing', ['process' => $newProcess->getUid()]);
+        return $this->redirect('editMetadata', 'Workflow', 'Crowdsourcing', ['process' => $newProcess->getUid()]);
     }
 
 

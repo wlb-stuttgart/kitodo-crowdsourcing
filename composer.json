@@ -6,18 +6,18 @@
         "GPL-2.0-or-later"
     ],
     "require": {
-        "php": "^8.2||~8.3.0",
+        "php": "^8.2||~8.4.0",
         "ext-dom": "*",
         "ext-simplexml": "*",
-        "typo3/cms-backend": "^11.5",
-        "typo3/cms-core": "^11.5",
+        "typo3/cms-backend": "^13.4",
+        "typo3/cms-core": "^13.4",
         "solarium/solarium": "^6.3",
         "galbar/jsonpath": "^3.0",
         "fluidtypo3/vhs": "^7.0",
-        "evoweb/sf-register": "^11",
-        "evoweb/recaptcha": "^11",
-        "evoweb/extender": "^10",
-        "symfony/filesystem": "^5.4"
+        "evoweb/sf-register": "^13",
+        "evoweb/recaptcha": "^14",
+        "evoweb/extender": "^11",
+        "symfony/filesystem": "^7.3"
     },
     "authors": [
         {

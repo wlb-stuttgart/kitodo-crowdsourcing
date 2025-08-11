@@ -5,8 +5,8 @@ $EM_CONF[$_EXTKEY] = [
     'description' => 'Extension for the WLB crowdsourcing digitization project',
     'constraints' => [
         'depends' => [
-            'php'   => '8.3',
-            'typo3' => '11.5.0-11.5.99',
+            'php'   => '8.4',
+            'typo3' => '13.4.0-13.4.99',
         ],
     ],
     'autoload' => [
