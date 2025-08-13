@@ -3,8 +3,6 @@
 namespace Wlb\Crowdsourcing\Services;
 
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use Wlb\Crowdsourcing\Domain\Model\ClickStatistic;
 use Wlb\Crowdsourcing\Domain\Model\Process;

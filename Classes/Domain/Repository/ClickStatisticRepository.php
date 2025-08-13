@@ -2,8 +2,13 @@
 
 namespace Wlb\Crowdsourcing\Domain\Repository;
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use Wlb\Crowdsourcing\Domain\Model\ClickStatistic;
 
 class ClickStatisticRepository extends Repository
 {
@@ -129,5 +134,47 @@ class ClickStatisticRepository extends Repository
             ORDER BY date DESC
         ');
         return $query->execute(true);
+    }
+
+    /**
+     * This function will insert the clickStatistic data into the database using the connection pool and the query builder.
+     *
+     * Since the add function is used by the LogPageHitMiddleware, we need to insert the data directly into the database
+     * to avoid the RuntimeException #1700841298:
+     * "Setup array has not been initialized. This happens in cached Frontend scope where full TypoScript is not needed by the system."
+     *
+     * @param $object
+     * @return void
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function add($object)
+    {
+        if (!$object instanceof ClickStatistic) {
+            throw new \InvalidArgumentException();
+        }
+
+        $data = [
+            'ip_address' => $object->getIpAddress(),
+            'user_agent' => $object->getUserAgent(),
+            'fe_user_uid' => $object->getFeUserUid(),
+            'action_type' => $object->getActionType(),
+            'action_identifier' => $object->getActionIdentifier(),
+            'uri' => $object->getUri(),
+            'referrer' => $object->getReferrer(),
+            'process_uid' => $object->getProcessUid(),
+            'campaign_uid' => $object->getCampaignUid(),
+            'session_id' => $object->getSessionId(),
+            'additional_data' => $object->getAdditionalData(),
+            'tstamp' => time(),
+            'crdate' => time(),
+        ];
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_crowdsourcing_domain_model_clickstatistic');
+
+        $queryBuilder
+            ->insert('tx_crowdsourcing_domain_model_clickstatistic')
+            ->values($data)
+            ->executeStatement();
     }
 }

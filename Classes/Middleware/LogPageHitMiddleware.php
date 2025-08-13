@@ -27,11 +27,6 @@ class LogPageHitMiddleware implements MiddlewareInterface
     {
         $site = $request->getAttribute('site');
         if ($site !== null) {
-
-            if (!isset($GLOBALS['TSFE']->tmpl->setup) || empty($GLOBALS['TSFE']->tmpl->setup)) {
-                return $handler->handle($request);
-            }
-
            $this->statisticService->log($request);
         }
 
