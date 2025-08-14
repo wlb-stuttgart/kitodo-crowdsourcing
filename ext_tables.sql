@@ -34,7 +34,7 @@ CREATE TABLE tx_crowdsourcing_domain_model_processhistory (
 
 CREATE TABLE tx_crowdsourcing_domain_model_metadataconfiguration (
     name        varchar(255)    DEFAULT '',
-    json        JSON
+    json        LONGTEXT
 );
 
 #

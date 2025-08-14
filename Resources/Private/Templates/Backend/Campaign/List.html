@@ -2,6 +2,7 @@
 <f:layout name="Backend/Campaign"/>
 
 <f:section name="main">
+
     <div class="container py-5">
         <div class="row text-center">
             <div class="col-12">
@@ -15,7 +16,7 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="searchCampaign" class="form-label">Suchen</label>
-                                    <input type="text" class="form-control" id="searchCampaign" placeholder="Suchbegriff..." onkeyup="filterCampaigns()">
+                                    <input type="text" class="form-control" id="searchCampaign" placeholder="Suchbegriff...">
                                 </div>
                             </div>
                         </div>
@@ -97,31 +98,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        function filterCampaigns() {
-            var searchInput = document.getElementById('searchCampaign').value.toLowerCase();
-            var campaigns = document.querySelectorAll('.campaign');
-            var noCampaigns = true;
-
-            campaigns.forEach(function(campaign) {
-                var name = campaign.getAttribute('data-name').toLowerCase();
-                // Check if campaign matches search and filters
-                var matchesSearch = name.includes(searchInput);
-                if (matchesSearch) {
-                    campaign.style.display = '';
-                    noCampaigns = false;
-                } else {
-                    campaign.style.display = 'none';
-                }
-            });
-
-            if (noCampaigns) {
-                document.getElementById('noCampaignsAlert').style.display = 'block';
-            } else {
-                document.getElementById('noCampaignsAlert').style.display = 'none';
-            }
-        }
-    </script>
 
 </f:section>

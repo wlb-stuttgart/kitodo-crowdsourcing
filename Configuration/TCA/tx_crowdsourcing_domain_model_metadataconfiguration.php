@@ -3,7 +3,7 @@
 $tca = [
     'ctrl' => [
         'title' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_metadataconfiguration',
-        'label' => 'data',
+        'label' => 'name',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'delete' => 'deleted',
@@ -169,7 +169,7 @@ $tca = [
 ];
 
 $typo3Version = new \TYPO3\CMS\Core\Information\Typo3Version();
-if ($typo3Version->getMajorVersion() < 12) {
+if ($typo3Version->getMajorVersion() < 12 and false) {
     $tca = array_replace_recursive(
         $tca,
         [

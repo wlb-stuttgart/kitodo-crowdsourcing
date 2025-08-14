@@ -3,10 +3,8 @@
 namespace Wlb\Crowdsourcing\Controller\Backend;
 
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Core\Messaging\FlashMessageService;
-use TYPO3\CMS\Core\Page\PageRenderer;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Http\ForwardResponse;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Mvc\Exception\StopActionException;
 use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
@@ -17,22 +15,18 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 class ConfigurationController extends ActionController
 {
-    /**
-     * @access protected
-     * @var MetadataConfigurationRepository
-     */
-    protected MetadataConfigurationRepository $metadataConfigurationRepository;
+    protected ModuleTemplate $moduleTemplate;
 
-    /**
-     * @access public
-     *
-     * @param MetadataConfigurationRepository $metadataConfigurationRepository
-     *
-     * @return void
-     */
-    public function injectMetadataConfigurationRepository(MetadataConfigurationRepository $metadataConfigurationRepository): void
+    public function __construct(
+        private readonly MetadataConfigurationRepository $metadataConfigurationRepository,
+        private readonly ModuleTemplateFactory $moduleTemplateFactory
+    )
     {
-        $this->metadataConfigurationRepository = $metadataConfigurationRepository;
+    }
+
+    public function initializeAction(): void
+    {
+        $this->moduleTemplate = $this->moduleTemplateFactory->create($this->request);
     }
 
     public function indexAction(): ResponseInterface
@@ -49,6 +43,7 @@ class ConfigurationController extends ActionController
 
         // get db saved config
         $queryResult = $this->metadataConfigurationRepository->findAll();
+
         if ($queryResult->count() !== 0) {
             /** @var MetadataConfiguration $dbConfiguration */
             $dbConfiguration = $queryResult->getFirst();
@@ -70,11 +65,10 @@ class ConfigurationController extends ActionController
                 }
             }
 
-            $this->view->assign('missingDocType', $missingDocType);
-            $this->view->assign('rulesetAdded', $rulesetAdded);
-            $this->view->assign('rulesetRemoved', $rulesetRemoved);
-            $this->view->assign('dbConfig', $dbConfigArray);
-
+            $this->moduleTemplate->assign('missingDocType', $missingDocType);
+            $this->moduleTemplate->assign('rulesetAdded', $rulesetAdded);
+            $this->moduleTemplate->assign('rulesetRemoved', $rulesetRemoved);
+            $this->moduleTemplate->assign('dbConfig', $dbConfigArray);
 
             if (!empty($rulesetAdded)) {
                 // remove options from dbConfigArray because only the keys are saved in the db
@@ -84,27 +78,31 @@ class ConfigurationController extends ActionController
                 $config = $dbConfigArray;
             }
         }
-        $this->view->assign('rulesetConfig', $configurationRuleset);
-        $this->view->assign('config', $config);
+        $this->moduleTemplate->assign('rulesetConfig', $configurationRuleset);
+        $this->moduleTemplate->assign('config', $config);
 
-        return $this->htmlResponse();
+        return $this->moduleTemplate->renderResponse('Backend/Configuration/Index');;
     }
 
     /**
-     * @throws UnknownObjectException
-     * @throws StopActionException
+     * @return ResponseInterface
      * @throws IllegalObjectTypeException
      * @throws NoSuchArgumentException
+     * @throws StopActionException
+     * @throws UnknownObjectException
      */
-    public function saveAction()
+    public function saveAction(): ResponseInterface
     {
+
         $metadataConfiguration = $this->request->getArgument('metadata');
 
         $queryResult = $this->metadataConfigurationRepository->findAll();
 
         if ($queryResult->count() === 0) {
             $metadataConfigurationObject = new MetadataConfiguration();
+            $metadataConfigurationObject->setName("Name");
             $metadataConfigurationObject->setJson(json_encode($metadataConfiguration));
+
             $this->metadataConfigurationRepository->add($metadataConfigurationObject);
         } else {
             /** @var MetadataConfiguration $metadataConfigurationObject */
@@ -115,7 +113,8 @@ class ConfigurationController extends ActionController
             $this->metadataConfigurationRepository->update($metadataConfigurationObject);
         }
 
-        $this->redirect('index');
+
+        return $this->redirect('index');
     }
     function removeOptionsRecursive(&$array) {
         if (!is_array($array)) {

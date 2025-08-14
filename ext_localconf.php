@@ -46,3 +46,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['locallangXMLOverride']['EXT:sf_register/Reso
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\Evoweb\SfRegister\Controller\FeuserCreateController::class] = [
     'className' => \Wlb\Crowdsourcing\Controller\FeuserCreateController::class
 ];
+
+
+$GLOBALS['TYPO3_CONF_VARS']['BE']['javaScript']['tx_crowdsourcing_campaign'] = 'EXT:crowdsourcing/Resources/Public/JavaScript/Backend/CampaignModule.js';
+

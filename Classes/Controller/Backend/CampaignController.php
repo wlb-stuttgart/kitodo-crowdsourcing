@@ -2,21 +2,11 @@
 
 namespace Wlb\Crowdsourcing\Controller\Backend;
 
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UploadedFileInterface;
-use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Http\UploadedFile;
-use TYPO3\CMS\Core\Resource\FileInterface;
-use TYPO3\CMS\Core\Resource\FileRepository;
-use TYPO3\CMS\Core\Resource\ResourceFactory;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Domain\Model\FileReference;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extensionmanager\Controller\ActionController;
-use Wlb\Crowdsourcing\Common\Solr\SolrSearcher;
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
@@ -26,12 +16,21 @@ use Wlb\Crowdsourcing\Services\SearchService;
 
 class CampaignController extends ActionController
 {
+    protected ModuleTemplate $moduleTemplate;
+
     public function __construct(
         private readonly CampaignRepository $campaignRepository,
         private readonly ProcessRepository $processRepository,
-        private readonly SearchService $searchService
+        private readonly SearchService $searchService,
+        private readonly ModuleTemplateFactory $moduleTemplateFactory
     )
     {
+    }
+
+
+    public function initializeAction(): void
+    {
+        $this->moduleTemplate = $this->moduleTemplateFactory->create($this->request);
     }
 
     /**
@@ -42,9 +41,8 @@ class CampaignController extends ActionController
      */
     public function editAction(Campaign $campaign): ResponseInterface
     {
-        $this->view->assign('campaign', $campaign);
-
-        return $this->htmlResponse();
+        $this->moduleTemplate->assign('campaign', $campaign);
+        return $this->moduleTemplate->renderResponse('Backend/Campaign/Edit');
     }
 
     /**
@@ -76,9 +74,9 @@ class CampaignController extends ActionController
     public function newAction(): ResponseInterface
     {
         $campaign = new Campaign();
-        $this->view->assign('campaign', $campaign);
+        $this->moduleTemplate->assign('campaign', $campaign);
 
-        return $this->htmlResponse();
+        return $this->moduleTemplate->renderResponse('Backend/Campaign/New');
     }
 
     /**
@@ -119,15 +117,15 @@ class CampaignController extends ActionController
 
         $campaigns = $this->campaignRepository->findByPage($offset, $itemsPerPage);
 
-        $this->view->assign('campaigns', $campaigns);
-        $this->view->assign('currentPage', $currentPage);
-        $this->view->assign('totalPages', $totalPages);
-        $this->view->assign('itemsPerPage', $itemsPerPage);
-        $this->view->assign('pageNumbers', $pageNumbers);
-        $this->view->assign('previousPage', $previousPage);
-        $this->view->assign('nextPage', $nextPage);
+        $this->moduleTemplate->assign('campaigns', $campaigns);
+        $this->moduleTemplate->assign('currentPage', $currentPage);
+        $this->moduleTemplate->assign('totalPages', $totalPages);
+        $this->moduleTemplate->assign('itemsPerPage', $itemsPerPage);
+        $this->moduleTemplate->assign('pageNumbers', $pageNumbers);
+        $this->moduleTemplate->assign('previousPage', $previousPage);
+        $this->moduleTemplate->assign('nextPage', $nextPage);
 
-        return $this->htmlResponse();
+        return $this->moduleTemplate->renderResponse('Backend/Campaign/List');
     }
 
     /**
@@ -144,12 +142,12 @@ class CampaignController extends ActionController
             $importedPath = $importedPath . '/';
         }
 
-        $this->view->assign("importedPath", $importedPath);
-        //$this->view->assign("search", $search);
-        $this->view->assign("campaign", $campaign);
-        $this->view->assign("documents", $campaign->getProcesses());
+        $this->moduleTemplate->assign("importedPath", $importedPath);
+        //$this->moduleTemplate->assign("search", $search);
+        $this->moduleTemplate->assign("campaign", $campaign);
+        $this->moduleTemplate->assign("documents", $campaign->getProcesses());
 
-        return $this->htmlResponse();
+        return $this->moduleTemplate->renderResponse('Backend/Campaign/ListProcesses');;
     }
 
 
@@ -162,7 +160,6 @@ class CampaignController extends ActionController
      */
     public function editProcessesAction(Campaign $campaign, int $processUid = 0): ResponseInterface
     {
-
         $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
         if (substr($importedPath, -1) !== '/') {
         } else {
@@ -170,12 +167,12 @@ class CampaignController extends ActionController
         }
 
         $processes = $this->processRepository->findAll();
-        $this->view->assign("importedPath", $importedPath);
-        $this->view->assign("processes", $processes);
-        $this->view->assign("currentCampaign", $campaign);
-        $this->view->assign("processUid", $processUid);
+        $this->moduleTemplate->assign("importedPath", $importedPath);
+        $this->moduleTemplate->assign("processes", $processes);
+        $this->moduleTemplate->assign("currentCampaign", $campaign);
+        $this->moduleTemplate->assign("processUid", $processUid);
 
-        return $this->htmlResponse();
+        return $this->moduleTemplate->renderResponse('Backend/Campaign/EditProcesses');;
     }
 
     /*
