@@ -31,11 +31,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <f:flashMessages/>
 
-                    <f:if condition="{cookieWarning}">
-                        <f:render partial="CookieWarning" />
-                    </f:if>
+                    <f:flashMessages/>
 
                     <f:if condition="{messageKey} && {messageKey} != 'welcome'">
                         <p>
@@ -43,74 +40,62 @@
                         </p>
                     </f:if>
 
-                    <f:if condition="{onSubmit}">
-                        <f:then>
-                            <f:form id="feloginSubmit" class="form-controlX" target="_top" fieldNamePrefix="" action="login" onsubmit="{onSubmit}" additionalAttributes="{spellcheck: 'false'}">
-                                <f:render section="content" arguments="{_all}"/>
-                            </f:form>
-                        </f:then>
-                        <f:else>
-                            <f:form id="feloginSubmit" class="form-controlX" target="_top" fieldNamePrefix="" action="login" additionalAttributes="{spellcheck: 'false'}">
-                                <f:render section="content" arguments="{_all}"/>
-                            </f:form>
-                        </f:else>
-                    </f:if>
+                    <f:form id="feloginSubmit" target="_top" fieldNamePrefix="" action="login" requestToken="{requestToken}" spellcheck="false">
+                        <f:render section="content" arguments="{_all}"/>
+                    </f:form>
 
                     <f:if condition="{settings.showForgotPassword}">
-                        <p>
-                            <f:link.action action="recovery" controller="PasswordRecovery" id="passwordRecoveryLink">
-                                <f:render partial="RenderLabelOrMessage" arguments="{key: 'forgot_header'}"/>
-                            </f:link.action>
-                        </p>
+                        <f:link.action action="recovery" controller="PasswordRecovery">
+                            <f:render partial="RenderLabelOrMessage" arguments="{key: 'forgot_header'}"/>
+                        </f:link.action>
                     </f:if>
 
                     <f:section name="content">
                         <fieldset class="mb-3">
                             <div class="mb-3">
-                                <label for="loginUser">
+                                <label for="tx-felogin-input-username">
                                     <f:translate key="username"/>
                                 </label>
-                                <f:form.textfield id="loginUser" class="form-control" name="user" required="true" additionalAttributes="{autocomplete: 'username'}"/>
+                                <f:form.textfield class="form-control" name="user" required="true" autocomplete="username" id="tx-felogin-input-username"/>
                             </div>
                             <div class="mb-3">
-                                <label for="loginPass">
+                                <label for="tx-felogin-input-password">
                                     <f:translate key="password"/>
                                 </label>
-                                <f:form.password id="loginPass" class="form-control" name="pass" additionalAttributes="{required: 'required', autocomplete: 'current-password'}"/>
+                                <f:form.password class="form-control"  name="pass" required="required" autocomplete="current-password" id="tx-felogin-input-password"/>
                             </div>
 
                             <f:if condition="{permaloginStatus} > -1">
                                 <div>
-                                    <label>
+                                    <label for="permalogin">
                                         <f:translate id="permalogin"/>
-                                        <f:if condition="{permaloginStatus} == 1">
-                                            <f:then>
-                                                <f:form.hidden name="permalogin" value="0" additionalAttributes="{disabled: 'disabled'}"/>
-                                                <f:form.checkbox class="form-control" name="permalogin" id="permalogin" value="1" checked="checked"/>
-                                            </f:then>
-                                            <f:else>
-                                                <f:form.hidden name="permalogin" value="0"/>
-                                                <f:form.checkbox class="form-control" name="permalogin" id="permalogin" value="1"/>
-                                            </f:else>
-                                        </f:if>
                                     </label>
+                                    <f:if condition="{permaloginStatus} == 1">
+                                        <f:then>
+                                            <f:form.hidden name="permalogin" value="0" disabled="disabled"/>
+                                            <f:form.checkbox class="form-control" name="permalogin" id="permalogin" value="1" checked="checked"/>
+                                        </f:then>
+                                        <f:else>
+                                            <f:form.hidden name="permalogin" value="0"/>
+                                            <f:form.checkbox class="form-control"  name="permalogin" id="permalogin" value="1"/>
+                                        </f:else>
+                                    </f:if>
                                 </div>
                             </f:if>
 
                             <f:comment>
-                                <div class="mt-3">
-                                    <f:form.submit class="btn btn-secondary" value="{f:translate(key: 'login')}" name="submit"/>
-                                </div>
+                            <div>
+                                <f:form.submit class="form-control"  value="{f:translate(key: 'login')}" name="submit"/>
+                            </div>
                             </f:comment>
 
                             <div class="felogin-hidden">
                                 <f:form.hidden name="logintype" value="login"/>
-                                <f:form.hidden name="pid" value="{storagePid}"/>
                                 <f:if condition="{redirectURL}!=''">
                                     <f:form.hidden name="redirect_url" value="{redirectURL}" />
                                 </f:if>
-                                <f:if condition="{wlb:currentUrl()}!=''">
-                                    <f:form.hidden name="referer" value="{wlb:currentUrl()}" />
+                                <f:if condition="{referer}!=''">
+                                    <f:form.hidden name="referer" value="{referer}" />
                                 </f:if>
                                 <f:if condition="{redirectReferrer}!=''">
                                     <f:form.hidden name="redirectReferrer" value="off" />

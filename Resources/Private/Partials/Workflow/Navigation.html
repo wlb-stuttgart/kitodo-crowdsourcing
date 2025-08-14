@@ -64,12 +64,12 @@
                     <div class="d-flex gap-2">
                         <f:if condition="{userInfo}">
                             <f:then>
-                                <f:link.page pageUid="{settings.crowdsourcingLogin}" additionalParams="{logintype: 'logout'}" class="btn login" title="Logout">
+                                <f:link.page pageUid="{settings.crowdsourcingRoot}" additionalParams="{logintype: 'logout'}" class="btn login" title="Logout">
                                     Abmelden
                                 </f:link.page>
                                 <div class="dropdown">
                                     <a href="#" id="userDropdown" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <img src="/typo3conf/ext/crowdsourcing/Resources/Public/Icons/avatar.svg" alt="User avatar" width="40" height="40" class="rounded-circle">
+                                        <f:image src="EXT:crowdsourcing/Resources/Public/Icons/avatar.svg" alt="User avatar"  width="40" height="40" class="rounded-circle" />
                                     </a>
                                     <ul id="userDropdownMenu" class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="userDropdown">
                                         <li>
