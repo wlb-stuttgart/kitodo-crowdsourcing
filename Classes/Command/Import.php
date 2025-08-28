@@ -58,13 +58,10 @@ class Import extends Command
             return Command::FAILURE;
         }
 
-        $frameworkConfiguration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
-        $frameworkConfiguration['persistence']['storagePid'] = MathUtility::forceIntegerInRange($storagePid, 0);
-        $this->configurationManager->setConfiguration($frameworkConfiguration);
-
         // TODO error logging.
         // TODO optimize exception handling.
         try {
+            $this->processImportService->setStoragePid(MathUtility::forceIntegerInRange($storagePid, 0));
             if ($this->processImportService->importProcessQueue()) {
                 return Command::SUCCESS;
             }

@@ -2,6 +2,7 @@
 
 namespace Wlb\Crowdsourcing\Common\Solr;
 
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use Wlb\Crowdsourcing\Common\XMLExtractor;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
@@ -26,6 +27,16 @@ class SolrIndexer
     )
     {
         $this->config = $this->indexFieldConfigReader->getConfig();
+    }
+
+
+    /**
+     * @param Typo3QuerySettings $querySettings
+     * @return void
+     */
+    public function applyQuerySettings(Typo3QuerySettings $querySettings)
+    {
+        $this->metadataConfigurationRepository->setDefaultQuerySettings($querySettings);
     }
 
     /**

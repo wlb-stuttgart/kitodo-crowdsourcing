@@ -3,7 +3,9 @@
 namespace Wlb\Crowdsourcing\Services;
 
 use Symfony\Component\Filesystem\Filesystem;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Model\ProcessHistory;
@@ -64,6 +66,12 @@ class ProcessImportService
 
 
     /**
+     * @var int
+     */
+    private $storagePid = 0;
+
+
+    /**
      * @param ProcessRepository $processRepository
      * @param PersistenceManager $persistenceManager
      * @param SolrIndexer $indexer
@@ -85,6 +93,23 @@ class ProcessImportService
         $this->processDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('processDirectoryPath');
         $this->exportDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('exportDirectoryPath');
         $this->archiveDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('archiveDirectoryPath');
+    }
+
+
+    public function setStoragePid(int $storagePid)
+    {
+        $this->storagePid = $storagePid;
+
+        $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
+        $querySettings->setRespectStoragePage(true);
+        $querySettings->setStoragePageIds([$storagePid]);
+
+        $this->processRepository->setDefaultQuerySettings($querySettings);
+        $this->processHistoryRepository->setDefaultQuerySettings($querySettings);
+
+        if (method_exists($this->indexer, 'applyQuerySettings')) {
+            $this->indexer->applyQuerySettings($querySettings);
+        }
     }
 
     /**
@@ -156,6 +181,7 @@ class ProcessImportService
 
             if (!$this->processRepository->findOneByRecordIdentifier($identifier)) {
                 $process = new Process();
+                $process->setPid($this->storagePid);
                 $process->setRecordIdentifier($identifier);
                 $process->setMetadata($xmlData->saveXML());
                 $process->setState(Process::WORKFLOW_STATE_NEW);
@@ -166,6 +192,7 @@ class ProcessImportService
 
                 // Set initial history dataset
                 $processHistory = new ProcessHistory();
+                $processHistory->setPid($this->storagePid);
                 $processHistory->setRecordIdentifier($identifier);
                 $processHistory->setMetadata($xmlData->saveXML());
                 $processHistory->setState(Process::WORKFLOW_STATE_NEW);
