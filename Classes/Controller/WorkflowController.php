@@ -214,7 +214,7 @@ class WorkflowController extends ActionController
         $feUser = $this->frontendUserRepository->findByUid($userId);
         $this->view->assign('currentUser', $feUser);
 
-        $facetsFields = $this->searchService->getFacetFields();
+        $facetsFields = $this->searchService->getFacetFields() ?? [];
         $activeFacets = $this->request->getArguments()['facet'] ?? [];
         $searchResult = $this->searchService->searchProcesses($query, $facetsFields, $activeFacets);
         $processes = $searchResult['processes'];
@@ -349,13 +349,13 @@ class WorkflowController extends ActionController
 
         if ($process->hasFeUser() && $process->getFeUser() !== $feUser) {
 //            throw new \Exception('Process already taken');
-            $this->redirect('listProcesses', null, null, ['errorMessage' => 'processTaken']);
+            return $this->redirect('listProcesses', null, null, ['errorMessage' => 'processTaken']);
         }
 
         if ($currentlyEditingProcess = $this->processRepository->findOneByFeUser($feUser)) {
             if ($currentlyEditingProcess !== $process) {
 //                throw new \Exception('User is already editing another process');
-                $this->redirect(
+                return $this->redirect(
                     'listProcesses',
                     null,
                     null,
@@ -545,8 +545,15 @@ class WorkflowController extends ActionController
      */
     public function saveFormAction(): ResponseInterface
     {
-        $trustedMetadata = $this->request->getArgument('metadata');
-        $processId = $this->request->getArgument('process');
+        $trustedMetadata = [];
+        if ($this->request->hasArgument('metadata')) {
+            $trustedMetadata = $this->request->getArgument('metadata');
+        }
+
+        if ($this->request->hasArgument('process')) {
+            $processId = $this->request->getArgument('process');
+        }
+
         /* @var $process \Wlb\Crowdsourcing\Domain\Model\Process */
         $process = $this->processRepository->findByUid($processId);
 
