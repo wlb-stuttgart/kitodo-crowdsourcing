@@ -466,6 +466,13 @@ function loginAndRegisterModals() {
         if (isLoginProcessActive()) {
             var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
             loginModal.show();
+        } else {
+            if (jQuery("#registerConfirmModal").length > 0) {
+                var registerConfirmModal = new bootstrap.Modal(document.getElementById('registerConfirmModal'));
+                if (registerConfirmModal !== undefined && registerConfirmModal !== null) {
+                    registerConfirmModal.show();
+                }
+            }
         }
     }
 
@@ -533,6 +540,16 @@ function loginAndRegisterModals() {
             redirectToActivePage();
         });
 
+    }
+
+    if (jQuery('#registerConfirmModal')) {
+        jQuery('#registerConfirmModal .btn-close').on('click', function () {
+            redirectToActivePage();
+        });
+
+        jQuery('#registerConfirmModal').on('hidden.bs.modal', function () {
+            redirectToActivePage();
+        });
     }
 
     // Listen for any modal being shown

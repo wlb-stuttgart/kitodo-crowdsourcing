@@ -1,0 +1,32 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="LoggedOut"/>
+
+<f:section name="Main">
+	<div class="modal fade" id="registerConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title" id="exampleModalLabel">
+						Registrieren
+					</h2>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<f:if condition="{userNotFound}">
+						<f:translate id="account_not_found"/>
+					</f:if><f:if condition="{userAlreadyConfirmed}">
+					<f:format.raw><f:translate id="account_already_activated" arguments="{0: user.username}"/></f:format.raw>
+					</f:if><f:if condition="{userConfirmed}">
+					<f:format.raw><f:translate id="account_successful_activated" arguments="{0: user.username}"/></f:format.raw>
+				</f:if>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
+				</div>
+			</div>
+		</div>
+
+</f:section>
+
+</html>
