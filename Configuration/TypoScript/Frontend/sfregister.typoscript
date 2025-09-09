@@ -17,18 +17,24 @@ plugin.tx_sfregister.view.partialRootPaths {
 plugin.tx_sfregister.settings {
     validation.create {
         username {
-            1 = "Evoweb.SfRegister:Required"
-            2 = "StringLength", options={"minimum": 8, "maximum": 80}
-            3 = "Wlb.Crowdsourcing:UniqueUsername"
+            1 = "Evoweb\SfRegister\Validation\Validator\RequiredValidator"
+            2 = "TYPO3\CMS\Extbase\Validation\Validator\StringLengthValidator", options={"minimum": 8, "maximum": 80}
+            3 = "Wlb\Crowdsourcing\Validation\Validator\UniqueUsernameValidator"
         }
 
         password {
-            1 = "Evoweb.SfRegister:Required"
-            2 = "Wlb.Crowdsourcing:Password"
+            1 = "Evoweb\SfRegister\Validation\Validator\RequiredValidator"
+            2 = "Wlb\Crowdsourcing\Validation\Validator\PasswordValidator"
         }
 
         passwordRepeat {
-            1 = "Evoweb.SfRegister:Required"
+            1 = "Evoweb\SfRegister\Validation\Validator\RequiredValidator"
+            2 = "Evoweb\SfRegister\Validation\Validator\RepeatValidator"
+        }
+
+        emailRepeat {
+            1 = "Evoweb\SfRegister\Validation\Validator\RequiredValidator"
+            2 = "Evoweb\SfRegister\Validation\Validator\RepeatValidator"
         }
 
         firstName >
@@ -37,23 +43,25 @@ plugin.tx_sfregister.settings {
 
     validation.password {
         password {
-            1 = "Evoweb.SfRegister:Required"
-            2 = "Wlb.Crowdsourcing:Password"
+            1 = "Evoweb\SfRegister\Validation\Validator\RequiredValidator"
+            2 = "Wlb\Crowdsourcing\Validation\Validator\PasswordValidator"
         }
 
         passwordRepeat {
-            1 = "Evoweb.SfRegister:Required"
+            1 = "Evoweb\SfRegister\Validation\Validator\RequiredValidator"
+            2 = "Evoweb\SfRegister\Validation\Validator\RepeatValidator"
         }
     }
 
     validation.edit {
          username {
-            1 = "Evoweb.SfRegister:Required"
-            2 = "StringLength", options={"minimum": 8, "maximum": 80}
-            3 = "Wlb.Crowdsourcing:UniqueUsername"
+             1 = "Evoweb\SfRegister\Validation\Validator\RequiredValidator"
+             2 = "TYPO3\CMS\Extbase\Validation\Validator\StringLengthValidator", options={"minimum": 8, "maximum": 40}
+             3 = "Wlb\Crowdsourcing\Validation\Validator\UniqueUsernameValidator"
          }
         email {
-            1 = "Evoweb.SfRegister:Required"
+            1 = "Evoweb\SfRegister\Validation\Validator\RequiredValidator"
+            2 = "TYPO3\CMS\Extbase\Validation\Validator\EmailAddressValidator"
         }
 
         firstName >
