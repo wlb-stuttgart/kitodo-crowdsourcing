@@ -123,7 +123,7 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
                 ->setParameter('uid', $randomPid)
                 ->setParameter('feUserUid', $feUser->getUid());
 
-            $process = $queryBuilder->execute()->fetchAssociative();
+            $process = $queryBuilder->executeQuery()->fetchAssociative();
             if ($process !== false) {
                 $randomProcess = $process;
                 break;
@@ -184,7 +184,8 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
                 ->setParameter('uid', $randomUid)
                 ->setParameter('feUserUid', $feUser->getUid());
 
-            $process = $queryBuilder->execute()->fetchAssociative();
+            $process = $queryBuilder->executeQuery()->fetchAssociative();
+
 
             if ($process !== false) {
                 $randomProcess = $process;
