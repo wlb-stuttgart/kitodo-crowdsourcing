@@ -15,8 +15,8 @@
         "galbar/jsonpath": "^3.0",
         "fluidtypo3/vhs": "^7.0",
         "evoweb/sf-register": "^13",
-        "evoweb/recaptcha": "^14",
         "evoweb/extender": "^11",
+        "sjbr/sr-freecap" : "^13",
         "symfony/filesystem": "^7.3"
     },
     "authors": [

@@ -10,6 +10,8 @@
     --color-background: #D9DADB;
     --color-box-background: #FAF9F7;
 
+    --modal-link: rgb(13, 110, 253);
+    --modal-link-hover: rgb(10, 88, 202);
 }
 
 @font-face {
@@ -635,6 +637,25 @@ h1 {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+
+.tx-srfreecap-pi1-cant-read {
+    width: auto;
+}
+
+.tx-srfreecap-pi1-cant-read a:hover {
+    color: var(--modal-link-hover) !important;
+    text-decoration: underline !important;
+}
+
+.tx-srfreecap-pi1-cant-read a {
+    color: var(--modal-link) !important;
+}
+
+.tx-srfreecap-pi1-image {
+    display: block;
+    margin: 10px 0 10px 0 !important;
+}
+
 
 #crowdsourcing .modal.fade .modal-dialog,
 #registerModal .modal-dialog,
