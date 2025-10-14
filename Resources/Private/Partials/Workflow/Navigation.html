@@ -64,7 +64,7 @@
                     <div class="d-flex gap-2">
                         <f:if condition="{userInfo}">
                             <f:then>
-                                <f:link.page pageUid="{settings.crowdsourcingRoot}" additionalParams="{logintype: 'logout'}" class="btn login" title="Logout">
+                                <f:link.page absolute="true" pageUid="{settings.navigation.crowdsourcingRoot}" additionalParams="{logintype: 'logout'}" class="btn login" title="Logout">
                                     Abmelden
                                 </f:link.page>
                                 <div class="dropdown">
