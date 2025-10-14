@@ -64,6 +64,11 @@ plugin.tx_sfregister.settings {
             2 = "TYPO3\CMS\Extbase\Validation\Validator\EmailAddressValidator"
         }
 
+        emailRepeat {
+            1 = "Evoweb\SfRegister\Validation\Validator\RequiredValidator"
+            2 = "Evoweb\SfRegister\Validation\Validator\RepeatValidator"
+        }
+
         firstName >
         lastName >
     }
