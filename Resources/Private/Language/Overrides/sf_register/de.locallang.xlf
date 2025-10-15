@@ -13,6 +13,10 @@
                 <source>Consent to the publication of the username in statistical surveys and analyses</source>
                 <target>Einwilligung zur Veröffentlichung des Benutzernamens in statistischen Erhebungen und Auswertungen</target>
              </trans-unit>
+             <trans-unit id="create_saved_mail">
+                <source>Your account has been created successfully. We've sent you an email with an activation link. Please check your inbox to complete the activation.</source>
+                <target>Ihr Konto wurde erfolgreich erstellt. Wir haben Ihnen eine E-Mail mit einem Aktivierungslink gesendet. Bitte überprüfen Sie Ihr Postfach, um die Aktivierung abzuschließen.</target>
+             </trans-unit>
 		</body>
 
 	</file>
