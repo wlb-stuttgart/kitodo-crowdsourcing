@@ -50,3 +50,16 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\Evoweb\SfRegister\Controller\Feus
 
 $GLOBALS['TYPO3_CONF_VARS']['BE']['javaScript']['tx_crowdsourcing_campaign'] = 'EXT:crowdsourcing/Resources/Public/JavaScript/Backend/CampaignModule.js';
 
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['passwordPolicies']['wlb-crowdsourcing'] = [
+    'validators' => [
+        \TYPO3\CMS\Core\PasswordPolicy\Validator\CorePasswordValidator::class => [
+            'options' => [
+                'minimumLength' => 12,
+                'upperCaseCharacterRequired' => true,
+                'lowerCaseCharacterRequired' => true,
+                'digitCharacterRequired' => true,
+                'specialCharacterRequired' => true,
+            ],
+        ],
+    ],
+];
