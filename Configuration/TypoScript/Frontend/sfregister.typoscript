@@ -16,15 +16,11 @@ plugin.tx_sfregister.view.partialRootPaths {
 
 plugin.tx_sfregister.settings {
     validation.create {
-        username {
-            1 = "Evoweb\SfRegister\Validation\Validator\RequiredValidator"
-            2 = "TYPO3\CMS\Extbase\Validation\Validator\StringLengthValidator", options={"minimum": 8, "maximum": 80}
-            3 = "Wlb\Crowdsourcing\Validation\Validator\UniqueUsernameValidator"
-        }
 
         password {
             1 = "Evoweb\SfRegister\Validation\Validator\RequiredValidator"
             2 = "Wlb\Crowdsourcing\Validation\Validator\PasswordValidator"
+            3 = "Evoweb\SfRegister\Validation\Validator\BadWordValidator"
         }
 
         passwordRepeat {
@@ -45,6 +41,7 @@ plugin.tx_sfregister.settings {
         password {
             1 = "Evoweb\SfRegister\Validation\Validator\RequiredValidator"
             2 = "Wlb\Crowdsourcing\Validation\Validator\PasswordValidator"
+            3 = "Evoweb\SfRegister\Validation\Validator\BadWordValidator"
         }
 
         passwordRepeat {
