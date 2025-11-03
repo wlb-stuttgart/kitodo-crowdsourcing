@@ -241,7 +241,7 @@ function clickEvents() {
         nextHidden.show();
 
         // find elements which are required
-        var requiredFields = configElement.find('input[data-required="1"]');
+        var requiredFields = nextHidden.find('input[data-required="1"]');
         requiredFields.attr('required', 'true');
 
         nextHidden = $(configElement).find('div.metadata-group:hidden').first();
