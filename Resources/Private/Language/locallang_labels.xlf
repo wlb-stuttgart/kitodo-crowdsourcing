@@ -23,6 +23,15 @@
 			<trans-unit id="config.import.archiveDirectoryPath">
 				<source>Path to the archive data directory</source>
 			</trans-unit>
+			<trans-unit id="config.import.processImageBaseDirectory">
+                <source>Images directory (inside process directory)</source>
+            </trans-unit>
+			<trans-unit id="config.import.processImageDefaultDirectory">
+                <source>Default directory (inside process images directory)</source>
+            </trans-unit>
+			<trans-unit id="config.import.processImageThumbDirectory">
+                <source>Thumbs directory (inside process images directory)</source>
+            </trans-unit>
 			<trans-unit id="config.storage.storagePid">
 				<source>UID of the system folder to store datasets</source>
 			</trans-unit>

@@ -16,6 +16,10 @@ class Process extends AbstractEntity
     const WORKFLOW_STATE_FINAL_CORRECTION = 'FINAL_CORRECTION';
     const WORKFLOW_STATE_COMPLETED = 'COMPLETED';
 
+    const PROCESS_IMAGE_BASE_DIRECTORY = 'jpg';
+    const PROCESS_IMAGE_DEFAULT_DIRECTORY = 'max';
+    const PROCESS_IMAGE_THUMB_DIRECTORY = 'thumbs';
+
     /**
      * @var string
      */
@@ -235,16 +239,22 @@ class Process extends AbstractEntity
 
     public function getThumbsImageInfos()
     {
-        return $this->getImageInfos('thumbs');
+        $thumbImageType = ExtensionConfigurationService::getInstance()->getConfigurationValue('processImageThumbDirectory') ?? self::PROCESS_IMAGE_THUMB_DIRECTORY;
+        return $this->getImageInfos($thumbImageType);
     }
 
-    public function getImageInfos(string $fileType = 'default')
+    public function getImageInfos(string $fileType = null)
     {
         if ($this->state === self::WORKFLOW_STATE_COMPLETED) {
             $processImagePath = ExtensionConfigurationService::getInstance()->getConfigurationValue('archiveDirectoryPath');
         } else {
             $processImagePath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
         }
+
+        $imageDirectory   = ExtensionConfigurationService::getInstance()->getConfigurationValue('processImageBaseDirectory') ?? self::PROCESS_IMAGE_BASE_DIRECTORY;
+        $defaultImageType = ExtensionConfigurationService::getInstance()->getConfigurationValue('processImageDefaultDirectory') ?? self::PROCESS_IMAGE_DEFAULT_DIRECTORY;
+        $imageType = empty($fileType) ? $defaultImageType : $fileType;
+
         if (substr($processImagePath, -1) === '/') {
             $processImagePath = $processImagePath . '/';
         }
@@ -252,7 +262,7 @@ class Process extends AbstractEntity
         $processImagesInfo = [];
         $i = 0;
         foreach ($this->getImages() as $image) {
-            $path = $processImagePath .'/'. $this->getRecordIdentifier() . '/images/' . $fileType . '/' . $image;
+            $path = $processImagePath .'/'. $this->getRecordIdentifier() . '/' . $imageDirectory . '/' . $imageType . '/' . $image;
             $type = pathinfo($path, PATHINFO_EXTENSION);
             $data = file_get_contents($path);
             $processImagesInfo[$i]['image'] = 'data:image/' . $type . ';base64,' . base64_encode($data);

@@ -16,6 +16,15 @@ exportDirectoryPath = /opt/import/export
 # cat=Import/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.import.archiveDirectoryPath
 archiveDirectoryPath = /opt/import/archive
 
+# cat=Import/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.import.processImageBaseDirectory
+processImageBaseDirectory = jpg
+
+# cat=Import/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.import.processImageDefaultDirectory
+processImageDefaultDirectory = max
+
+# cat=Import/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.import.processImageThumbDirectory
+processImageThumbDirectory = thumbs
+
 # cat=Storage/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.storage.storagePid
 storagePid =
 

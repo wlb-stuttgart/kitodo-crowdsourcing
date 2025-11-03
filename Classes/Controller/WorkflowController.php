@@ -600,7 +600,6 @@ class WorkflowController extends ActionController
                 $importedDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
                 // Check for necessary subdirectories and XML file
                 $dataDir = $importedDir . '/' . $identifier;
-                $imagesDir = $dataDir . '/images/default';
                 $xmlFilePath = $dataDir . '/meta.xml';
 
                 $xmlDoc = new \DOMDocument();

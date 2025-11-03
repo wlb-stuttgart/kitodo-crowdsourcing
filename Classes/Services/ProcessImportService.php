@@ -64,6 +64,19 @@ class ProcessImportService
      */
     private $filesystem;
 
+    /**
+     * Base directory for the process images.
+     *
+     * @var string
+     */
+    private $processImageBaseDirectory;
+
+    /**
+     * Default subdirectory of the process images.
+     *
+     * @var string
+     */
+    private $processImageDefaultDirectory;
 
     /**
      * @var int
@@ -93,6 +106,8 @@ class ProcessImportService
         $this->processDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('processDirectoryPath');
         $this->exportDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('exportDirectoryPath');
         $this->archiveDir = ExtensionConfigurationService::getInstance()->getConfigurationValue('archiveDirectoryPath');
+        $this->processImageBaseDirectory = ExtensionConfigurationService::getInstance()->getConfigurationValue('processImageBaseDirectory') ?? Process::PROCESS_IMAGE_BASE_DIRECTORY;
+        $this->processImageDefaultDirectory = ExtensionConfigurationService::getInstance()->getConfigurationValue('processImageDefaultDirectory') ?? Process::PROCESS_IMAGE_DEFAULT_DIRECTORY;
     }
 
 
@@ -131,7 +146,7 @@ class ProcessImportService
 
         // Check for necessary subdirectories and XML file
         $dataDir = $this->processDir . '/' . $identifier;
-        $imagesDir = $dataDir . '/images/default';
+        $imagesDir = $dataDir . '/' . $this->processImageBaseDirectory . '/' . $this->processImageDefaultDirectory . '/';
         $xmlFilePath = $dataDir . '/meta.xml';
 
         if (!is_dir($dataDir) || !is_dir($imagesDir) || !file_exists($xmlFilePath)) {
@@ -248,7 +263,8 @@ class ProcessImportService
      */
     protected function getImageNames(string $identifier): array
     {
-        $imagesDir = $this->processDir . '/' . $identifier . '/images/default';
+        $imagesDir = $this->processDir . '/' . $identifier . '/' . $this->processImageBaseDirectory . '/' . $this->processImageDefaultDirectory;
+
         $imageFiles = array_diff(scandir($imagesDir), ['.', '..']);
         $imageNames = [];
 
