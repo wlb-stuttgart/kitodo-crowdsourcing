@@ -2,6 +2,10 @@
 
 namespace Wlb\Crowdsourcing\Domain\Model;
 
+use TYPO3\CMS\Core\Resource\AbstractFile;
+use TYPO3\CMS\Core\Resource\Enum\DuplicationBehavior;
+use TYPO3\CMS\Extbase\Annotation\FileUpload;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 class Campaign extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
@@ -40,11 +44,29 @@ class Campaign extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     protected $processes;
 
-    /**
-     * @var int
-     */
+    #[FileUpload([
+        'validation' => [
+            'required' => false,
+            'maxFiles' => 1,
+            'fileSize' => ['minimum' => '0K', 'maximum' => '2M'],
+            'mimeType' => ['allowedMimeTypes' => [
+                    'image/jpeg',
+                    'image/jpg',
+                    'image/png',
+                    'image/gif',
+                    'image/webp',
+                    'image/svg+xml',
+                    'image/bmp',
+                    'image/tiff'
+                ]
+            ],
+            'imageDimensions' => ['maxWidth' => 4096, 'maxHeight' => 4096]
+        ],
+        'uploadFolder' => '1:/uploads/tx_crowdsourcing/',
+        'addRandomSuffix' => false,
+        'duplicationBehavior' => DuplicationBehavior::RENAME,
+    ])]
     protected $image;
-
 
     public function __construct()
     {
@@ -89,14 +111,14 @@ class Campaign extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         return $this->processes->count();
     }
 
-    public function getImage(): int
-    {
-        return $this->image;
-    }
-
-    public function setImage(int $image): void
+    public function setImage(?FileReference $image): void
     {
         $this->image = $image;
+    }
+
+    public function getImage(): ?FileReference
+    {
+        return $this->image;
     }
 
     /**

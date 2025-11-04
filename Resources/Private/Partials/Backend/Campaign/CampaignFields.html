@@ -1,5 +1,5 @@
 <div class="form-group">
-    <label for="campaignTitle">Titel</label>
+    <label for="campaignTitle"><f:translate extensionName="crowdsourcing" key="campaignModule.title" /></label>
     <f:form.textfield
             property="title"
             class="form-control"
@@ -10,7 +10,7 @@
 
 <f:comment>
 <div class="form-group mt-3">
-    <label for="campaignSubtitle">Subtitle</label>
+    <label for="campaignSubtitle"><f:translate extensionName="crowdsourcing" key="campaignModule.subtitle" /></label>
 
     <f:form.textarea
             property="subtitle"
@@ -24,7 +24,7 @@
 
 <f:comment>
 <div class="form-group">
-    <label for="campaignShortDescription">Short description</label>
+    <label for="campaignShortDescription"><f:translate extensionName="crowdsourcing" key="campaignModule.shortDescription" /></label>
 
     <f:form.textarea
             property="shortDescription"
@@ -37,7 +37,7 @@
 </f:comment>
 
 <div class="form-group mt-3">
-    <label for="campaignDescription">Beschreibung</label>
+    <label for="campaignDescription"><f:translate extensionName="crowdsourcing" key="campaignModule.description" /></label>
 
     <f:form.textarea
             property="description"
@@ -50,12 +50,25 @@
 
 <div class="form-group mt-3 mb-3">
     <f:if condition="{campaign.image}">
-        <f:image image="{campaign.imageObject}" class="img-fluid w-100" alt="" width="770c" height="517c"
+        <f:comment>
+            <div>
+                Existing Filename: {campaign.image.originalResource.name}
+            </div>
+        </f:comment>
+        <div>
+            <f:form.uploadDeleteCheckbox class="form-check-input" id="file-delete" property="image" fileReference="{campaign.image}" />
+            <label for="file" class="form-check-label">
+                <f:translate extensionName="crowdsourcing" key="campaignModule.deleteOrChange" /></label>
+        </div>
+    </f:if>
+    <f:if condition="{campaign.image}">
+        <f:image image="{campaign.image}" class="img-fluid w-100" alt="" width="770c" height="517c"
                  additionalAttributes='{style: "object-fit: cover; height: 400px; object-position: center;"}'/>
+
     </f:if>
 </div>
 
 <div class="form-group mt-3 mb-3">
-    <label for="file">Bild hochladen:</label>
-    <f:form.upload type="file" name="uploadFile" id="file" />
+    <label for="file"><f:translate extensionName="crowdsourcing" key="campaignModule.uploadImage" /></label></label>
+    <f:form.upload property="image" id="file-upload" allowEmpty="1" />
 </div>

@@ -207,13 +207,12 @@ $tca = [
             ],
         ],
         'image' => [
-            'label' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaign.files',
+            'exclude' => true,
+            'label' => 'LLL:EXT:your_extension/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_campaign.image',
             'config' => [
-                'type' => 'input',
-                'size' => 40,
-                'max' => 255,
-                'eval' => 'int',
-                'required' => false,
+                'type' => 'file',
+                'maxitems' => 1,
+                'allowed' => 'common-image-types',
             ],
         ],
         'processes' => [

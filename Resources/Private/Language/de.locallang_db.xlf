@@ -7,69 +7,91 @@
 		<body>
 		<trans-unit id="tx_crowdsourcing_domain_model_campaign">
 			<source>Campaign</source>
+			<target>Kampagne</target>
 		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_campaign.title">
 			<source>Title</source>
+			<target>Titel</target>
 		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_campaign.subtitle">
         	<source>Subtitle</source>
+        	<target>Untertitel</target>
         </trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_campaign.description">
         	<source>Description</source>
+        	<target>Beschreibung</target>
         </trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_campaign.shortDescription">
         	<source>Short description</source>
+        	<target>Kurzbeschreibung</target>
         </trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_campaign.workflow_state">
         	<source>Workflow state</source>
+        	<target>Workflow-Status</target>
         </trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_campaign.files">
         	<source>Files</source>
+        	<target>Dateien</target>
         </trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_campaign.image">
         	<source>Image</source>
+        	<target>Bild</target>
         </trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_process">
 			<source>Process</source>
+			<target>Vorgang</target>
 		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_process.title">
 			<source>Title</source>
+			<target>Titel</target>
 		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_process.identifier">
 			<source>Identifier</source>
+			<target>Identifier</target>
 		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_processk.images">
 			<source>Images</source>
+			<target>Bilder</target>
 		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_process.state">
 			<source>State</source>
+			<target>Status</target>
 		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_process.type">
 			<source>Type</source>
-		</trans-unit>
-		<trans-unit id="tx_crowdsourcing_domain_model_process.metadata">
-			<source>Metadata</source>
+			<target>Typ</target>
 		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_processhistory">
             <source>Process history</source>
+            <target>Vorgangshistorie</target>
         </trans-unit>
+		<trans-unit id="tx_crowdsourcing_domain_model_process.metadata">
+			<source>Metadata</source>
+			<target>Metadaten</target>
+		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_metadata">
 			<source>Metadata</source>
+			<target>Metadaten</target>
 		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_metadata.name">
 			<source>Name</source>
+			<target>Name</target>
 		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_metadata.value">
 			<source>Value</source>
+			<target>Wert</target>
 		</trans-unit>
         <trans-unit id="tx_crowdsourcing_domain_model_metadata.process">
             <source>Process</source>
+            <target>Vorgang</target>
         </trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_metadataconfiguration">
 			<source>Metadata configuration</source>
+			<target>Metadaten-Konfiguration</target>
 		</trans-unit>
 		<trans-unit id="tx_crowdsourcing_domain_model_metadataconfiguration.data">
             <source>Data</source>
+            <target>Daten</target>
         </trans-unit>
 		</body>
 	</file>

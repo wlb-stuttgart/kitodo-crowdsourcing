@@ -5,7 +5,7 @@ namespace Wlb\Crowdsourcing\Controller\Backend;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
 use Wlb\Crowdsourcing\Domain\Model\Process;
@@ -22,7 +22,8 @@ class CampaignController extends ActionController
         private readonly CampaignRepository $campaignRepository,
         private readonly ProcessRepository $processRepository,
         private readonly SearchService $searchService,
-        private readonly ModuleTemplateFactory $moduleTemplateFactory
+        private readonly ModuleTemplateFactory $moduleTemplateFactory,
+        protected ResourceFactory $resourceFactory
     )
     {
     }
@@ -38,6 +39,7 @@ class CampaignController extends ActionController
      *
      * @param Campaign $campaign
      * @return ResponseInterface
+     * @TYPO3\CMS\Extbase\Annotation\IgnoreValidation("campaign")
      */
     public function editAction(Campaign $campaign): ResponseInterface
     {
@@ -49,18 +51,28 @@ class CampaignController extends ActionController
      * Creates a new campaign.
      *
      * @param Campaign $campaign
-     * @param array $uploadFile
      * @return ResponseInterface
      * @throws \TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
-    public function updateAction(Campaign $campaign, $uploadFile = []): ResponseInterface
+    public function updateAction(Campaign $campaign): ResponseInterface
     {
-        if ($uploadFile) {
-            $this->saveAndUploadFile($campaign, $uploadFile);
+        if ($campaign->getImage() instanceof \TYPO3\CMS\Core\Resource\FileReference) {
+            $originalImage = $campaign->getImage();
         }
+
+        if ($this->request->hasArgument('image') && $this->request->getArgument('image') === '') {
+            // Wenn das Bild gelöscht werden soll
+            $campaign->setImage(null);
+            if (isset($originalImage)) {
+                // Lösche die FileReference
+                $originalResource = $originalImage->getOriginalResource();
+                $originalResource->delete();
+            }
+        }
+
 
         $this->campaignRepository->update($campaign);
         return $this->redirect('list');
@@ -83,18 +95,13 @@ class CampaignController extends ActionController
      * Creates a new campaign.
      *
      * @param Campaign $campaign
-     * @param array $uploadFile
      * @return ResponseInterface
      * @throws \TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
-    public function createAction(Campaign $campaign, $uploadFile = []): ResponseInterface
+    public function createAction(Campaign $campaign): ResponseInterface
     {
-        if ($uploadFile) {
-            $this->saveAndUploadFile($campaign, $uploadFile);
-        }
-
         $this->campaignRepository->add($campaign);
         return $this->redirect('list');
     }
@@ -278,29 +285,5 @@ class CampaignController extends ActionController
         $campaign->changeWorkflowState(Campaign::WORKFLOW_STATE_PUBLISHED);
         $this->campaignRepository->update($campaign);
         return $this->redirect('list', null, null, ['page' => $page]);
-    }
-
-    /**
-     * @param Campaign $campaign
-     * @param array $uploadFile
-     * @return void
-     * @throws \TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException
-     */
-    protected function saveAndUploadFile($campaign, $uploadFile)
-    {
-        $resourceFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\ResourceFactory::class);
-        $defaultStorage = $resourceFactory->getDefaultStorage();
-        $folder = $defaultStorage->getFolder("uploads/tx_crowdsourcing/");
-
-        $tempFilePath = $uploadFile['tmp_name'];
-
-        if (is_file($tempFilePath)) {
-            $destinationPath = GeneralUtility::getFileAbsFileName(ltrim($folder->getPublicUrl(), '/') . basename($uploadFile['name']));
-
-            if (move_uploaded_file($tempFilePath, $destinationPath)) {
-                $file = $folder->getFile($uploadFile['name']);
-                $campaign->setImage($file->getUid());
-            }
-        }
     }
 }

@@ -2,3 +2,9 @@
     height:100%;
     overflow-y: scroll;
 }
+
+.module-container table thead th,
+.module-container table td,
+.module-container .card {
+    color: #000000 !important;
+}

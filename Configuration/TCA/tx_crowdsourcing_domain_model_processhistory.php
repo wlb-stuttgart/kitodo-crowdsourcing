@@ -2,7 +2,7 @@
 
 $tca = [
     'ctrl' => [
-        'title' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_process',
+        'title' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_processhistory',
         'label' => 'title',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',

@@ -103,6 +103,46 @@
                 Das Passwort muss mindestens %d Zeichen lang sein , mindestens einen Großbuchstaben enthalten, mindestens einen Kleinbuchstaben enthalten , mindestens eine Zahl enthalten , mindestens ein Sonderzeichen enthalten.
             </target>
         </trans-unit>
+        <trans-unit id="campaignModule.editCampaign">
+            <source>Edit campaign</source>
+            <target>Kamagne bearbeiten</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.createCampaign">
+            <source>Create campaign</source>
+            <target>Kampagne erstellen</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.save">
+            <source>Save</source>
+            <target>Speichern</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.cancel">
+            <source>Cancel</source>
+            <target>Abbrechen</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.title">
+            <source>Title</source>
+            <target>Titel</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.subtitle">
+            <source>Subtitle</source>
+            <target>Untertitel</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.shortDescription">
+            <source>Short description</source>
+            <target>Kurzbeschreibung</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.description">
+            <source>Description</source>
+            <target>Beschreibung</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.deleteOrChange">
+            <source>Delete or change image</source>
+            <target>Bild löschen oder austauschen</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.uploadImage">
+            <source>Upload image: </source>
+            <target>Bild hochladen: </target>
+        </trans-unit>
 		</body>
 	</file>
 </xliff>
