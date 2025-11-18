@@ -131,7 +131,11 @@ function datePicker() {
 }
 
 function openLayer() {
-    const extent = [0, 0, 1024, 968];
+
+    const initialWidth = $('.processimages').first().data('width');
+    const initialHeight = $('.processimages').first().data('height');
+    const extent = [0, 0, initialWidth, initialHeight];
+
     const projection = new ol.proj.Projection({
         code: 'image',
         units: 'pixels',
@@ -143,7 +147,7 @@ function openLayer() {
             attributions: '',
             url: $(this).data('path'),
             projection: projection,
-            imageExtent: [0, 0, $(this).data('width'), $(this).data('height')],
+            imageExtent: [0, 0, $(this).data('width'), $(this).data('height')]
         });
         source.push(tempSource);
     });
@@ -151,7 +155,7 @@ function openLayer() {
     const imageLayer = new ol.layer.Image({
         source: source[0],
     });
-
+    
     map = new ol.Map({
         layers: [
             imageLayer,
@@ -159,11 +163,18 @@ function openLayer() {
         target: 'map',
         view: new ol.View({
             projection: projection,
-            center: [imageLayer.getSource().getImageExtent()[2]/2, imageLayer.getSource().getImageExtent()[3]/2],
+            center: [initialWidth/2, initialHeight/2],
             zoom: 1,
             maxZoom: 6,
         }),
         controls: [],
+    });
+
+    map.getView().fit(imageLayer.getSource().getImageExtent(), {
+        size: map.getSize(),
+        padding: [0,0,0,0],
+        nearest: true,
+        duration: 0
     });
 
     $('.ol-prev-image').on('click', function (evt) {
@@ -171,6 +182,12 @@ function openLayer() {
         if (currentSource > 0) {
             $('#map').data('sourcecount', currentSource-1);
             imageLayer.setSource(source[currentSource-1]);
+            map.getView().fit(source[currentSource-1].getImageExtent(), {
+                size: map.getSize(),
+                padding: [0,0,0,0],
+                nearest: true,
+                duration: 0
+            });
         }
     });
 
@@ -180,6 +197,12 @@ function openLayer() {
         if (currentSource < maxCount-1) {
             $('#map').data('sourcecount', currentSource+1);
             imageLayer.setSource(source[currentSource+1]);
+            map.getView().fit(source[currentSource+1].getImageExtent(), {
+                size: map.getSize(),
+                padding: [0,0,0,0],
+                nearest: true,
+                duration: 0
+            });
         }
     });
 }
