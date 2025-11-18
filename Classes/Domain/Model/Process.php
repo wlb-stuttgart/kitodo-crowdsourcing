@@ -274,7 +274,7 @@ class Process extends AbstractEntity
         foreach ($this->getImages() as $image) {
             $path = $processImagePath .'/'. $this->getRecordIdentifier() . '/' . $imageDirectory . '/' . $imageType . '/' . $image;
             $imageService = GeneralUtility::makeInstance(ImageService::class);
-            $file = $imageService->getImageInfo($path, width: $width);;
+            $file = $imageService->getImageInfo($path, $width);
             $processImagesInfo[$i]['image'] = $file['base64'];
             $processImagesInfo[$i]['path'] = $file['path'];
             $processImagesInfo[$i]['width'] = $file['width'];
