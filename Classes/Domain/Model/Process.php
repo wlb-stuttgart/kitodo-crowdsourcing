@@ -2,15 +2,12 @@
 
 namespace Wlb\Crowdsourcing\Domain\Model;
 
-use TYPO3\CMS\Core\Resource\ResourceFactory;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Frontend\Exception;
 use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
 use Wlb\Crowdsourcing\Domain\Repository\FrontendUserRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
-use Wlb\Crowdsourcing\Services\ImageService;
 
 class Process extends AbstractEntity
 {
@@ -246,14 +243,7 @@ class Process extends AbstractEntity
         return $this->getImageInfos($thumbImageType);
     }
 
-    /**
-     * @param string|null $fileType
-     * @param int|null $width
-     * @return array
-     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
-     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
-     */
-    public function getImageInfos(string $fileType = null, int $width = null)
+    public function getImageInfos(string $fileType = null)
     {
         if ($this->state === self::WORKFLOW_STATE_COMPLETED) {
             $processImagePath = ExtensionConfigurationService::getInstance()->getConfigurationValue('archiveDirectoryPath');
@@ -273,12 +263,13 @@ class Process extends AbstractEntity
         $i = 0;
         foreach ($this->getImages() as $image) {
             $path = $processImagePath .'/'. $this->getRecordIdentifier() . '/' . $imageDirectory . '/' . $imageType . '/' . $image;
-            $imageService = GeneralUtility::makeInstance(ImageService::class);
-            $file = $imageService->getImageInfo($path, $width);
-            $processImagesInfo[$i]['image'] = $file['base64'];
-            $processImagesInfo[$i]['path'] = $file['path'];
-            $processImagesInfo[$i]['width'] = $file['width'];
-            $processImagesInfo[$i]['height'] = $file['height'];
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $processImagesInfo[$i]['image'] = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+            $imageSize = getimagesize($path);
+            $processImagesInfo[$i]['width'] = $imageSize[0];
+            $processImagesInfo[$i]['height'] = $imageSize[1];
             $i++;
         }
 
