@@ -109,8 +109,12 @@
                                                         <v:variable.set name="facetActive" value=""/>
                                                     </f:else>
                                                 </f:if>
+
+                                                <f:variable name="facetArray" value="{wlb:facetArgument(facetValue: '{value}', facetField:'{facetField}', activeFacets:'{activeFacets}')}"/>
+                                                <f:variable name="facetWhithQueryArray" value="{v:iterator.merge(a: facetArray, b: {query: query})}" />
+
                                                 <f:link.action action="listProcesses"
-                                                               arguments="{wlb:facetArgument(facetValue: '{value}', facetField:'{facetField}', activeFacets:'{activeFacets}')}"
+                                                               arguments="{facetWhithQueryArray}"
                                                                class="{facetActive}">
                                                     <f:if condition="{facetActive} == 'active'">
                                                         <f:then>
