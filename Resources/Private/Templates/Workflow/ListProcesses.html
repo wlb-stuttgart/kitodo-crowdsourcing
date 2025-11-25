@@ -89,115 +89,128 @@
                 </f:form>
             </section>
 
-            <!-- Facet area -->
-            <section class="facets-section">
-                <div class="row mb-4 mt-4">
-                    <f:for each="{facets}" key="facetLabel" as="facetFields">
-                        <f:for each="{facetFields}" key="facetField" as="facet">
-                            <div class="col">
-                                <h3>{facetLabel}</h3>
-                                <ul class="facets">
-                                <f:for each="{facet}" key="facetName" as="value" iteration="iterator">
-                                    <f:if condition="{facetCounters.{facetField}.{iterator.index}} != 0">
-                                        <f:then>
-                                            <li>
-                                                <f:if condition="{wlb:isFacetActive(facetValue: '{value}',facetField:'{facetField}', activeFacets:'{activeFacets}')}">
-                                                    <f:then>
-                                                        <v:variable.set name="facetActive" value="active"/>
-                                                    </f:then>
-                                                    <f:else>
-                                                        <v:variable.set name="facetActive" value=""/>
-                                                    </f:else>
-                                                </f:if>
-
-                                                <f:variable name="facetArray" value="{wlb:facetArgument(facetValue: '{value}', facetField:'{facetField}', activeFacets:'{activeFacets}')}"/>
-                                                <f:variable name="facetWhithQueryArray" value="{v:iterator.merge(a: facetArray, b: {query: query})}" />
-
-                                                <f:link.action action="listProcesses"
-                                                               arguments="{facetWhithQueryArray}"
-                                                               class="{facetActive}">
-                                                    <f:if condition="{facetActive} == 'active'">
-                                                        <f:then>
-                                                            <i class="fa-solid fa-square-xmark"></i>
-                                                        </f:then>
-                                                        <f:else>
-                                                            <i class="fa-regular fa-square"></i>
-                                                        </f:else>
-                                                    </f:if>
-                                                    {value} ({facetCounters.{facetField}.{iterator.index}})
-                                                </f:link.action>
-                                            </li>
-                                        </f:then>
-                                    </f:if>
-                                </f:for>
-                                </ul>
-                            </div>
-                        </f:for>
-                    </f:for>
-                </div>
-            </section>
-
-            <main class="process-list-section">
-                <ul class="list-unstyled row">
-                    <f:for each="{processes}" as="process">
-                        <li class="col-xl-2 col-lg-4 col-md-6 col-sm-6 d-flex">
-                            <div class="card d-flex flex-column w-100">
-                                <div class="card-image">
-                                <f:if condition="{process.images}">
-                                    <f:then>
-                                        <img src="{process.thumbsImageInfos.0.image}" class="card-img-top carousel-image" />
-                                    </f:then>
-                                    <f:else>
-                                        <div class="card-img-left" style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; background-color: #e0e0e0; border: 0px solid #333;">
-                                            <i class="fas fa-image" style="font-size: 50px; color: #999;" aria-label="Image not available"></i>
-                                        </div>
-                                    </f:else>
-                                </f:if>
-                                </div>
-
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">{process.metadataForDisplay.signatur}</h5>
-                                    <p><f:translate key="process.type.{process.type}" /></p>
-
-                                    <f:if condition="(!{process.feUser} || {process.feUser} == {currentUser}) && {editAllowedByCurrentUser.{process.uid}} && {process.state} != 'COMPLETED'">
-                                        <f:then>
-                                            <f:link.action action="editMetadata" arguments="{process: process}" class="btn btn-outline-secondary btn-sm mt-auto">
-                                                <f:if condition="{process.feUser} == {currentUser}">
-                                                    <f:then>
-                                                        Bearbeitung fortsetzen
-                                                    </f:then>
-                                                    <f:else>
-                                                        <f:translate key="process.button.edit" />
-                                                    </f:else>
-                                                </f:if>
-                                            </f:link.action>
-                                        </f:then>
-                                        <f:else>
-                                            <f:if condition="{process.state} == 'COMPLETED'}">
+            <f:if condition="{processes}">
+                <f:then>
+                    <!-- Facet area -->
+                    <section class="facets-section">
+                        <div class="row mb-4 mt-4">
+                            <f:for each="{facets}" key="facetLabel" as="facetFields">
+                                <f:for each="{facetFields}" key="facetField" as="facet">
+                                    <div class="col">
+                                        <h3>{facetLabel}</h3>
+                                        <ul class="facets">
+                                        <f:for each="{facet}" key="facetName" as="value" iteration="iterator">
+                                            <f:if condition="{facetCounters.{facetField}.{iterator.index}} != 0">
                                                 <f:then>
-                                                    <f:link.action action="showProcessDetails" arguments="{process: process}" class="btn btn-outline-secondary btn-sm mt-auto">
-                                                        Betrachten
+                                                    <li>
+                                                        <f:if condition="{wlb:isFacetActive(facetValue: '{value}',facetField:'{facetField}', activeFacets:'{activeFacets}')}">
+                                                            <f:then>
+                                                                <v:variable.set name="facetActive" value="active"/>
+                                                            </f:then>
+                                                            <f:else>
+                                                                <v:variable.set name="facetActive" value=""/>
+                                                            </f:else>
+                                                        </f:if>
+
+                                                        <f:variable name="facetArray" value="{wlb:facetArgument(facetValue: '{value}', facetField:'{facetField}', activeFacets:'{activeFacets}')}"/>
+                                                        <f:variable name="facetWhithQueryArray" value="{v:iterator.merge(a: facetArray, b: {query: query})}" />
+
+                                                        <f:link.action action="listProcesses"
+                                                                       arguments="{facetWhithQueryArray}"
+                                                                       class="{facetActive}">
+                                                            <f:if condition="{facetActive} == 'active'">
+                                                                <f:then>
+                                                                    <i class="fa-solid fa-square-xmark"></i>
+                                                                </f:then>
+                                                                <f:else>
+                                                                    <i class="fa-regular fa-square"></i>
+                                                                </f:else>
+                                                            </f:if>
+                                                            {value} ({facetCounters.{facetField}.{iterator.index}})
+                                                        </f:link.action>
+                                                    </li>
+                                                </f:then>
+                                            </f:if>
+                                        </f:for>
+                                        </ul>
+                                    </div>
+                                </f:for>
+                            </f:for>
+                        </div>
+                    </section>
+
+                    <main class="process-list-section">
+                        <ul class="list-unstyled row">
+                            <f:for each="{processes}" as="process">
+                                <li class="col-xl-2 col-lg-4 col-md-6 col-sm-6 d-flex">
+                                    <div class="card d-flex flex-column w-100">
+                                        <div class="card-image">
+                                        <f:if condition="{process.images}">
+                                            <f:then>
+                                                <img src="{process.thumbsImageInfos.0.image}" class="card-img-top carousel-image" />
+                                            </f:then>
+                                            <f:else>
+                                                <div class="card-img-left" style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; background-color: #e0e0e0; border: 0px solid #333;">
+                                                    <i class="fas fa-image" style="font-size: 50px; color: #999;" aria-label="Image not available"></i>
+                                                </div>
+                                            </f:else>
+                                        </f:if>
+                                        </div>
+
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title">{process.metadataForDisplay.signatur}</h5>
+                                            <p><f:translate key="process.type.{process.type}" /></p>
+
+                                            <f:if condition="(!{process.feUser} || {process.feUser} == {currentUser}) && {editAllowedByCurrentUser.{process.uid}} && {process.state} != 'COMPLETED'">
+                                                <f:then>
+                                                    <f:link.action action="editMetadata" arguments="{process: process}" class="btn btn-outline-secondary btn-sm mt-auto">
+                                                        <f:if condition="{process.feUser} == {currentUser}">
+                                                            <f:then>
+                                                                Bearbeitung fortsetzen
+                                                            </f:then>
+                                                            <f:else>
+                                                                <f:translate key="process.button.edit" />
+                                                            </f:else>
+                                                        </f:if>
                                                     </f:link.action>
                                                 </f:then>
                                                 <f:else>
-                                                    <f:if condition="{editAllowedByCurrentUser.{process.uid}}">
+                                                    <f:if condition="{process.state} == 'COMPLETED'}">
                                                         <f:then>
-                                                            <button class="btn btn-outline-secondary btn-sm mt-auto" disabled>Aktuell in Bearbeitung</button>
+                                                            <f:link.action action="showProcessDetails" arguments="{process: process}" class="btn btn-outline-secondary btn-sm mt-auto">
+                                                                Betrachten
+                                                            </f:link.action>
                                                         </f:then>
                                                         <f:else>
-                                                            <button class="btn btn-outline-secondary btn-sm mt-auto" disabled>Wurde bereits bearbeitet</button>
+                                                            <f:if condition="{editAllowedByCurrentUser.{process.uid}}">
+                                                                <f:then>
+                                                                    <button class="btn btn-outline-secondary btn-sm mt-auto" disabled>Aktuell in Bearbeitung</button>
+                                                                </f:then>
+                                                                <f:else>
+                                                                    <button class="btn btn-outline-secondary btn-sm mt-auto" disabled>Wurde bereits bearbeitet</button>
+                                                                </f:else>
+                                                            </f:if>
                                                         </f:else>
                                                     </f:if>
                                                 </f:else>
                                             </f:if>
-                                        </f:else>
-                                    </f:if>
+                                        </div>
                                 </div>
+                            </li>
+                            </f:for>
+                        </ul>
+
+                        <f:render partial="Workflow/Pagination" arguments="{_all}"/>
+                    </main>
+                </f:then>
+                <f:else>
+                    <main class="process-list-section pt-4 pb-4">
+                        <div class="alert alert-warning justify-content-center pt-4 pb-4" role="alert">
+                            Leider konnten keine Suchergebnisse gefunden werden.
                         </div>
-                    </li>
-                    </f:for>
-                </ul>
-            </main>
+                    </main>
+                </f:else>
+            </f:if>
         </div>
     </div>
 

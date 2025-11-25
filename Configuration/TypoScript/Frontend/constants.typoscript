@@ -48,5 +48,12 @@ plugin.tx_crowdsourcing {
 
         # cat=plugin.tx_crowdsourcing//a; type=integer; label=FAQs info box uid
         infoBox.faqs =
+
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Number of items per result page.
+        searchPagination.itemsPerPage = 50
+
+        # cat=plugin.tx_crowdsourcing//a; type=integer; label=Maximum number of page links for the search results pagination.
+        searchPagination.maximumNumberOfLinks = 10
+
     }
 }

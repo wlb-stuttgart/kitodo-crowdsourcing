@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Pagination\SlidingWindowPagination;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -27,6 +28,7 @@ use Wlb\Crowdsourcing\Domain\Repository\FrontendUserRepository;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
+use Wlb\Crowdsourcing\Pagination\SearchResultPaginator;
 use Wlb\Crowdsourcing\Services\AccessControlService;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 use Wlb\Crowdsourcing\Services\ProcessHistoryService;
@@ -216,9 +218,30 @@ class WorkflowController extends ActionController
 
         $facetsFields = $this->searchService->getFacetFields() ?? [];
         $activeFacets = $this->request->getArguments()['facet'] ?? [];
-        $searchResult = $this->searchService->searchProcesses($query, $facetsFields, $activeFacets);
-        $processes = $searchResult['processes'];
-        $facets = $searchResult['facets'];
+
+        $currentPage = $this->request->hasArgument('currentPage')
+            ? (int)$this->request->getArgument('currentPage') : 1;
+
+        $itemsPerPage = $this->settings['searchPagination']['itemsPerPage'] ?
+            $this->settings['searchPagination']['itemsPerPage'] : 20;
+
+        $maximumLinks = $this->settings['searchPagination']['maximumNumberOfLinks'] ?
+            $this->settings['searchPagination']['maximumNumberOfLinks'] : 10;
+
+        $this->searchService->initSearch($query, $facetsFields, $activeFacets);
+
+        $paginator = new SearchResultPaginator($this->searchService, $currentPage, $itemsPerPage);
+        $pagination = new SlidingWindowPagination(
+            $paginator,
+            $maximumLinks,
+        );
+
+        $this->view->assign('pagination', $pagination);
+        $this->view->assign('paginator', $paginator);
+
+
+        $processes = $paginator->getSearchResult()->getProcesses();
+        $facets =  $paginator->getSearchResult()->getFacets();
 
         // Process facets for frontend use
         $facetValueCounter = [];

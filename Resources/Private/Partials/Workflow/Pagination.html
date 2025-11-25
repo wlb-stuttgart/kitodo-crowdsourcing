@@ -1,0 +1,78 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:if condition="{pagination}">
+    <nav class="pagination-nav" aria-label="Ergebnisseiten">
+        <ul class="pagination justify-content-center">
+            <f:if condition="{paginator.currentPageNumber} > {pagination.firstPageNumber}">
+                <li class="page-item">
+                    <f:link.action action="listProcesses"
+                                   arguments="{currentPage: pagination.firstPageNumber}"
+                                   class="page-link"
+                                   aria-label="Erste Seite der Ergebnisse">
+                        <span aria-hidden="true">&lsaquo;&lsaquo;</span>
+                    </f:link.action>
+                </li>
+            </f:if>
+
+            <f:if condition="{paginator.currentPageNumber} > {pagination.firstPageNumber}">
+                <li class="page-item">
+                    <f:variable name="prevPage" value="{paginator.currentPageNumber - 1}"/>
+                    <f:link.action action="listProcesses"
+                                   arguments="{currentPage: prevPage}"
+                                   class="page-link"
+                                   aria-label="Vorherige Ergebnisseite">
+                        <span aria-hidden="true">&lsaquo;</span>
+                    </f:link.action>
+                </li>
+            </f:if>
+
+            <span aria-hidden="true">&nbsp;&nbsp;&nbsp;</span>
+
+            <f:variable name="activeFacetsArray" value="{facet: activeFacets}"/>
+            <f:variable name="activeFacetsWhithQueryArray" value="{v:iterator.merge(a: activeFacetsArray, b: {query: query})}" />
+
+            <f:for each="{pagination.allPageNumbers}" as="page">
+                <f:variable name="pageArguments" value="{v:iterator.merge(a: activeFacetsWhithQueryArray, b: {currentPage: page})}"/>
+                <li class="page-item {f:if(condition:'{paginator.currentPageNumber}=={page}',then:'active')}">
+                    <f:link.action
+                            action="listProcesses"
+                            arguments="{pageArguments}"
+                            class="page-link"
+                    >
+                        {page}
+                    </f:link.action>
+                </li>
+            </f:for>
+
+            <span aria-hidden="true">&nbsp;&nbsp;&nbsp;</span>
+
+            <f:if condition="{paginator.currentPageNumber} < {pagination.paginator.numberOfPages}">
+                <li class="page-item">
+                    <f:variable name="nextPage" value="{paginator.currentPageNumber + 1}"/>
+                    <f:link.action action="listProcesses"
+                                   arguments="{currentPage: nextPage}"
+                                   class="page-link"
+                                   aria-label="Vorherige Ergebnisseite">
+                        <span aria-hidden="true">&rsaquo;</span>
+                    </f:link.action>
+                </li>
+            </f:if>
+
+            <f:if condition="{paginator.currentPageNumber} < {pagination.paginator.numberOfPages}">
+                <li class="page-item">
+                    <f:link.action action="listProcesses"
+                                   arguments="{currentPage: pagination.lastPageNumber}"
+                                   class="page-link"
+                                   aria-label="Letzte Seite der Ergebnisse">
+                        <span aria-hidden="true">&rsaquo;&rsaquo;</span>
+                    </f:link.action>
+                </li>
+            </f:if>
+
+        </ul>
+    </nav>
+</f:if>
+
+</html>

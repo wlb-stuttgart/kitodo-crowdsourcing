@@ -42,6 +42,10 @@ plugin.tx_crowdsourcing_campaigns {
             faqs = {$plugin.tx_crowdsourcing.settings.infoBox.faqs}
         }
 
+        searchPagination {
+            itemsPerPage = {$plugin.tx_crowdsourcing.settings.searchPagination.itemsPerPage}
+            maximumNumberOfLinks = {$plugin.tx_crowdsourcing.settings.searchPagination.maximumNumberOfLinks}
+        }
     }
 }
 

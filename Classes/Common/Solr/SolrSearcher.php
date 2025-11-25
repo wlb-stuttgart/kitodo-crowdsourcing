@@ -38,6 +38,8 @@ class SolrSearcher
 
         $query->setQuery($queryString);
 
+        $query->addSort('id', $query::SORT_ASC);
+
         $query->setStart($start);
         $query->setRows($rows);
 

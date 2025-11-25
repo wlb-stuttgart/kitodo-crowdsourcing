@@ -753,6 +753,23 @@ ul.facets li a:hover {
     color: #0a53be;
 }
 
+.pagination .page-item .page-link {
+    color: #000 !important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--color-btn-primary);
+    border-color: var(--color-btn-primary);
+    color: white !important;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white !important;
+}
+
+
 
 @media (max-width: 1076px) {
     #crowdsourcing .info-box-wrapper .col-md-4 {
