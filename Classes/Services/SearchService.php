@@ -36,7 +36,7 @@ class SearchService
     }
 
 
-    public function initSearch($search = '', $facets = [], $activeFacets = [])
+    public function setQuery($search = '', $facets = [], $activeFacets = [])
     {
         $this->search = $search;
         $this->facets = $facets;
@@ -52,14 +52,10 @@ class SearchService
      */
     public function searchProcesses($offset = 0, $itemsPerPage = 50)
     {
-        $query = empty($this->search)? '*' : $this->search;
-
-        $results = [];
-
+        $query   = empty($this->search)? '*' : $this->search;
         $results = $this->solrSearcher->searchWithFacets($query, $offset, $itemsPerPage, $this->facets, $this->activeFacets);
 
         $documentIdentifiers = [];
-
         foreach($results as $result) {
             $documentIdentifiers[] = $result->id;
         }
@@ -75,6 +71,17 @@ class SearchService
         return $searchResult;
 
     }
+
+    /**
+     * @return int
+     */
+    public function getTotalCount(): int
+    {
+        $query = empty($this->search)? '*' : $this->search;
+        $results = $this->solrSearcher->searchWithFacets($query, 0, 0, $this->facets, $this->activeFacets);
+        return (int)$results->getData()['response']['numFound'] ?? 0;
+    }
+
 
     public function getFacetFields()
     {

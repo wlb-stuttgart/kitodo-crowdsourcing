@@ -28,12 +28,6 @@ class SearchResultPaginator extends AbstractPaginator
         int $itemsPerPage = 10
     ) {
         $this->searchService = $searchService;
-        //$this->searchResult = $searchResult;
-
-        if ($this->searchResult === null) {
-            $this->searchResult = $searchService->searchProcesses($currentPage-1, $itemsPerPage);
-        }
-
         $this->setCurrentPageNumber($currentPage);
         $this->setItemsPerPage($itemsPerPage);
         $this->updateInternalState();
@@ -62,7 +56,7 @@ class SearchResultPaginator extends AbstractPaginator
 
     protected function getTotalAmountOfItems(): int
     {
-        return $this->searchResult->getNumFound();
+        return $this->searchService->getTotalCount();
     }
 
     protected function getAmountOfItemsOnCurrentPage(): int
