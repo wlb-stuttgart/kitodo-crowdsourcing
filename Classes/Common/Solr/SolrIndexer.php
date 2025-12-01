@@ -7,6 +7,7 @@ use Wlb\Crowdsourcing\Common\XMLExtractor;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
+use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 use Wlb\Crowdsourcing\Services\IndexFieldConfigReader;
 
 class SolrIndexer
@@ -24,7 +25,8 @@ class SolrIndexer
     public function __construct(
         private readonly IndexFieldConfigReader $indexFieldConfigReader,
         private readonly XMLExtractor $xmlExtractor,
-        private readonly MetadataConfigurationRepository $metadataConfigurationRepository
+        private readonly MetadataConfigurationRepository $metadataConfigurationRepository,
+        private readonly ProcessRepository $processRepository
     )
     {
         $this->config = $this->indexFieldConfigReader->getConfig();
@@ -180,5 +182,18 @@ class SolrIndexer
         }
 
         return $result;
+    }
+
+    /**
+     * @return bool
+     */
+    public function deleteAll(): bool
+    {
+        $solr   = SolrClient::getInstance();
+        $update = $solr->getClient()->createUpdate();
+        $update->addDeleteQuery('*:*');
+        $update->addCommit();
+        $solr->getClient()->update($update);
+        return true;
     }
 }
