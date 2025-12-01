@@ -7,6 +7,7 @@ use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
@@ -22,6 +23,7 @@ class CampaignController extends ActionController
         private readonly CampaignRepository $campaignRepository,
         private readonly ProcessRepository $processRepository,
         private readonly SearchService $searchService,
+        private readonly SolrIndexer $indexer,
         private readonly ModuleTemplateFactory $moduleTemplateFactory,
         protected ResourceFactory $resourceFactory
     )
@@ -160,12 +162,11 @@ class CampaignController extends ActionController
 
     /**
      * @param Campaign $campaign
-     * @param int $processUid
      * @return ResponseInterface
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
      */
-    public function editProcessesAction(Campaign $campaign, int $processUid = 0): ResponseInterface
+    public function editProcessesAction(Campaign $campaign): ResponseInterface
     {
         $importedPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('importedDirectoryPath');
         if (substr($importedPath, -1) !== '/') {
@@ -174,12 +175,13 @@ class CampaignController extends ActionController
         }
 
         $processes = $this->processRepository->findAll();
+        $this->moduleTemplate->assign("campaign", $campaign);
         $this->moduleTemplate->assign("importedPath", $importedPath);
         $this->moduleTemplate->assign("processes", $processes);
         $this->moduleTemplate->assign("currentCampaign", $campaign);
-        $this->moduleTemplate->assign("processUid", $processUid);
+        //$this->moduleTemplate->assign("processUid", $processUid);
 
-        return $this->moduleTemplate->renderResponse('Backend/Campaign/EditProcesses');;
+        return $this->moduleTemplate->renderResponse('Backend/Campaign/EditProcesses');
     }
 
     /*
@@ -213,9 +215,13 @@ class CampaignController extends ActionController
         $campaign->addProcess($process);
         $this->campaignRepository->update($campaign);
 
+        $process->setCampaign($campaign);
+
+        $this->indexer->indexDocument($process);
+
         return $this->redirect('editProcesses', null, null, [
-            "campaign" => $campaign,
-            "processUid" => $process->getUid()
+            "campaign" => $campaign
+            //"processUid" => $process->getUid()
         ]);
     }
 
@@ -236,9 +242,11 @@ class CampaignController extends ActionController
 
         $this->campaignRepository->update($campaign);
 
+        $this->indexer->deleteDocument($process);
+
         return $this->redirect('editProcesses', null, null, [
-            "campaign" => $campaign,
-            "processUid" => $process->getUid()
+            "campaign" => $campaign
+            //"processUid" => $process->getUid()
         ]);
     }
 

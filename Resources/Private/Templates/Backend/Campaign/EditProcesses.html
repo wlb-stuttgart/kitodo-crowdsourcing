@@ -12,13 +12,6 @@
         }
     </style>
 
-    <script>
-        let processUid = {processUid}
-    </script>
-
-    <script type="module" src="{f:uri.resource(path:'EXT:crowdsourcing/Resources/Public/JavaScript/Backend/CampaignModule.js')}"></script>
-
-
     <!-- Container for Process List Page -->
     <div class="container mt-5">
         <div class="row text-center">
@@ -35,37 +28,31 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="searchTask" class="form-label">Search Processes</label>
-                                    <input type="text" class="form-control" id="searchTask" placeholder="Search by task name..." onkeyup="filterTasks()">
+                                    <input type="text" class="form-control" id="searchTask" placeholder="" onkeyup="filterTasks()">
                                 </div>
                             </div>
                         </div>
 
                         <table class="table table-striped" id="taskTable">
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>Name</th>
-                                <th>Status</th>
-                                <th>Images</th>
-                            </tr>
-                            </thead>
                             <tbody>
-
                             <f:for each="{processes}" as="process">
-                                <tr class="task" id="{process.uid}" data-name="Create Campaign Landing Page" data-status="In Progress" data-priority="High">
+                                <tr class="task" id="process-{process.uid}" data-name="Create Campaign Landing Page" data-status="In Progress 100" data-priority="High">
                                     <td>
                                         <f:if condition="{process.campaign.uid} == {currentCampaign.uid}">
                                             <f:then>
-                                                <f:link.action action="removeProcessFromCampaign" arguments="{process:process, campaign:currentCampaign}" class="btn btn-danger btn-sm">Remove</f:link.action>
+                                                <f:link.action section="process-{process.uid}" action="removeProcessFromCampaign" arguments="{process:process, campaign:currentCampaign}" class="btn btn-danger btn-sm">Remove</f:link.action>
                                             </f:then>
                                             <f:else>
-                                                <f:link.action action="addProcessToCampaign" arguments="{process:process, campaign:currentCampaign}" class="btn btn-primary btn-sm">Add</f:link.action>
+                                                <f:link.action  section="process-{process.uid}" action="addProcessToCampaign" arguments="{process:process, campaign:currentCampaign}" class="btn btn-primary btn-sm">Add</f:link.action>
                                             </f:else>
                                         </f:if>
                                     </td>
-
-                                    <td>{process.metadataForDisplay.signature}</td>
-                                    <td><span class="badge bg-warning">In Progress</span></td>
+                                    <td>
+                                        {process.metadataForDisplay.signatur}
+                                        <span class="badge bg-warning border-warning">
+                                            <f:translate key="campaignModule.process.state.{process.state}" />
+                                        </span>
+                                    </td>
                                     <td>
                                         <div id="carousel-{process.uid}" class="carousel slide">
                                             <!-- Wrapper for slides -->
@@ -104,6 +91,7 @@
     </div>
 
 
+    <script type="module" src="{f:uri.resource(path:'EXT:crowdsourcing/Resources/Public/JavaScript/Backend/CampaignModule.js')}"></script>
 
 
     <script>

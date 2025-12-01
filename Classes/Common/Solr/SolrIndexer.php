@@ -4,6 +4,7 @@ namespace Wlb\Crowdsourcing\Common\Solr;
 
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use Wlb\Crowdsourcing\Common\XMLExtractor;
+use Wlb\Crowdsourcing\Domain\Model\Campaign;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
 use Wlb\Crowdsourcing\Services\IndexFieldConfigReader;
@@ -70,6 +71,11 @@ class SolrIndexer
 
         $doc->setField('id', $identifier);
 
+        $campaign = $process->getCampaign();
+        if ($campaign instanceof Campaign) {
+            $doc->setField('campaign_tsi', $campaign->getUid());
+        }
+
         foreach ($indexData as $key => $value) {
             $doc->setField($key, $value);
         }
@@ -82,6 +88,18 @@ class SolrIndexer
 
     }
 
+    /**
+     * @param Process $process
+     * @return void
+     */
+    public function deleteDocument(Process $process)
+    {
+        $solr   = SolrClient::getInstance();
+        $update = $solr->getClient()->createUpdate();
+        $update->addDeleteById($process->getRecordIdentifier());
+        $update->addCommit();
+        $solr->getClient()->update($update);
+    }
 
     /**
      * Extracts the index relevant data (due to the index field configuration) from the given json data.

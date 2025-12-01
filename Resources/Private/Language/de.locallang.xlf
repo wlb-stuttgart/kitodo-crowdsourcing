@@ -143,6 +143,34 @@
             <source>Upload image: </source>
             <target>Bild hochladen: </target>
         </trans-unit>
+        <trans-unit id="campaignModule.button.close">
+            <source>Close</source>
+            <target>Schließen</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.button.addProcessToCampaign">
+            <source>Add</source>
+            <target>Hinzufügen</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.button.removeProcessFromCampaign">
+            <source>Remove</source>
+            <target>Entfernen</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.process.state.NEW">
+            <source>New</source>
+            <target>Neu</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.process.state.CORRECTION">
+            <source>Correction</source>
+            <target>Korrektur</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.process.state.FINAL_CORRECTION">
+            <source>Final Correction</source>
+            <target>Finale Korrektur</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.process.state.COMPLETED">
+            <source>Completed</source>
+            <target>Abgeschlossen</target>
+        </trans-unit>
 		</body>
 	</file>
 </xliff>

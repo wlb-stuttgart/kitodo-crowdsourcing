@@ -104,6 +104,27 @@
         <trans-unit id="campaignModule.uploadImage">
             <source>Upload image: </source>
         </trans-unit>
+        <trans-unit id="campaignModule.button.close">
+            <source>Close</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.button.addProcessToCampaign">
+            <source>Add</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.button.removeProcessFromCampaign">
+            <source>Remove</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.process.state.NEW">
+            <source>New</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.process.state.CORRECTION">
+            <source>Correction</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.process.state.FINAL_CORRECTION">
+            <source>Final Correction</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.process.state.COMPLETED">
+            <source>Completed</source>
+        </trans-unit>
 		</body>
 	</file>
 </xliff>

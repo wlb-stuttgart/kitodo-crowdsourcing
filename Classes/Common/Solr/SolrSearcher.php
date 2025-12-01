@@ -18,13 +18,22 @@ class SolrSearcher
     }
 
     /**
-     * @param $queryString
-     * @param $start
-     * @param $rows
-     * @param $facetFields
+     * @param int $campaign
+     * @param string $queryString
+     * @param int $start
+     * @param int $rows
+     * @param array $facetFields
+     * @param array $activeFacets
      * @return ResultInterface
      */
-    public function searchWithFacets($queryString, $start = 0, $rows = 50, $facetFields = [], $activeFacets = []): ResultInterface
+    public function searchWithFacets(
+        int $campaign,
+        string $queryString,
+        int $start = 0,
+        int $rows = 50,
+        array $facetFields = [],
+        array $activeFacets = []
+    ): ResultInterface
     {
         $query = $this->client->createSelect();
 
@@ -37,6 +46,11 @@ class SolrSearcher
         }
 
         $query->setQuery($queryString);
+
+        $filterQuery = $query->createFilterQuery('campaignFilter');
+        $filterQuery->setQuery('campaign_tsi:'. $campaign);
+
+        $query->addFilterQuery($filterQuery);
 
         $query->addSort('id', $query::SORT_ASC);
 
