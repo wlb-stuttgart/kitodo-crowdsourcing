@@ -7,7 +7,7 @@
 		<body>
             <trans-unit id="username">
                 <source>Username</source>
-                <target>Anmeldename</target>
+                <target>Benutzername</target>
             </trans-unit>
             <trans-unit id="password">
                 <source>Password</source>
@@ -17,9 +17,53 @@
                 <source>Next</source>
                 <target>Weiter</target>
             </trans-unit>
-             <trans-unit id="consent_publish_username_stats">
-                            <source>Next</source>
-             </trans-unit>
+            <trans-unit id="consent_publish_username_stats">
+                <source>Next</source>
+            </trans-unit>
+            <trans-unit id="error_message" xml:space="preserve" approved="yes">
+				<source>An error occurred during login. Most likely you didn't enter the username or password correctly.
+Make sure you have entered both correctly, including upper/lower case.
+Another possibility is that cookies might be disabled in your web browser.</source>
+			    <target state="final">Bei der Anmeldung ist ein Fehler aufgetreten. Wahrscheinlich haben Sie den Benutzernamen oder das Passwort nicht richtig eingegeben.
+Vergewissern Sie sich, dass Sie beides korrekt eingegeben haben, einschließlich der Groß- und Kleinschreibung.
+Eine andere Ursache könnte sein, dass die Cookies in Ihrem Browser deaktiviert sind.</target>
+            </trans-unit>
+            <trans-unit id="password_recovery_mail_header">
+                <source>Your new password for mitmachen.wlb-stuttgart.de</source>
+                <target>Ihr neues Passwort für mitmachen.wlb-stuttgart.de</target>
+            </trans-unit>
+            <trans-unit id="password_recovery_link">
+                <source>Assign new password</source>
+                <target>Neues Passwort vergeben</target>
+            </trans-unit>
+            <trans-unit id="forgot_validate_reset_password_html" xml:space="preserve">
+				<source>Hello,
+We have received a request to reset your password.
+Please click the following link:
+%s
+For security reasons, this link will only be active until %s. If you do not click the link before then, you will need to repeat the password reset steps.
+If you did not request to reset your password, you can ignore this email. Your password will not be changed.</source>
+				<target>Guten Tag,
+wir haben eine Anfrage erhalten, Ihr Passwort zurückzusetzen.
+Klicken Sie dazu bitte den folgenden Link an:
+%s
+Aus Sicherheitsgründen ist dieser Link nur bis %s aktiv. Wenn Sie den Link vorher nicht aufrufen, müssen Sie die Schritte zum Zurücksetzen des Passworts wiederholen.
+Wenn Sie nicht darum gebeten haben, Ihr Passwort zurückzusetzen, können Sie diese E-Mail ignorieren. Ihr Passwort wird nicht geändert.</target>
+			</trans-unit>
+			<trans-unit id="forgot_validate_reset_password_plaintext" xml:space="preserve">
+				<source>Hello,
+We have received a request to reset your password.
+Please click the following link:
+%s
+For security reasons, this link will only be active until %s. If you do not click the link before then, you will need to repeat the password reset steps.
+If you did not request to reset your password, you can ignore this email. Your password will not be changed.</source>
+				<target>Guten Tag,
+wir haben eine Anfrage erhalten, Ihr Passwort zurückzusetzen.
+Klicken Sie dazu bitte den folgenden Link an:
+%s
+Aus Sicherheitsgründen ist dieser Link nur bis %s aktiv. Wenn Sie den Link vorher nicht aufrufen, müssen Sie die Schritte zum Zurücksetzen des Passworts wiederholen.
+Wenn Sie nicht darum gebeten haben, Ihr Passwort zurückzusetzen, können Sie diese E-Mail ignorieren. Ihr Passwort wird nicht geändert.</target>
+			</trans-unit>
 		</body>
 
 	</file>

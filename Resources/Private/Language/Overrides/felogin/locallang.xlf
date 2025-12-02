@@ -14,6 +14,40 @@
             <trans-unit id="next">
                 <source>Next</source>
             </trans-unit>
+            <trans-unit id="next">
+                <source>Next</source>
+            </trans-unit>
+            <trans-unit id="error_message" xml:space="preserve" approved="yes">
+				<source>An error occurred during login. Most likely you didn't enter the username or password correctly.
+Make sure you have entered both correctly, including upper/lower case.
+Another possibility is that cookies might be disabled in your web browser.</source>
+            </trans-unit>
+            <trans-unit id="password_recovery_mail_header">
+                <source>Your new password for mitmachen.wlb-stuttgart.de</source>
+            </trans-unit>
+            <trans-unit id="password_recovery_link">
+                <source>Assign new password</source>
+            </trans-unit>
+            <trans-unit id="forgot_validate_reset_password_html" xml:space="preserve">
+				<source>Hello,
+We have received a request to reset your password.
+Please click the following link:
+
+%s
+
+For security reasons, this link will only be active until %s. If you do not click the link before then, you will need to repeat the password reset steps.
+If you did not request to reset your password, you can ignore this email. Your password will not be changed.
+				</source>
+			</trans-unit>
+			<trans-unit id="forgot_validate_reset_password_plaintext" xml:space="preserve">
+				<source>Hello,
+We have received a request to reset your password.
+Please click the following link:
+%s
+
+For security reasons, this link will only be active until %s. If you do not click the link before then, you will need to repeat the password reset steps.
+If you did not request to reset your password, you can ignore this email. Your password will not be changed.</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

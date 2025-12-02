@@ -5,14 +5,74 @@
 			<generator>LFEditor</generator>
 		</header>
 		<body>
-             <trans-unit id="consentPublishUsernameEdits">
-                <source>Consent to the publication of the username in connection with edited objects</source>
+            <trans-unit id="newPassword">
+                <source>New Password</source>
+            </trans-unit>
+            <trans-unit id="newPasswordRepeat">
+                <source>New Password repetition</source>
+            </trans-unit>
+            <trans-unit id="delete_saved" approved="yes">
+                <source>You have requested the deletion of your user account. We have sent you an email with a link to confirm the deletion.</source>
+            </trans-unit>
+            <trans-unit id="gtc">
+                <source>I accept the terms of use.</source>
+            </trans-unit>
+            <trans-unit id="privacy">
+                <source>I accept the privacy policy.</source>
+            </trans-unit>
+            <trans-unit id="consentPublishUsernameEdits">
+                <source>I consent to the publication of my username in connection with edited digital copies.</source>
+            </trans-unit>
+            <trans-unit id="consentPublishUsernameStats">
+                <source>I consent to the publication of my username in statistical surveys and analyses.</source>
+            </trans-unit>
+            <trans-unit id="create_saved_mail">
+               <source>Your account has been created successfully. We've sent you an email with an activation link. Please check your inbox to complete the activation.</source>
+            </trans-unit>
+            <trans-unit id="subjectNotifyUserDeleteSave">
+                <source>Deletion of your user account on %1$s</source>
+            </trans-unit>
+            <trans-unit id="subjectNotifyUserCreateSave">
+                <source>Your registration at %1$s</source>
+            </trans-unit>
+            <trans-unit id="subjectNotifyUserDeleteConfirm">
+                <source>Confirmation of the deletion of your user account on %1$s</source>
              </trans-unit>
-             <trans-unit id="consentPublishUsernameStats">
-                <source>Consent to the publication of the username in statistical surveys and analyses</source>
+             <trans-unit id="email_user_salutation">
+                <source>Hello</source>
              </trans-unit>
-             <trans-unit id="create_saved_mail">
-                <source>Your account has been created successfully. We've sent you an email with an activation link. Please check your inbox to complete the activation.</source>
+             <trans-unit id="email_user_account_saved">
+                <source>a user account has been set up for you on the WLB crowdsourcing platform.</source>
+             </trans-unit>
+             <trans-unit id="email_user_confirm_link_description">
+                <source>Activate your account by clicking the following link:</source>
+             </trans-unit>
+             <trans-unit id="email_user_refuse_link_description">
+                <source>If you have not registered, please click the following link:</source>
+             </trans-unit>
+             <trans-unit id="email_user_account_delete">
+                <source>You have requested the deletion of your user account on %1$s.</source>
+             </trans-unit>
+             <trans-unit id="email_user_account_deleted">
+                <source>You have agreed to the deletion of your user account on %1$s. Your user account has been deleted.</source>
+             </trans-unit>
+             <trans-unit id="email_user_delete_link_description">
+                <source>Please click the following link:</source>
+             </trans-unit>
+             <trans-unit id="email_user_delete_link">
+                <source>Delete user account</source>
+             </trans-unit>
+             <trans-unit id="email_signature">
+                <source><![CDATA[Best regards,
+                Your "Sammlung Proteste" team
+                ___
+                Württembergische Landesbibliothek
+                Sammlung Proteste
+
+                Tel.: +49 (0) 711 / 13798 - 541
+                <a href="mailto:mitmachen@wlb-stuttgart.de">mitmachen@wlb-stuttgart.de</a>
+                <a href="https://www.mitmachen.wlb-stuttgart.de"/>www.mitmachen.wlb-stuttgart.de</a>
+                <a href="https://www.wlb-stuttgart.de/sammlungen/sammlung-proteste/">www.wlb-stuttgart.de/sammlungen/sammlung-proteste/</a>]]></source>
              </trans-unit>
 		</body>
 	</file>

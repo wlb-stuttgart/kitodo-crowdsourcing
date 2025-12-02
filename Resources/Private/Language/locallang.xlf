@@ -37,39 +37,25 @@
             <target>Die Württembergische Landesbibliothek besitzt mehr als 55.000 Plakate aus vielen Ländern, Kontinenten und Zeiträumen zu politischen und sozialen Protesten seit Ende der 1960er Jahre. Die Plakate stammen aus der Umwelt- und Anti-Atomkraftbewegung, aus der Friedensbewegung und der Frauenbewegung, es geht um Migration, Antifaschismus, Menschenrechte und vieles mehr. Sie alle gehören zur Plakatsammlung Thomas Hill, die die WLB im Herbst 2022 erworben hat. Tauchen Sie ein in die Tiefen unserer Archive, entdecken Sie Plakate, die seit ihrer Entstehung nicht mehr in der Öffentlichkeit gezeigt wurden! Damit die Plakate für alle im Internet sichtbar werden, brauchen wir Ihre Unterstützung. Helfen Sie, die Plakate zu erschließen, teilen Sie Ihr Wissen mit uns und vielen Interessierten weltweit! Sie sichern damit nicht nur das kulturelle Erbe, sondern unterstützen die Wissenschaft bei der Erforschung der Protestbewegungen.</target>
         </trans-unit>
         <trans-unit id="feuser.password.error.minlength">
-            <source>
-                be at least %d characters long
-            </source>
+            <source>be at least %d characters long</source>
         </trans-unit>
         <trans-unit id="feuser.password.error.uppercase">
-            <source>
-                contain at least one uppercase letter
-            </source>
+            <source>contain at least one uppercase letter</source>
         </trans-unit>
         <trans-unit id="feuser.password.error.lowercase">
-            <source>
-                contain at least one lowercase letter
-            </source>
+            <source>contain at least one lowercase letter</source>
         </trans-unit>
         <trans-unit id="feuser.password.error.number">
-            <source>
-                contain at least one number
-            </source>
+            <source>contain at least one number</source>
         </trans-unit>
         <trans-unit id="feuser.password.error.symbol">
-            <source>
-                contain at least one special characters
-            </source>
+            <source>contain at least one special characters</source>
         </trans-unit>
         <trans-unit id="feuser.password.error.message">
-            <source>
-                The password must %s.
-            </source>
+            <source>The password must %s.</source>
         </trans-unit>
         <trans-unit id="feuser.password.message.rules">
-            <source>
-                The password must be at least %d characters long, contain at least one uppercase letter, contain at least one lowercase letter, contain at least one number, contain at least one special character.
-            </source>
+            <source>The password must be at least %d characters long, contain at least one uppercase letter, contain at least one lowercase letter, contain at least one number, contain at least one special character.</source>
         </trans-unit>
         <trans-unit id="campaignModule.editCampaign">
             <source>Edit campaign</source>

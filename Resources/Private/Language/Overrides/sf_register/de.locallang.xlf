@@ -5,19 +5,108 @@
 			<generator>LFEditor</generator>
 		</header>
 		<body>
-             <trans-unit id="consentPublishUsernameEdits">
-                <source>Consent to the publication of the username in connection with edited objects</source>
-                <target>Einwilligung zur Veröffentlichung des Benutzernamens im Zusammenhang mit bearbeiteten Objekten</target>
-             </trans-unit>
-             <trans-unit id="consentPublishUsernameStats">
-                <source>Consent to the publication of the username in statistical surveys and analyses</source>
-                <target>Einwilligung zur Veröffentlichung des Benutzernamens in statistischen Erhebungen und Auswertungen</target>
-             </trans-unit>
-             <trans-unit id="create_saved_mail">
+            <trans-unit id="newPassword">
+                <source>New Password</source>
+                <target>Neues Passwort</target>
+            </trans-unit>
+            <trans-unit id="newPasswordRepeat">
+                <source>New Password repetition</source>
+                <target>Neues Passwort wiederholen</target>
+            </trans-unit>
+            <trans-unit id="delete_saved" approved="yes">
+                <source>You have requested the deletion of your user account. We have sent you an email with a link to confirm the deletion.</source>
+                <target>Sie haben die Löschung Ihres Benutzerkontos beantragt. Wir haben Ihnen eine E-Mail mit einem Link zugeschickt, mit dem Sie die Löschung bestätigen können.</target>
+            </trans-unit>
+            <trans-unit id="gtc">
+                <source>I accept the terms of use.</source>
+                <target>Ich akzeptiere die Nutzungsbedingungen.</target>
+            </trans-unit>
+            <trans-unit id="privacy">
+                <source>I accept the privacy policy.</source>
+                <target>Ich akzeptiere die Datenschutzbestimmungen.</target>
+            </trans-unit>
+            <trans-unit id="consentPublishUsernameEdits">
+                <source>I consent to the publication of my username in connection with edited digital copies.</source>
+                <target>Ich stimme der Veröffentlichung meines Benutzernamens im Zusammenhang mit bearbeiteten Digitalisaten zu.</target>
+            </trans-unit>
+            <trans-unit id="consentPublishUsernameStats">
+                <source>I consent to the publication of my username in statistical surveys and analyses.</source>
+                <target>Ich stimme der Veröffentlichung meines Benutzernamens in statistischen Erhebungen und Auswertungen zu.</target>
+            </trans-unit>
+            <trans-unit id="create_saved_mail">
                 <source>Your account has been created successfully. We've sent you an email with an activation link. Please check your inbox to complete the activation.</source>
                 <target>Ihr Konto wurde erfolgreich erstellt. Wir haben Ihnen eine E-Mail mit einem Aktivierungslink gesendet. Bitte überprüfen Sie Ihr Postfach, um die Aktivierung abzuschließen.</target>
+            </trans-unit>
+            <trans-unit id="subjectNotifyUserDeleteSave">
+                <source>Deletion of your user account on %1$s</source>
+                <target>Löschung Ihres Benutzerkontos auf %1$s</target>
+            </trans-unit>
+            <trans-unit id="subjectNotifyUserCreateSave">
+                <source>Your registration at %1$s</source>
+                <target>Ihre Registrierung auf %1$s</target>
+            </trans-unit>
+            <trans-unit id="subjectNotifyUserDeleteConfirm">
+                <source>Confirmation of the deletion of your user account on %1$s</source>
+                <target>Bestätigung der Löschung Ihres Benutzerkontos auf %1$s</target>
+            </trans-unit>
+            <trans-unit id="email_user_salutation">
+               <source>Hello</source>
+               <target>Guten Tag</target>
+            </trans-unit>
+            <trans-unit id="email_user_account_saved">
+               <source>a user account has been set up for you on the WLB crowdsourcing platform.</source>
+               <target>auf der Crowdsourcing-Plattform der WLB wurde ein Benutzerkonto für Sie eingerichtet.</target>
+            </trans-unit>
+            <trans-unit id="email_user_confirm_link_description">
+               <source>Activate your account by clicking the following link:</source>
+               <target>Aktivieren Sie das Konto, indem Sie den folgenden Link anklicken:</target>
+            </trans-unit>
+            <trans-unit id="email_user_refuse_link_description">
+               <source>If you have not registered, please click the following link:</source>
+               <target>Falls Sie sich nicht registriert haben, klicken Sie bitte den folgenden Link an:</target>
+            </trans-unit>
+            <trans-unit id="email_user_registration_thank_you">
+                <source>Thank you very much for your assistance with the crowdsourcing project.</source>
+                <target>Vielen Dank für Ihre Mithilfe beim Crowdsourcing-Projekt.</target>
+            </trans-unit>
+            <trans-unit id="email_user_account_delete">
+                <source>You have requested the deletion of your user account on %1$s.</source>
+                <target>Sie haben die Löschung Ihres Benutzerkontos auf %1$s beantragt.</target>
+            </trans-unit>
+            <trans-unit id="email_user_account_deleted">
+                <source>You have agreed to the deletion of your user account on %1$s. Your user account has been deleted.</source>
+                <target>Sie haben der Löschung Ihres Benutzerkontos auf %1$s zugestimmt. Ihr Benutzerkonto wurde gelöscht.</target>
+            </trans-unit>
+            <trans-unit id="email_user_delete_link_description">
+                <source>Please click the following link:</source>
+                <target>Klicken Sie dazu bitte den folgenden Link an:</target>
+            </trans-unit>
+            <trans-unit id="email_user_delete_link">
+                <source>Delete user account</source>
+                <target>Benutzerkonto löschen</target>
+            </trans-unit>
+            <trans-unit id="email_signature">
+                <source><![CDATA[Best regards,
+                Your "Sammlung Proteste" team
+                ___
+                Württembergische Landesbibliothek
+                Sammlung Proteste
+
+                Tel.: +49 (0) 711 / 13798 - 541
+                <a href="mailto:mitmachen@wlb-stuttgart.de">mitmachen@wlb-stuttgart.de</a>
+                <a href="https://www.mitmachen.wlb-stuttgart.de"/>www.mitmachen.wlb-stuttgart.de</a>
+                <a href="https://www.wlb-stuttgart.de/sammlungen/sammlung-proteste/">www.wlb-stuttgart.de/sammlungen/sammlung-proteste/</a>]]></source>
+                <target><![CDATA[Mit freundlichen Grüßen,
+                Ihre Sammlung Proteste
+                ___
+                Württembergische Landesbibliothek
+                Sammlung Proteste
+
+                Tel.: +49 (0) 711 / 13798 - 541
+                <a href="mailto:mitmachen@wlb-stuttgart.de">mitmachen@wlb-stuttgart.de</a>
+                <a href="https://www.mitmachen.wlb-stuttgart.de"/>www.mitmachen.wlb-stuttgart.de</a>
+                <a href="https://www.wlb-stuttgart.de/sammlungen/sammlung-proteste/">www.wlb-stuttgart.de/sammlungen/sammlung-proteste/</a>]]></target>
              </trans-unit>
 		</body>
-
 	</file>
 </xliff>
