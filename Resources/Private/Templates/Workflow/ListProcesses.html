@@ -98,7 +98,7 @@
                                 <f:for each="{facetFields}" key="facetField" as="facet">
                                     <f:if condition="{wlb:isFacetVisible(facetCounters: '{facetCounters}', facetField:'{facetField}', activeFacets:'{activeFacets}')}">
                                         <div class="col">
-                                            <h3>{facetLabel}</h3>
+                                            <h3><f:translate key="search.facetLabel.{facetLabel}" default="{facetLabel}" /></h3>
                                             <ul class="facets">
                                             <f:for each="{facet}" key="facetName" as="value" iteration="iterator">
                                                 <f:if condition="{facetCounters.{facetField}.{iterator.index}} != 0">
@@ -127,7 +127,15 @@
                                                                         <i class="fa-regular fa-square"></i>
                                                                     </f:else>
                                                                 </f:if>
-                                                                {value} ({facetCounters.{facetField}.{iterator.index}})
+                                                                <f:if condition="{facetField} == 'state_faceting'">
+                                                                    <f:then>
+                                                                        <f:translate key="process.state.{value}" default="{value}" />
+                                                                    </f:then>
+                                                                    <f:else>
+                                                                        {value}
+                                                                    </f:else>
+                                                                </f:if>
+                                                                ({facetCounters.{facetField}.{iterator.index}})
                                                             </f:link.action>
                                                         </li>
                                                     </f:then>

@@ -127,21 +127,33 @@
             <source>Remove</source>
             <target>Entfernen</target>
         </trans-unit>
-        <trans-unit id="campaignModule.process.state.NEW">
+        <trans-unit id="process.state.NEW">
             <source>New</source>
             <target>Neu</target>
         </trans-unit>
-        <trans-unit id="campaignModule.process.state.CORRECTION">
-            <source>Correction</source>
-            <target>Korrektur</target>
+        <trans-unit id="process.state.CORRECTION">
+            <source>First correction</source>
+            <target>Erstkorrektur</target>
         </trans-unit>
-        <trans-unit id="campaignModule.process.state.FINAL_CORRECTION">
-            <source>Final Correction</source>
-            <target>Finale Korrektur</target>
+        <trans-unit id="process.state.FINAL_CORRECTION">
+            <source>Final correction</source>
+            <target>Schlusskorrektur</target>
         </trans-unit>
-        <trans-unit id="campaignModule.process.state.COMPLETED">
-            <source>Completed</source>
-            <target>Abgeschlossen</target>
+        <trans-unit id="process.state.COMPLETED">
+            <source>Finished</source>
+            <target>Fertig</target>
+        </trans-unit>
+        <trans-unit id="search.facetLabel.state">
+            <source>State</source>
+            <target>Status</target>
+        </trans-unit>
+        <trans-unit id="search.facetLabel.type">
+            <source>Type</source>
+            <target>Typ</target>
+        </trans-unit>
+        <trans-unit id="search.facetLabel.campaign">
+            <source>Campaign</source>
+            <target>Kampagne</target>
         </trans-unit>
 		</body>
 	</file>

@@ -99,17 +99,26 @@
         <trans-unit id="campaignModule.button.removeProcessFromCampaign">
             <source>Remove</source>
         </trans-unit>
-        <trans-unit id="campaignModule.process.state.NEW">
+        <trans-unit id="process.state.NEW">
             <source>New</source>
         </trans-unit>
-        <trans-unit id="campaignModule.process.state.CORRECTION">
-            <source>Correction</source>
+        <trans-unit id="process.state.CORRECTION">
+            <source>First correction</source>
         </trans-unit>
-        <trans-unit id="campaignModule.process.state.FINAL_CORRECTION">
-            <source>Final Correction</source>
+        <trans-unit id="process.state.FINAL_CORRECTION">
+            <source>Final correction</source>
         </trans-unit>
-        <trans-unit id="campaignModule.process.state.COMPLETED">
-            <source>Completed</source>
+        <trans-unit id="process.state.COMPLETED">
+            <source>Finished</source>
+        </trans-unit>
+        <trans-unit id="search.facetLabel.state">
+            <source>State</source>
+        </trans-unit>
+        <trans-unit id="search.facetLabel.type">
+            <source>Type</source>
+        </trans-unit>
+        <trans-unit id="search.facetLabel.campaign">
+            <source>Campaign</source>
         </trans-unit>
 		</body>
 	</file>
