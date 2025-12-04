@@ -64,7 +64,7 @@
                     <div class="d-flex gap-2">
                         <f:if condition="{userInfo}">
                             <f:then>
-                                <f:link.page absolute="true" pageUid="{settings.navigation.crowdsourcingRoot}" additionalParams="{logintype: 'logout'}" class="btn login" title="Logout">
+                                <f:link.page absolute="true" pageUid="{settings.navigation.crowdsourcingRoot}" additionalParams="{logintype: 'logout'}" class="btn login">
                                     Abmelden
                                 </f:link.page>
                                 <div class="dropdown">
@@ -85,10 +85,10 @@
                                 </div>
                             </f:then>
                             <f:else>
-                                <a href="{f:uri.action(action:'landingPage')}" type="button" title="Login" class="btn login">
+                                <a href="{f:uri.action(action:'landingPage')}" type="button" class="btn login">
                                     Anmelden
                                 </a>
-                                <a href="#" title="Register" class="btn btn-primary register">
+                                <a href="#" class="btn btn-primary register">
                                     Registrieren
                                 </a>
                             </f:else>
