@@ -176,6 +176,7 @@ class SolrIndexer
 
             $result['type_faceting'] = $process->getType();
             $result['state_faceting'] = $process->getState();
+            $result['campaign_faceting'] = $process->getCampaign()->getUid();
 
         } else {
             throw new \Exception('Metadata configuration missing');
@@ -183,6 +184,21 @@ class SolrIndexer
 
         return $result;
     }
+
+    /*
+    public function updateProcessesPublicationState(Campaign $campaign): void
+    {
+        $batchSize   = 1;
+        $total = $this->processRepository->count(['campaign'=>$campaign->getUid()]);
+
+        for ($offset = 0; $offset < $total; $offset += $batchSize) {
+            $batch = $this->processRepository->batchByCampaign($campaign->getUid(), $batchSize, $offset);
+            foreach ($batch as $process) {
+                $this->indexDocument($process);
+            }
+        }
+    }
+    */
 
     /**
      * @return bool

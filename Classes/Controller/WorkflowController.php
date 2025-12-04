@@ -228,8 +228,7 @@ class WorkflowController extends ActionController
         $maximumLinks = $this->settings['searchPagination']['maximumNumberOfLinks'] ?
             $this->settings['searchPagination']['maximumNumberOfLinks'] : 10;
 
-        $campaign = $this->campaignRepository->findAll()->getFirst();
-        $this->searchService->setQuery($campaign->getUid(), $query, $facetsFields, $activeFacets);
+        $this->searchService->setQuery($query, $facetsFields, $activeFacets);
 
         $paginator = new SearchResultPaginator($this->searchService, $currentPage, $itemsPerPage);
         $pagination = new SlidingWindowPagination(

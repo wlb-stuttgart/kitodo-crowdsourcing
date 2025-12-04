@@ -2,6 +2,8 @@
 
 namespace Wlb\Crowdsourcing\Domain\Repository;
 
+use Wlb\Crowdsourcing\Domain\Model\Campaign;
+
 class CampaignRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 {
     /**
@@ -24,5 +26,19 @@ class CampaignRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     {
         $query = $this->createQuery();
         return $query->count();
+    }
+
+    public function getActiveCampaignUids()
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('hidden', 0),
+                $query->equals('workflowState', Campaign::WORKFLOW_STATE_PUBLISHED)
+            )
+        );
+
+        return array_column($query->execute(true), 'uid');
     }
 }

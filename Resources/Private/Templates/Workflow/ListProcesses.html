@@ -96,44 +96,46 @@
                         <div class="row mb-4 mt-4">
                             <f:for each="{facets}" key="facetLabel" as="facetFields">
                                 <f:for each="{facetFields}" key="facetField" as="facet">
-                                    <div class="col">
-                                        <h3>{facetLabel}</h3>
-                                        <ul class="facets">
-                                        <f:for each="{facet}" key="facetName" as="value" iteration="iterator">
-                                            <f:if condition="{facetCounters.{facetField}.{iterator.index}} != 0">
-                                                <f:then>
-                                                    <li>
-                                                        <f:if condition="{wlb:isFacetActive(facetValue: '{value}',facetField:'{facetField}', activeFacets:'{activeFacets}')}">
-                                                            <f:then>
-                                                                <v:variable.set name="facetActive" value="active"/>
-                                                            </f:then>
-                                                            <f:else>
-                                                                <v:variable.set name="facetActive" value=""/>
-                                                            </f:else>
-                                                        </f:if>
-
-                                                        <f:variable name="facetArray" value="{wlb:facetArgument(facetValue: '{value}', facetField:'{facetField}', activeFacets:'{activeFacets}')}"/>
-                                                        <f:variable name="facetWhithQueryArray" value="{v:iterator.merge(a: facetArray, b: {query: query})}" />
-
-                                                        <f:link.action action="listProcesses"
-                                                                       arguments="{facetWhithQueryArray}"
-                                                                       class="{facetActive}">
-                                                            <f:if condition="{facetActive} == 'active'">
+                                    <f:if condition="{wlb:isFacetVisible(facetCounters: '{facetCounters}', facetField:'{facetField}', activeFacets:'{activeFacets}')}">
+                                        <div class="col">
+                                            <h3>{facetLabel}</h3>
+                                            <ul class="facets">
+                                            <f:for each="{facet}" key="facetName" as="value" iteration="iterator">
+                                                <f:if condition="{facetCounters.{facetField}.{iterator.index}} != 0">
+                                                    <f:then>
+                                                        <li>
+                                                            <f:if condition="{wlb:isFacetActive(facetValue: '{value}',facetField:'{facetField}', activeFacets:'{activeFacets}')}">
                                                                 <f:then>
-                                                                    <i class="fa-solid fa-square-xmark"></i>
+                                                                    <v:variable.set name="facetActive" value="active"/>
                                                                 </f:then>
                                                                 <f:else>
-                                                                    <i class="fa-regular fa-square"></i>
+                                                                    <v:variable.set name="facetActive" value=""/>
                                                                 </f:else>
                                                             </f:if>
-                                                            {value} ({facetCounters.{facetField}.{iterator.index}})
-                                                        </f:link.action>
-                                                    </li>
-                                                </f:then>
-                                            </f:if>
-                                        </f:for>
-                                        </ul>
-                                    </div>
+
+                                                            <f:variable name="facetArray" value="{wlb:facetArgument(facetValue: '{value}', facetField:'{facetField}', activeFacets:'{activeFacets}')}"/>
+                                                            <f:variable name="facetWhithQueryArray" value="{v:iterator.merge(a: facetArray, b: {query: query})}" />
+
+                                                            <f:link.action action="listProcesses"
+                                                                           arguments="{facetWhithQueryArray}"
+                                                                           class="{facetActive}">
+                                                                <f:if condition="{facetActive} == 'active'">
+                                                                    <f:then>
+                                                                        <i class="fa-solid fa-square-xmark"></i>
+                                                                    </f:then>
+                                                                    <f:else>
+                                                                        <i class="fa-regular fa-square"></i>
+                                                                    </f:else>
+                                                                </f:if>
+                                                                {value} ({facetCounters.{facetField}.{iterator.index}})
+                                                            </f:link.action>
+                                                        </li>
+                                                    </f:then>
+                                                </f:if>
+                                            </f:for>
+                                            </ul>
+                                        </div>
+                                    </f:if>
                                 </f:for>
                             </f:for>
                         </div>

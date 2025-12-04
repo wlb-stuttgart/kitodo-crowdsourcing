@@ -18,7 +18,7 @@ class SolrSearcher
     }
 
     /**
-     * @param int $campaign
+     * @param array $activeCampaigns
      * @param string $queryString
      * @param int $start
      * @param int $rows
@@ -27,7 +27,7 @@ class SolrSearcher
      * @return ResultInterface
      */
     public function searchWithFacets(
-        int $campaign,
+        array $activeCampaigns,
         string $queryString,
         int $start = 0,
         int $rows = 50,
@@ -46,13 +46,18 @@ class SolrSearcher
         }
 
         $query->setQuery($queryString);
-
-        $filterQuery = $query->createFilterQuery('campaignFilter');
-        $filterQuery->setQuery('campaign_tsi:'. $campaign);
-
-        $query->addFilterQuery($filterQuery);
-
         $query->addSort('id', $query::SORT_ASC);
+
+        // Deliver only campaigns that are published.
+        if (!empty($activeCampaigns)) {
+            $filterQuery = $query->createFilterQuery('campaignFilter');
+            $filterQuery->setQuery('campaign_tsi:'.implode(' OR ', $activeCampaigns));
+            $query->addFilterQuery($filterQuery);
+        } else {
+            $emptyFilterQuery = $query->createFilterQuery('force_empty_result');
+            $emptyFilterQuery->setQuery('NOT id:[* TO *]');
+            $query->addFilterQuery($emptyFilterQuery);
+        }
 
         $query->setStart($start);
         $query->setRows($rows);

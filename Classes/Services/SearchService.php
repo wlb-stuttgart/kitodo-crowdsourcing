@@ -3,7 +3,6 @@
 namespace Wlb\Crowdsourcing\Services;
 
 use Wlb\Crowdsourcing\Common\Solr\SolrSearcher;
-use Wlb\Crowdsourcing\Domain\Model\Campaign;
 use Wlb\Crowdsourcing\Domain\Model\SearchResult;
 use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
@@ -11,10 +10,6 @@ use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 
 class SearchService
 {
-    /**
-     * @var int
-     */
-    protected $campaign;
     /**
      * @var string
      */
@@ -41,15 +36,13 @@ class SearchService
     }
 
     /**
-     * @param int $campaign
      * @param string $search
      * @param array $facets
      * @param array $activeFacets
      * @return void
      */
-    public function setQuery(int $campaign, string $search = '', array $facets = [], array $activeFacets = []): void
+    public function setQuery(string $search = '', array $facets = [], array $activeFacets = []): void
     {
-        $this->campaign = $campaign;
         $this->search = $search;
         $this->facets = $facets;
         $this->activeFacets = $activeFacets;
@@ -65,7 +58,11 @@ class SearchService
     public function searchProcesses($offset = 0, $itemsPerPage = 50)
     {
         $query = empty($this->search)? '*' : $this->search;
-        $results = $this->solrSearcher->searchWithFacets($this->campaign, $query, $offset, $itemsPerPage, $this->facets, $this->activeFacets);
+
+        $results = $this->solrSearcher->searchWithFacets(
+            $this->campaignRepository->getActiveCampaignUids(),
+            $query, $offset, $itemsPerPage, $this->facets, $this->activeFacets
+        );
 
         $documentIdentifiers = [];
         foreach($results as $result) {
@@ -90,7 +87,11 @@ class SearchService
     public function getTotalCount(): int
     {
         $query = empty($this->search)? '*' : $this->search;
-        $results = $this->solrSearcher->searchWithFacets($this->campaign, $query, 0, 0, $this->facets, $this->activeFacets);
+        $results = $this->solrSearcher->searchWithFacets(
+            $this->campaignRepository->getActiveCampaignUids(),
+            $query, 0, 0, $this->facets, $this->activeFacets
+        );
+
         return (int)$results->getData()['response']['numFound'] ?? 0;
     }
 
@@ -108,6 +109,7 @@ class SearchService
             // add static facets like state, type, etc.
             $facets['Status']['state_faceting'] = false;
             $facets['Typ']['type_faceting'] = false;
+            $facets['Campaign']['campaign_faceting'] = false;
 
             foreach ($dbConfigArray as $docType => $docTypConfig) {
                 foreach ($docTypConfig as $metadataName => $metadataConfig) {

@@ -233,14 +233,23 @@ class Campaign extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 
     }
 
+    /**
+     * @return bool
+     */
     public function isNew() {
         return $this->workflowState === self::WORKFLOW_STATE_NEW;
     }
 
+    /**
+     * @return bool
+     */
     public function isPublished() {
         return $this->workflowState === self::WORKFLOW_STATE_PUBLISHED;
     }
 
+    /**
+     * @return bool
+     */
     public function isClosed() {
         return $this->workflowState === self::WORKFLOW_STATE_CLOSED;
     }

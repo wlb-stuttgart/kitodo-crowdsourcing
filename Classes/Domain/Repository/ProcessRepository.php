@@ -5,6 +5,7 @@ namespace Wlb\Crowdsourcing\Domain\Repository;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Wlb\Crowdsourcing\Domain\Model\FrontendUser;
 use Wlb\Crowdsourcing\Domain\Model\Process;
@@ -68,7 +69,7 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             $query->equals('feUser', $feUser->getUid())
         );
         $query->setOrderings([
-            'lastAccessed' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
+            'lastAccessed' => QueryInterface::ORDER_DESCENDING
         ]);
         $query->setLimit(1);
 
@@ -200,4 +201,23 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         return null;
     }
 
+
+    /*
+    public function batchByCampaign(int $campaignUid, int $limit, int $offset)
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->equals('campaign', $campaignUid)
+        );
+
+        $query->setOrderings([
+            'uid' => QueryInterface::ORDER_ASCENDING
+        ]);
+        $query->setLimit($limit);
+        $query->setOffset($offset);
+
+        return $query->execute();
+    }
+    */
 }
