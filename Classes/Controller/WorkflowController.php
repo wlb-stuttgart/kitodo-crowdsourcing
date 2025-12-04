@@ -667,7 +667,16 @@ class WorkflowController extends ActionController
             ['metadata_fields' => count($trustedMetadata)]
         );
 
-        return $this->redirect('listProcesses', null, null);
+        if ($actionTaken === 'cache') {
+            return $this->redirect(
+                'editMetadata',
+                'Workflow',
+                'Crowdsourcing',
+                ['process' => $process->getUid()]
+            );
+        } else {
+            return $this->redirect('listProcesses', null, null);
+        }
     }
 
     /**
