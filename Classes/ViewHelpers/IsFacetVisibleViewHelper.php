@@ -29,7 +29,7 @@ class IsFacetVisibleViewHelper extends AbstractViewHelper
         $activeFacets = $this->arguments['activeFacets'];
 
         if ($facetField == 'campaign_faceting') {
-            $counters = $facetCounters[$facetField];
+            $counters = $facetCounters[$facetField] ?? [];
             return array_key_exists('campaign_faceting', $activeFacets) ||
                 count(array_filter($counters, fn($v) => $v > 0)) > 1;
         }
