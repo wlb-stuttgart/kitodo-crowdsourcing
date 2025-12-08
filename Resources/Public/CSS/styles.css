@@ -770,6 +770,10 @@ ul.facets li a:hover {
 }
 
 
+.processForm .edit-submit-btn {
+    margin-bottom: 10px;
+}
+
 
 @media (max-width: 1076px) {
     #crowdsourcing .info-box-wrapper .col-md-4 {

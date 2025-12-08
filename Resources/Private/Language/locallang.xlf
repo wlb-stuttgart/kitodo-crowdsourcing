@@ -20,6 +20,9 @@
 		<trans-unit id="process.button.edit">
 			<source>Edit</source>
 		</trans-unit>
+		<trans-unit id="process.button.reportProblem">
+			<source>Report a problem</source>
+		</trans-unit>
         <trans-unit id="landingpage.header">
             <source>Protest sichtbar machen</source>
             <target>Protest sichtbar machen</target>
@@ -110,6 +113,9 @@
         </trans-unit>
         <trans-unit id="process.state.COMPLETED">
             <source>Finished</source>
+        </trans-unit>
+        <trans-unit id="search.input.placeHolder">
+            <source>Enter search term</source>
         </trans-unit>
         <trans-unit id="search.facetLabel.state">
             <source>State</source>
