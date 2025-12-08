@@ -25,6 +25,14 @@
     </f:else>
 </f:if>
 
+<f:variable name="conditionFieldRequired">
+    <f:if condition="{required} == 1 && ({child} != 1 || ({metadata.minOccurs} >= 1) && {i} < {metadata.minOccurs})">
+        <f:then>true</f:then>
+        <f:else>false</f:else>
+    </f:if>
+</f:variable>
+<f:variable name="fieldRequired">{conditionFieldRequired -> f:format.trim()}</f:variable>
+
 <f:switch expression="{inputType}">
     <f:case value="text">
         <f:form.textfield
@@ -33,7 +41,7 @@
                 name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{i}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
                 value="{value}"
                 placeholder=""
-                required="{f:if(condition: '{required} == 1 && {child} != 1', then: 'true', else: 'false')}"
+                required="{fieldRequired}"
                 pattern="{metadata.validation}"
                 data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"
                 data-max="{fieldMaxOccurs}"/>
@@ -45,7 +53,7 @@
                 name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{i}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
                 value="{value}"
                 placeholder=""
-                required="{f:if(condition: '{required} == 1 && {child} != 1', then: 'true', else: 'false')}"
+                required="{fieldRequired}"
                 pattern="{metadata.validation}"
                 data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"
                 data-max="{fieldMaxOccurs}"/>
@@ -57,7 +65,7 @@
                 name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{i}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
                 value="{value}"
                 placeholder=""
-                required="{f:if(condition: '{required} == 1 && {child} != 1', then: 'true', else: 'false')}"
+                required="{fieldRequired}"
                 pattern="{metadata.validation}"
                 data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"
                 data-max="{fieldMaxOccurs}"/>
@@ -89,7 +97,7 @@
                 name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{i}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
                 value="{value}"
                 placeholder="Test"
-                required="{f:if(condition: '{required} == 1 && {child} != 1', then: 'true', else: 'false')}"
+                required="{fieldRequired}"
                 data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"
                 data-max="{fieldMaxOccurs}">
             <f:if condition="{child} == 1">
