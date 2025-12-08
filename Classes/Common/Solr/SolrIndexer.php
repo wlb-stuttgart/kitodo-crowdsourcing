@@ -176,8 +176,10 @@ class SolrIndexer
 
             $result['type_faceting'] = $process->getType();
             $result['state_faceting'] = $process->getState();
-            $result['campaign_faceting'] = $process->getCampaign()->getUid();
 
+            if ($process->getCampaign()) {
+                $result['campaign_faceting'] = $process->getCampaign()->getUid();
+            }
         } else {
             throw new \Exception('Metadata configuration missing');
         }
