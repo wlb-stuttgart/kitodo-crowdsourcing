@@ -8,19 +8,15 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
-use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
-use Wlb\Crowdsourcing\Services\ProcessImportService;
-use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 
 /**
  * Command to clear the solr index.
  */
-class ClearIndex extends Command
+class ClearIndex extends BaseCommand
 {
     /**
      * @param ProcessRepository $processRepository

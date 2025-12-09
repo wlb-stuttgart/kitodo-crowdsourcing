@@ -2,16 +2,14 @@
 
 namespace Wlb\Crowdsourcing\Common\Solr;
 
-use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use Wlb\Crowdsourcing\Common\XMLExtractor;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
 use Wlb\Crowdsourcing\Domain\Model\FrontendUser;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
-use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
+use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
 use Wlb\Crowdsourcing\Services\IndexFieldConfigReader;
-use Wlb\Crowdsourcing\Services\ProcessHistoryService;
 
 class SolrIndexer
 {
@@ -29,13 +27,11 @@ class SolrIndexer
         private readonly IndexFieldConfigReader $indexFieldConfigReader,
         private readonly XMLExtractor $xmlExtractor,
         private readonly MetadataConfigurationRepository $metadataConfigurationRepository,
-        private readonly ProcessRepository $processRepository,
-        private readonly ProcessHistoryService $processHistoryService
+        private readonly ProcessHistoryRepository $processHistoryRepository
     )
     {
         $this->config = $this->indexFieldConfigReader->getConfig();
     }
-
 
     /**
      * @param Typo3QuerySettings $querySettings
@@ -44,6 +40,7 @@ class SolrIndexer
     public function applyQuerySettings(Typo3QuerySettings $querySettings)
     {
         $this->metadataConfigurationRepository->setDefaultQuerySettings($querySettings);
+        $this->processHistoryRepository->setDefaultQuerySettings($querySettings);
     }
 
     /**
@@ -88,7 +85,7 @@ class SolrIndexer
             $doc->setField('feUser_tsi', $feUser->getUid());
         }
 
-        $feUserUids = $this->processHistoryService->findUserIds($process);
+        $feUserUids = $this->processHistoryRepository->findFeUserIdsByRecordIdentifier($process->getRecordIdentifier());
         if (is_array($feUserUids)) {
             $doc->setField('feUserHistory_tsi', $feUserUids);
         }
@@ -201,21 +198,6 @@ class SolrIndexer
 
         return $result;
     }
-
-    /*
-    public function updateProcessesPublicationState(Campaign $campaign): void
-    {
-        $batchSize   = 1;
-        $total = $this->processRepository->count(['campaign'=>$campaign->getUid()]);
-
-        for ($offset = 0; $offset < $total; $offset += $batchSize) {
-            $batch = $this->processRepository->batchByCampaign($campaign->getUid(), $batchSize, $offset);
-            foreach ($batch as $process) {
-                $this->indexDocument($process);
-            }
-        }
-    }
-    */
 
     /**
      * @return bool

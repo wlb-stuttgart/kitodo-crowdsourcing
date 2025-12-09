@@ -79,14 +79,4 @@ class ProcessHistoryService
         return $hasEdited;
 
     }
-
-    /**
-     * @param Process $process
-     * @return mixed[]
-     * @throws \Doctrine\DBAL\Exception
-     */
-    public function findUserIds(Process $process)
-    {
-        return $this->processHistoryRepository->findFeUserIdsByRecordIdentifier($process->getRecordIdentifier());
-    }
 }

@@ -15,7 +15,7 @@ use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 use Wlb\Crowdsourcing\Services\ProcessHistoryService;
 
-class CleanupStaleProcessesCommand extends Command
+class CleanupStaleProcessesCommand extends BaseCommand
 {
     protected static $defaultName = 'crowdsourcing:cleanup-stale-processes';
 
@@ -26,6 +26,10 @@ class CleanupStaleProcessesCommand extends Command
         private readonly ProcessHistoryService $processHistoryService
     ) {
         parent::__construct();
+        $querySettings = $this->getQuerySettings($this->getStoragePid());
+
+        $this->processRepository->setDefaultQuerySettings($querySettings);
+        $this->processHistoryRepository->setDefaultQuerySettings($querySettings);
     }
 
     protected function configure(): void

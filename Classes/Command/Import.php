@@ -8,19 +8,16 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
-use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 use Wlb\Crowdsourcing\Services\ProcessImportService;
-use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 
 /**
  * Command to import the meta data exported from Kitodo-Publication.
  */
-class Import extends Command
+class Import extends BaseCommand
 {
     /**
      * @param ProcessRepository $processRepository
@@ -37,6 +34,7 @@ class Import extends Command
         private readonly ProcessImportService $processImportService
     ) {
         parent::__construct();
+        $this->processImportService->setStoragePid($this->getStoragePid());
     }
 
     protected function configure(): void
@@ -53,15 +51,9 @@ class Import extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $storagePid = ExtensionConfigurationService::getInstance()->getConfigurationValue('storagePid');
-        if (!is_numeric($storagePid) || $storagePid <= 0) {
-            return Command::FAILURE;
-        }
-
         // TODO error logging.
         // TODO optimize exception handling.
         try {
-            $this->processImportService->setStoragePid(MathUtility::forceIntegerInRange($storagePid, 0));
             if ($this->processImportService->importProcessQueue()) {
                 return Command::SUCCESS;
             }
