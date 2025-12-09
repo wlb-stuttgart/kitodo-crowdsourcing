@@ -15,7 +15,9 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
+use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
+use Wlb\Crowdsourcing\Services\ProcessHistoryService;
 use Wlb\Crowdsourcing\Services\ProcessImportService;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 
@@ -35,7 +37,8 @@ class RebuildIndex extends Command
         private readonly PersistenceManager   $persistenceManager,
         private readonly ResourceFactory      $resourceFactory,
         private readonly SolrIndexer          $indexer,
-        private readonly ProcessRepository    $processRepository
+        private readonly ProcessRepository    $processRepository,
+        private readonly ProcessHistoryRepository $processHistoryRepository
     ) {
         parent::__construct();
     }
@@ -68,6 +71,7 @@ class RebuildIndex extends Command
             $querySettings->setStoragePageIds([$storagePid]);
 
             $this->processRepository->setDefaultQuerySettings($querySettings);
+            $this->processHistoryRepository->setDefaultQuerySettings($querySettings);
 
             if (method_exists($this->indexer, 'applyQuerySettings')) {
                 $this->indexer->applyQuerySettings($querySettings);

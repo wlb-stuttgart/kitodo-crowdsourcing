@@ -2,7 +2,9 @@
 
 namespace Wlb\Crowdsourcing\Services;
 
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use Wlb\Crowdsourcing\Common\Solr\SolrSearcher;
+use Wlb\Crowdsourcing\Domain\Model\FrontendUser;
 use Wlb\Crowdsourcing\Domain\Model\SearchResult;
 use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
@@ -24,6 +26,11 @@ class SearchService
      * @var array
      */
     protected $activeFacets = [];
+
+    /**
+     * @var FrontendUser
+     */
+    protected $feUser;
 
 
     public function __construct(
@@ -48,6 +55,18 @@ class SearchService
         $this->activeFacets = $activeFacets;
     }
 
+    public function setFeUser(FrontendUser $feUser): void
+    {
+        $this->feUser = $feUser;
+    }
+
+    /**
+     * @return FrontendUser|null
+     */
+    public function getFeUser(): FrontendUser|null
+    {
+        return $this->feUser;
+    }
 
     /**
      * @param $offset
@@ -61,7 +80,7 @@ class SearchService
 
         $results = $this->solrSearcher->searchWithFacets(
             $this->campaignRepository->getActiveCampaignUids(),
-            $query, $offset, $itemsPerPage, $this->facets, $this->activeFacets
+            $query, $offset, $itemsPerPage, $this->facets, $this->activeFacets, $this->getFeUser()
         );
 
         $documentIdentifiers = [];

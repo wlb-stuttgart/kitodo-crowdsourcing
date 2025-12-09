@@ -2,13 +2,16 @@
 
 namespace Wlb\Crowdsourcing\Common\Solr;
 
+use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use Wlb\Crowdsourcing\Common\XMLExtractor;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
+use Wlb\Crowdsourcing\Domain\Model\FrontendUser;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 use Wlb\Crowdsourcing\Services\IndexFieldConfigReader;
+use Wlb\Crowdsourcing\Services\ProcessHistoryService;
 
 class SolrIndexer
 {
@@ -26,7 +29,8 @@ class SolrIndexer
         private readonly IndexFieldConfigReader $indexFieldConfigReader,
         private readonly XMLExtractor $xmlExtractor,
         private readonly MetadataConfigurationRepository $metadataConfigurationRepository,
-        private readonly ProcessRepository $processRepository
+        private readonly ProcessRepository $processRepository,
+        private readonly ProcessHistoryService $processHistoryService
     )
     {
         $this->config = $this->indexFieldConfigReader->getConfig();
@@ -72,10 +76,21 @@ class SolrIndexer
         }
 
         $doc->setField('id', $identifier);
+        $doc->setField('uid', $process->getUid());
 
         $campaign = $process->getCampaign();
         if ($campaign instanceof Campaign) {
             $doc->setField('campaign_tsi', $campaign->getUid());
+        }
+
+        $feUser = $process->getFeUser();
+        if ($feUser instanceof FrontendUser) {
+            $doc->setField('feUser_tsi', $feUser->getUid());
+        }
+
+        $feUserUids = $this->processHistoryService->findUserIds($process);
+        if (is_array($feUserUids)) {
+            $doc->setField('feUserHistory_tsi', $feUserUids);
         }
 
         foreach ($indexData as $key => $value) {

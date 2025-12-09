@@ -2,6 +2,8 @@
 
 namespace Wlb\Crowdsourcing\Domain\Repository;
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
@@ -19,5 +21,37 @@ class ProcessHistoryRepository extends ProcessRepository
         $result = $query->execute();
         return $result->getFirst();
 
+    }
+
+    /**
+     * @param string $identifier
+     * @return mixed[]
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findFeUserIdsByRecordIdentifier(string $identifier): array
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_processhistory');
+
+        $queryBuilder = $connection->createQueryBuilder();
+        return $queryBuilder
+            ->select('fe_user')
+            ->from('tx_crowdsourcing_domain_model_processhistory')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'record_identifier',
+                    $queryBuilder->createNamedParameter($identifier
+                )
+            ))
+            ->andWhere(
+                $queryBuilder->expr()->neq(
+                    'fe_user',
+                    $queryBuilder->createNamedParameter(0)
+                )
+            )
+            ->groupBy('fe_user')
+            ->orderBy('fe_user', 'ASC')
+            ->executeQuery()
+            ->fetchFirstColumn();
     }
 }

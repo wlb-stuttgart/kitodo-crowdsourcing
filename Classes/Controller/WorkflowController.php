@@ -229,6 +229,7 @@ class WorkflowController extends ActionController
             $this->settings['searchPagination']['maximumNumberOfLinks'] : 10;
 
         $this->searchService->setQuery($query, $facetsFields, $activeFacets);
+        $this->searchService->setFeUser($feUser);
 
         $paginator = new SearchResultPaginator($this->searchService, $currentPage, $itemsPerPage);
         $pagination = new SlidingWindowPagination(
@@ -393,7 +394,8 @@ class WorkflowController extends ActionController
 
         $process->setFeUser($feUser);
         $this->processRepository->update($process);
-
+        
+        $this->solrIndexer->indexDocument($process);
 //        $this->persistenceManager->persistAll();
 
         $queryResult = $this->metadataConfigurationRepository->findAll();

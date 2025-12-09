@@ -24,13 +24,22 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         if (empty($identifiers)) {
             return [];
-        } else {
-            $query->matching(
-                $query->in('recordIdentifier', $identifiers)
-            );
-
-            return $query->execute();
         }
+
+        $query->matching(
+            $query->in('recordIdentifier', $identifiers)
+        );
+
+        $result = $query->execute();
+
+        $items = $result->toArray();
+
+        usort($items, function ($a, $b) use ($identifiers) {
+            return array_search($a->getRecordIdentifier(), $identifiers)
+                - array_search($b->getRecordIdentifier(), $identifiers);
+        });
+
+        return $items;
     }
 
     /**

@@ -4,6 +4,7 @@ namespace Wlb\Crowdsourcing\Common\Solr;
 
 use Solarium\Core\Query\Result\ResultInterface;
 use Wlb\Crowdsourcing\Common\IndexFields;
+use Wlb\Crowdsourcing\Domain\Model\FrontendUser;
 
 class SolrSearcher
 {
@@ -24,6 +25,7 @@ class SolrSearcher
      * @param int $rows
      * @param array $facetFields
      * @param array $activeFacets
+     * @param FrontendUser $currentUser
      * @return ResultInterface
      */
     public function searchWithFacets(
@@ -32,7 +34,8 @@ class SolrSearcher
         int $start = 0,
         int $rows = 50,
         array $facetFields = [],
-        array $activeFacets = []
+        array $activeFacets = [],
+        FrontendUser $currentUser = null
     ): ResultInterface
     {
         $query = $this->client->createSelect();
@@ -46,7 +49,16 @@ class SolrSearcher
         }
 
         $query->setQuery($queryString);
-        $query->addSort('id', $query::SORT_ASC);
+
+        $currentUserId = 0;
+        if ($currentUser instanceof FrontendUser) {
+            $currentUserId = $currentUser->getUid();
+        }
+
+        $query->addSort("query({!v='feUser_tsi:$currentUserId'})", $query::SORT_DESC);
+        $query->addSort("not(exists(feUser_tsi))", $query::SORT_DESC);
+        $query->addSort("termfreq(feUserHistory_tsi,$currentUserId)", $query::SORT_ASC);
+        $query->addSort("uid", $query::SORT_DESC);
 
         // Deliver only campaigns that are published.
         if (!empty($activeCampaigns)) {

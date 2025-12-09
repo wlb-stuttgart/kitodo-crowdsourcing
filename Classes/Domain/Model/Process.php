@@ -169,7 +169,10 @@ class Process extends AbstractEntity
      */
     public function getFeUser(): \Wlb\Crowdsourcing\Domain\Model\FrontendUser|null
     {
-        return $this->feUser;
+        if ($this->feUser instanceof \Wlb\Crowdsourcing\Domain\Model\FrontendUser) {
+            return $this->feUser;
+        }
+        return null;
     }
 
     /**
