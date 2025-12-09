@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
@@ -23,13 +24,19 @@ class CleanupStaleProcessesCommand extends BaseCommand
         private readonly ProcessRepository $processRepository,
         private readonly PersistenceManager $persistenceManager,
         private readonly ProcessHistoryRepository $processHistoryRepository,
-        private readonly ProcessHistoryService $processHistoryService
+        private readonly ProcessHistoryService $processHistoryService,
+        private readonly SolrIndexer $indexer,
     ) {
         parent::__construct();
+
         $querySettings = $this->getQuerySettings($this->getStoragePid());
 
         $this->processRepository->setDefaultQuerySettings($querySettings);
         $this->processHistoryRepository->setDefaultQuerySettings($querySettings);
+
+        if (method_exists($this->indexer, 'applyQuerySettings')) {
+           $this->indexer->applyQuerySettings($querySettings);
+        }
     }
 
     protected function configure(): void
@@ -182,6 +189,8 @@ class CleanupStaleProcessesCommand extends BaseCommand
             $this->processHistoryService->restoreFromArray($process, $data);
             $this->processRepository->update($process);
             $this->persistenceManager->persistAll();
+
+            $this->indexer->indexDocument($process);
 
             $cleanedCount++;
         }

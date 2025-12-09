@@ -55,6 +55,7 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         $query->matching(
             $query->logicalAnd(
+                $query->greaterThan('fe_user', 0),
                 $query->logicalNot($query->equals('fe_user', null)),
                 $query->lessThan('last_accessed', $cutoffTime->getTimestamp())
             )
