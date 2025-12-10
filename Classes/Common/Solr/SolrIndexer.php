@@ -75,21 +75,6 @@ class SolrIndexer
         $doc->setField('id', $identifier);
         $doc->setField('uid', $process->getUid());
 
-        $campaign = $process->getCampaign();
-        if ($campaign instanceof Campaign) {
-            $doc->setField('campaign_tsi', $campaign->getUid());
-        }
-
-        $feUser = $process->getFeUser();
-        if ($feUser instanceof FrontendUser) {
-            $doc->setField('feUser_tsi', $feUser->getUid());
-        }
-
-        $feUserUids = $this->processHistoryRepository->findFeUserIdsByRecordIdentifier($process->getRecordIdentifier());
-        if (is_array($feUserUids)) {
-            $doc->setField('feUserHistory_tsi', $feUserUids);
-        }
-
         foreach ($indexData as $key => $value) {
             $doc->setField($key, $value);
         }
@@ -191,6 +176,16 @@ class SolrIndexer
 
             if ($process->getCampaign()) {
                 $result['campaign_faceting'] = $process->getCampaign()->getUid();
+            }
+
+            $feUser = $process->getFeUser();
+            if ($feUser instanceof FrontendUser) {
+                $result['modifier_faceting'] = $feUser->getUid();
+            }
+
+            $feUserUids = $this->processHistoryRepository->findFeUserIdsByRecordIdentifier($process->getRecordIdentifier());
+            if (is_array($feUserUids)) {
+                $result['modifierHistory_faceting'] = $feUserUids;
             }
         } else {
             throw new \Exception('Metadata configuration missing');

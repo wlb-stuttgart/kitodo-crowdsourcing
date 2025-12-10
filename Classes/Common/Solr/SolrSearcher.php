@@ -55,15 +55,15 @@ class SolrSearcher
             $currentUserId = $currentUser->getUid();
         }
 
-        $query->addSort("query({!v='feUser_tsi:$currentUserId'})", $query::SORT_DESC);
-        $query->addSort("not(exists(feUser_tsi))", $query::SORT_DESC);
-        $query->addSort("termfreq(feUserHistory_tsi,$currentUserId)", $query::SORT_ASC);
+        $query->addSort("query({!v='modifier_faceting:$currentUserId'})", $query::SORT_DESC);
+        $query->addSort("query({!v='state_faceting:COMPLETED'})", $query::SORT_ASC);
+        $query->addSort("termfreq(modifierHistory_faceting,$currentUserId)", $query::SORT_ASC);
         $query->addSort("uid", $query::SORT_DESC);
 
         // Deliver only campaigns that are published.
         if (!empty($activeCampaigns)) {
             $filterQuery = $query->createFilterQuery('campaignFilter');
-            $filterQuery->setQuery('campaign_tsi:'.implode(' OR ', $activeCampaigns));
+            $filterQuery->setQuery('campaign_faceting:'.implode(' OR campaign_faceting:', $activeCampaigns));
             $query->addFilterQuery($filterQuery);
         } else {
             $emptyFilterQuery = $query->createFilterQuery('force_empty_result');
