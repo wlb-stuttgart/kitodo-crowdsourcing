@@ -55,11 +55,12 @@ class SolrSearcher
             $currentUserId = $currentUser->getUid();
         }
 
-        $query->addSort("query({!v='modifier_faceting:$currentUserId'})", $query::SORT_DESC);
-        $query->addSort("query({!v='state_faceting:COMPLETED'})", $query::SORT_ASC);
+        $query->addSort("query({!v='modifier_sorting:$currentUserId'})", $query::SORT_DESC);
+        $query->addSort("not(exists(modifier_sorting))", $query::SORT_DESC);
         $query->addSort("termfreq(modifierHistory_faceting,$currentUserId)", $query::SORT_ASC);
+        $query->addSort("if(query({!v='state_faceting:COMPLETED'}),1,0)", $query::SORT_ASC);
         $query->addSort("uid", $query::SORT_DESC);
-
+        
         // Deliver only campaigns that are published.
         if (!empty($activeCampaigns)) {
             $filterQuery = $query->createFilterQuery('campaignFilter');

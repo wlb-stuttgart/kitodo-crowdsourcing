@@ -180,7 +180,7 @@ class SolrIndexer
 
             $feUser = $process->getFeUser();
             if ($feUser instanceof FrontendUser) {
-                $result['modifier_faceting'] = $feUser->getUid();
+                $result['modifier_sorting'] = $feUser->getUid();
             }
 
             $feUserUids = $this->processHistoryRepository->findFeUserIdsByRecordIdentifier($process->getRecordIdentifier());
