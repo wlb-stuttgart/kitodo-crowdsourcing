@@ -8,7 +8,8 @@ class RulesetService
     
     public function __construct()
     {
-        $this->rulesetXml = simplexml_load_file('/var/www/html/public/fileadmin/crowd/ruleset_crowdsourcing_wlb.xml');
+        $rulesetPath = ExtensionConfigurationService::getInstance()->getConfigurationValue('rulesetPath');
+        $this->rulesetXml = simplexml_load_file($rulesetPath);
     }
 
     /**

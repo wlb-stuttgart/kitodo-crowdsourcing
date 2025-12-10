@@ -30,3 +30,6 @@ storagePid =
 
 # cat=Config/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.storage.reportMail
 reportMail =
+
+# cat=Ruleset/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.ruleset.rulesetPath
+rulesetPath =

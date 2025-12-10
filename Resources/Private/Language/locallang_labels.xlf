@@ -38,6 +38,9 @@
 			<trans-unit id="config.storage.reportMail">
 				<source>Mail adress for reporting messages</source>
 			</trans-unit>
+			<trans-unit id="config.storage.rulesetPath">
+				<source>Absolute path to the ruleset file</source>
+			</trans-unit>
 		</body>
   </file>
 </xliff>
