@@ -408,7 +408,7 @@ class WorkflowController extends ActionController
 
             $dbConfigArraySorted = $this->sortMetadataByTabs($dbConfigArray, $processType);
 
-            $this->view->assign('dbConfigTabSorted', $dbConfigArraySorted);
+            $this->view->assign('dbConfigTabSorted', $this->removeEmptyTabs($dbConfigArraySorted));
 
         } else {
             throw new \Exception('Metadata configuration missing');
@@ -525,7 +525,7 @@ class WorkflowController extends ActionController
 
             $dbConfigArraySorted = $this->sortMetadataByTabs($dbConfigArray, $processType);
 
-            $this->view->assign('dbConfigTabSorted', $dbConfigArraySorted);
+            $this->view->assign('dbConfigTabSorted', $this->removeEmptyTabs($dbConfigArraySorted));
 
         } else {
             throw new \Exception('Metadata configuration missing');
@@ -746,5 +746,27 @@ class WorkflowController extends ActionController
         // Reset user from history otherwise the process is blocked by the last edited user
         $process->resetFeUser();
         $this->persistenceManager->persistAll();
+    }
+
+    /**
+     * @param array $dbConfigArraySorted
+     * @return void
+     */
+    private function removeEmptyTabs($dbConfigArraySorted)
+    {
+        foreach ($dbConfigArraySorted as $typeName => $type) {
+            foreach ($type as $tabName => $tab) {
+                foreach ($tab as $metatdataKey => $metadata) {
+                    if (!$metadata['active']) {
+                        unset($dbConfigArraySorted[$typeName][$tabName][$metatdataKey]);
+                    }
+                }
+                if (empty($dbConfigArraySorted[$typeName][$tabName])) {
+                    unset($dbConfigArraySorted[$typeName][$tabName]);
+                }
+            }
+        }
+
+        return $dbConfigArraySorted;
     }
 }
