@@ -105,6 +105,18 @@
                             placeholder="Use as facet ( $firstname $lastname or $this)"/>
                 </div>
 
+                <div class="col-xs-6">
+                    <label for="meta-{metadataId}-options" class="form-label">Options</label>
+                    <f:form.select
+                            id="meta-{metadataId}-options"
+                            class="form-control"
+                            name="metadata[{docType}][{metadataId}][options]"
+                            placeholder="Test"
+                            options="{metadata.options}"
+                            selectAllByDefault="true"
+                            multiple="true"/>
+                </div>
+
                 <!-- Regulärer Ausdruck -->
                 <div class="col-xs-6">
                     <label for="meta-{metadataId}-validation" class="form-label">Validierung (HTML5)</label>
