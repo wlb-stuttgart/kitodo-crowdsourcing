@@ -5,6 +5,7 @@ namespace Wlb\Crowdsourcing\Common\Solr;
 use Solarium\Client;
 use Solarium\Core\Client\Adapter\Curl;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 
 class SolrClient
 {
@@ -55,13 +56,18 @@ class SolrClient
      */
     private function getSolrConfig()
     {
+        $host = ExtensionConfigurationService::getInstance()->getConfigurationValue('solrHost');
+        $port = ExtensionConfigurationService::getInstance()->getConfigurationValue('solrPort');
+        $path = ExtensionConfigurationService::getInstance()->getConfigurationValue('solrPath');
+        $core = ExtensionConfigurationService::getInstance()->getConfigurationValue('solrCore');
+
         $config = [
             'endpoint' => [
                 'solr' => [
-                    'host' => 'solr',
-                    'port' => '8983',
-                    'path' => '/',
-                    'core' => 'crowdCore0',
+                    'host' => $host,
+                    'port' => $port,
+                    'path' => $path,
+                    'core' => $core
                 ],
             ],
         ];
