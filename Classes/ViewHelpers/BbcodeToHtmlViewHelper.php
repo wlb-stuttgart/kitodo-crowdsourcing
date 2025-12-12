@@ -37,11 +37,15 @@ class BbcodeToHtmlViewHelper extends AbstractViewHelper
      */
     public function render(): string {
         $text = $this->arguments['text'] ?? $this->renderChildren();
-        $target = $this->arguments['target'] ?? '_blank';
+        $target = $this->arguments['target'] ?? '';
         $cssClass = $this->arguments['class'] ?? '';
 
         if (empty($text)) {
             return '';
+        }
+
+        if (empty($target)) {
+            return '_blank';
         }
 
         return self::convertBbcodeLinks($text, $target, $cssClass);
