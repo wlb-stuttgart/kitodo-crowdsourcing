@@ -45,7 +45,7 @@ class BbcodeToHtmlViewHelper extends AbstractViewHelper
         }
 
         if (empty($target)) {
-            return '_blank';
+            $target = '_blank';
         }
 
         return self::convertBbcodeLinks($text, $target, $cssClass);
