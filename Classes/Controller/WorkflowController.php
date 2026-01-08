@@ -599,6 +599,9 @@ class WorkflowController extends ActionController
             $actionTaken = 'save';
             $process->updateMetadata($trustedMetadata);
 
+            // Set process to next state
+            $process->setNextState();
+
             $processHistory = new ProcessHistory();
             $data = $process->toArray();
 
@@ -611,8 +614,6 @@ class WorkflowController extends ActionController
 
             // Remove user
             $process->resetFeUser();
-            // Set process to next state
-            $process->setNextState();
 
             // Check if process is finished
             // Move directory to exported directory
