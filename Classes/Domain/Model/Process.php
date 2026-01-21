@@ -379,6 +379,17 @@ class Process extends AbstractEntity
         $this->setTitleFromMetadata();
     }
 
+    public function getSignature()
+    {
+        $xml = simplexml_load_string($this->metadata);
+        $xml->registerXPathNamespace('kitodo', 'http://meta.kitodo.org/v1/');
+        $signature = $xml->xpath('*[@name="Signatur"]');
+        if (isset($signature[0])) {
+            return (string) $signature[0];
+        }
+        return '';
+    }
+
     public function toArray()
     {
         return [

@@ -205,10 +205,11 @@
                         <button id="nextBtn" class="btn btn-primary">Weiter</button>
                     </div>
                 </div>
+
                 <f:if condition="{reportMail}">
                     <f:then>
                         <div class="mt-3 mb-3 text-end">
-                            <a id="report" href="mailto:{reportMail}?subject=Report ID {process.recordIdentifier}"
+                            <a id="report" href="mailto:{reportMail}?subject=Report ID {process.recordIdentifier}, Signatur {process.signature}"
                                class="btn btn-secondary"><f:translate key="process.button.reportProblem" /></a>
                         </div>
                     </f:then>

@@ -171,6 +171,10 @@ class SolrIndexer
                 $result[$indexField] = $this->xmlExtractor->extractData($indexFieldConfig, $xml);
             }
 
+            if (!isset($result['signature_tsi'])) {
+                $result['signature_tsi'] = $process->getSignature();
+            }
+
             $result['type_faceting'] = $process->getType();
             $result['state_faceting'] = $process->getState();
 
