@@ -783,16 +783,20 @@ class WorkflowController extends ActionController
         $history = $this->processHistoryRepository->getProcessHistory($process->getRecordIdentifier());
 
         foreach ($history as $historyEntry) {
-
             $feUser = $historyEntry->getFeUser();
             if ($feUser instanceof FrontendUser) {
+                $username = '';
+                if ($feUser->isConsentPublishUsernameEdits()) {
+                    $username = $feUser->getUsername();
+                }
+
                 // The state in the history is the state after the correction,
                 // but the fe_user is the user who did the step before the correction
                 $index = array_search($historyEntry->getState(), Process::WORKFLOW_STATES);
                 if ($index !== false && $index > 0) {
                     $previousState = Process::WORKFLOW_STATES[$index - 1];
                     $stateReport[$previousState] = [
-                        'username' => $feUser->getUsername(),
+                        'username' => $username,
                         'progress' => 'finished'
                     ];
                 }

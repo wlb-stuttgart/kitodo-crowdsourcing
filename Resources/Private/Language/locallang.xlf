@@ -114,6 +114,18 @@
         <trans-unit id="process.state.COMPLETED">
             <source>Finished</source>
         </trans-unit>
+        <trans-unit id="process.editor.state.NEW">
+        	<source>1. Editor</source>
+        </trans-unit>
+        <trans-unit id="process.editor.state.CORRECTION">
+        	<source>2. Editor</source>
+        </trans-unit>
+        <trans-unit id="process.editor.state.FINAL_CORRECTION">
+        	<source>3. Editor</source>
+        </trans-unit>
+        <trans-unit id="process.editor.anonymous">
+        	<source>Anonymous</source>
+        </trans-unit>
         <trans-unit id="search.input.placeHolder">
             <source>Enter search term</source>
         </trans-unit>

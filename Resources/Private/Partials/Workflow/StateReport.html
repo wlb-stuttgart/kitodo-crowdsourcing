@@ -16,7 +16,8 @@
                     <f:if condition="{index.cycle} < 4 && {stateReportEntry.progress} == 'finished'}">
                         <li class="breadcrumb-item">
                             <f:if condition="{index.cycle} == 0"></f:if>
-                            <span class="editor-label">{index.cycle} Erfasser:</span> {f:if(condition:'!{stateReportEntry.username}', then:'Anonym', else:'{stateReportEntry.username}')}
+                            <span class="editor-label"><f:translate key="process.editor.state.{state}" />:</span>
+                            {f:if(condition:'!{stateReportEntry.username}', then:'{f:translate(key:\'process.editor.anonymous\')}', else:'{stateReportEntry.username}')}
                         </li>
                     </f:if>
                 </f:for>
