@@ -1,0 +1,28 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<section class="container-fluid mt-4">
+    <div class="status-bar">
+        <div class="row align-items-center">
+            <div class="col-md-5 d-flex gap-2">
+                <span class="state-badge badge-active">{process.state}</span>
+            </div>
+        </div>
+
+        <div style="--bs-breadcrumb-divider: '>';" aria-label="Vorherige Erfasser" class="mt-3">
+            <ol class="breadcrumb">
+                <f:for each="{stateReport}" as="stateReportEntry" key="state" iteration="index">
+                    <f:if condition="{index.cycle} < 4 && {stateReportEntry.progress} == 'finished'}">
+                        <li class="breadcrumb-item">
+                            <f:if condition="{index.cycle} == 0"></f:if>
+                            <span class="editor-label">{index.cycle} Erfasser:</span> {f:if(condition:'!{stateReportEntry.username}', then:'Anonym', else:'{stateReportEntry.username}')}
+                        </li>
+                    </f:if>
+                </f:for>
+            </ol>
+        </div>
+    </div>
+</section>
+
+</html>

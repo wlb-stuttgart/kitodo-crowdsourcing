@@ -54,4 +54,20 @@ class ProcessHistoryRepository extends ProcessRepository
             ->executeQuery()
             ->fetchFirstColumn();
     }
+
+    /**
+     * @param $process
+     * @return array|object[]|QueryResultInterface
+     * @throws InvalidQueryException
+     */
+    public function getProcessHistory($identifier)
+    {
+        $query = $this->createQuery();
+        $query->matching(
+            $query->equals('record_identifier', $identifier)
+        );
+        $query->setOrderings(['uid' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING]);
+        $result = $query->execute();
+        return $result;
+    }
 }

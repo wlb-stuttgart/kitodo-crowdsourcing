@@ -694,6 +694,61 @@ h1 {
 }
 
 
+/* status */
+.status-bar { background: white; border-bottom: 1px solid #dee2e6; padding: 10px 20px; }
+
+.status-bar .breadcrumb-item::before {
+    display: none !important;
+}
+
+.status-bar .breadcrumb-item {
+    padding-left: 0 !important;
+}
+
+.status-bar .breadcrumb-item:not(:last-child)::after {
+    content: var(--bs-breadcrumb-divider, "/");
+    margin: 0 .5rem;
+    color: var(--bs-breadcrumb-divider-color, #6c757d);
+}
+
+.status-bar .breadcrumb-item {
+    white-space: nowrap;
+}
+
+.editor-label {
+    color: #6c757d !important;
+}
+
+.state-badge {
+    display: inline-block;
+    padding: 0.35em 0.8em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 50rem;
+    text-decoration: none;
+}
+
+.badge-done {
+    background-color: #fff;
+    color: #198754;
+    border: 1px solid #198754;
+}
+
+.badge-active {
+    background-color: #0d6efd;
+    color: #fff;
+    border: 1px solid #0d6efd;
+}
+
+.badge-inactive {
+    background-color: #fff;
+    color: #adb5bd;
+    border: 1px solid #dee2e6;
+}
 
 /* Metadata form */
 

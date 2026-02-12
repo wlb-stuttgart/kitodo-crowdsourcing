@@ -20,6 +20,13 @@ class Process extends AbstractEntity
     const PROCESS_IMAGE_DEFAULT_DIRECTORY = 'max';
     const PROCESS_IMAGE_THUMB_DIRECTORY = 'thumbs';
 
+    const WORKFLOW_STATES = [
+        self::WORKFLOW_STATE_NEW,
+        self::WORKFLOW_STATE_CORRECTION,
+        self::WORKFLOW_STATE_FINAL_CORRECTION,
+        self::WORKFLOW_STATE_COMPLETED,
+    ];
+
     /**
      * @var string
      */

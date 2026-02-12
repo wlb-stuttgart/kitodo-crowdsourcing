@@ -422,6 +422,7 @@ class WorkflowController extends ActionController
         $this->view->assign("processImagesInfo", $process->getImageInfos());
         $this->view->assign('process', $process);
         $this->view->assign('formValues', $formValues);
+        $this->view->assign('stateReport', $this->getStateReport($process));
 
         $this->view->assign('reportMail', ExtensionConfigurationService::getInstance()->getConfigurationValue('reportMail'));
 
@@ -539,6 +540,7 @@ class WorkflowController extends ActionController
         $this->view->assign("processImagesInfo", $process->getImageInfos());
         $this->view->assign('process', $process);
         $this->view->assign('formValues', $formValues);
+        $this->view->assign('stateReport', $this->getStateReport($process));
 
         $this->view->assign('reportMail', ExtensionConfigurationService::getInstance()->getConfigurationValue('reportMail'));
 
@@ -770,4 +772,36 @@ class WorkflowController extends ActionController
 
         return $dbConfigArraySorted;
     }
+
+    private function getStateReport($process): array
+    {
+        $stateReport[Process::WORKFLOW_STATE_NEW] = ['username' => '', 'progress' => 'upcoming'];
+        $stateReport[Process::WORKFLOW_STATE_CORRECTION] = ['username' => '', 'progress' => 'upcoming'];
+        $stateReport[Process::WORKFLOW_STATE_FINAL_CORRECTION] = ['username' => '', 'progress' => 'upcoming'];
+        $stateReport[Process::WORKFLOW_STATE_COMPLETED] = ['username' => '', 'progress' => 'upcoming'];
+
+        $history = $this->processHistoryRepository->getProcessHistory($process->getRecordIdentifier());
+
+        foreach ($history as $historyEntry) {
+
+            $feUser = $historyEntry->getFeUser();
+            if ($feUser instanceof FrontendUser) {
+                // The state in the history is the state after the correction,
+                // but the fe_user is the user who did the step before the correction
+                $index = array_search($historyEntry->getState(), Process::WORKFLOW_STATES);
+                if ($index !== false && $index > 0) {
+                    $previousState = Process::WORKFLOW_STATES[$index - 1];
+                    $stateReport[$previousState] = [
+                        'username' => $feUser->getUsername(),
+                        'progress' => 'finished'
+                    ];
+                }
+            }
+        }
+
+        $stateReport[$process->getState()]['progress'] = 'current';
+
+        return $stateReport;
+    }
+
 }
