@@ -13,11 +13,13 @@
         <div>
             <ol class="breadcrumb">
                 <f:for each="{stateReport}" as="stateReportEntry" key="state" iteration="index">
-                    <f:if condition="{index.cycle} < 4 && {stateReportEntry.progress} != 'current'}">
-                        <li class="breadcrumb-item">
-                            <span class="editor-label"><f:translate key="process.editor.state.{state}" />:</span>
-                            {f:if(condition:'!{stateReportEntry.username}', then:'{f:translate(key:\'process.editor.anonymous\')}', else:'{stateReportEntry.username}')}
-                        </li>
+                    <f:if condition="{index.cycle} < 4">
+                        <f:if condition="{stateReportEntry.progress} != 'current' && {stateReportEntry.progress} != 'upcoming'">
+                            <li class="breadcrumb-item">
+                                <span class="editor-label"><f:translate key="process.editor.state.{state}" />:</span>
+                                {f:if(condition:'!{stateReportEntry.username}', then:'{f:translate(key:\'process.editor.anonymous\')}', else:'{stateReportEntry.username}')}
+                            </li>
+                        </f:if>
                     </f:if>
                 </f:for>
             </ol>
