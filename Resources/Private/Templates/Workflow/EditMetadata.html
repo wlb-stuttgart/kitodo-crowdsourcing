@@ -13,7 +13,7 @@
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col">
-            <div>
+            <div class="sticky-top">
                 <f:if condition="{processImagesInfo -> f:count()} > 1">
                     <f:then>
                         <f:form.button class="ol-prev-image btn btn-secondary mb-2 mt-2 p-3 fa-solid fa-arrow-left" type="button"></f:form.button>
@@ -39,7 +39,7 @@
                     </f:then>
                 </f:if>
 
-                <div id="map" class="map" data-sourcecount="0" style="width: 100%;height: 1000px;"></div>
+                <div id="map" class="map" data-sourcecount="0" style="width: 100%;height: calc(100vh - 100px);"></div>
 
                 <f:for each="{processImagesInfo}" as="imageInfo" iteration="index">
                     <div class="processimages" data-path="{imageInfo.image}" data-height="{imageInfo.height}" data-width="{imageInfo.width}"></div>
@@ -47,7 +47,7 @@
             </div>
         </div>
         <div class="col">
-            <nav>
+            <nav class="form-nav sticky-top">
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <f:for each="{dbConfigTabSorted.{process.type}}" as="tab" key="tabName" iteration="tabIterator">
                         <f:if condition="{tabIterator.isFirst}">

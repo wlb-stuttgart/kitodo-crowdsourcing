@@ -836,6 +836,9 @@ ul.facets li a:hover {
     margin-bottom: 10px;
 }
 
+.form-nav {
+  background-color: var(--color-background);
+}
 
 @media (max-width: 1076px) {
     #crowdsourcing .info-box-wrapper .col-md-4 {
