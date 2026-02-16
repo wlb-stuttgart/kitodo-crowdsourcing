@@ -13,9 +13,8 @@
         <div>
             <ol class="breadcrumb">
                 <f:for each="{stateReport}" as="stateReportEntry" key="state" iteration="index">
-                    <f:if condition="{index.cycle} < 4 && {stateReportEntry.progress} == 'finished'}">
+                    <f:if condition="{index.cycle} < 4 && {stateReportEntry.progress} != 'current'}">
                         <li class="breadcrumb-item">
-                            <f:if condition="{index.cycle} == 0"></f:if>
                             <span class="editor-label"><f:translate key="process.editor.state.{state}" />:</span>
                             {f:if(condition:'!{stateReportEntry.username}', then:'{f:translate(key:\'process.editor.anonymous\')}', else:'{stateReportEntry.username}')}
                         </li>
