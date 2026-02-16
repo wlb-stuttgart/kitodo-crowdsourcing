@@ -695,24 +695,30 @@ h1 {
 
 
 /* status */
-.status-bar { background: white; border-bottom: 1px solid #dee2e6; padding: 10px 20px; }
+.status-bar {
+    border-bottom: 1px solid #FFF;
+    padding: 10px 0px;
+    display: flex;
+    align-items: flex-start;
+}
 
 .status-bar .breadcrumb-item::before {
     display: none !important;
 }
 
-.status-bar .breadcrumb-item {
-    padding-left: 0 !important;
-}
-
 .status-bar .breadcrumb-item:not(:last-child)::after {
-    content: var(--bs-breadcrumb-divider, "/");
     margin: 0 .5rem;
     color: var(--bs-breadcrumb-divider-color, #6c757d);
 }
 
 .status-bar .breadcrumb-item {
     white-space: nowrap;
+    border: 1px solid #6c757d;
+    font-size: 0.75em;
+    border-radius: 50rem;
+    padding: 0.35em 0.8em;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .editor-label {
@@ -724,12 +730,13 @@ h1 {
     padding: 0.35em 0.8em;
     font-size: 0.75em;
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.5;
     text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 50rem;
     text-decoration: none;
+    margin-right: 0.5rem;
 }
 
 .badge-done {

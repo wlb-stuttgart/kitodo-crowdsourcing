@@ -6,11 +6,11 @@
     <div class="status-bar">
         <div class="row align-items-center">
             <div class="col-md-5 d-flex gap-2">
-                <span class="state-badge badge-active">{process.state}</span>
+                <span class="state-badge badge-active">{f:translate(key:'process.state.{process.state}')}</span>
             </div>
         </div>
 
-        <div style="--bs-breadcrumb-divider: '>';" aria-label="Vorherige Erfasser" class="mt-3">
+        <div>
             <ol class="breadcrumb">
                 <f:for each="{stateReport}" as="stateReportEntry" key="state" iteration="index">
                     <f:if condition="{index.cycle} < 4 && {stateReportEntry.progress} == 'finished'}">
