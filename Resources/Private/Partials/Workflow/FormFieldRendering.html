@@ -93,7 +93,7 @@
     <f:case value="select">
         <f:form.select
                 id="{f:if(condition: '{child} == 1', then: 'meta-{metadataChildId}', else: 'meta-{metadataId}')}"
-                class="form-control processForm"
+                class="form-control form-select processForm"
                 name="{f:if(condition: '{child} == 1', then: 'metadata[{metadataId}][{i}][{metadataChildId}][]', else: 'metadata[{metadataId}][]')}"
                 value="{value}"
                 placeholder="Test"
