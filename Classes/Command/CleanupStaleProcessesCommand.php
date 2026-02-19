@@ -182,11 +182,12 @@ class CleanupStaleProcessesCommand extends BaseCommand
 
         /** @var Process $process */
         foreach ($staleProcesses as $process) {
-            $process->resetFeUser();
             $lastHistoryProcess = $this->processHistoryRepository->getLastHistory($process->getRecordIdentifier());
 
             $data = $lastHistoryProcess->toArray();
+
             $this->processHistoryService->restoreFromArray($process, $data);
+            $process->resetFeUser();
             $this->processRepository->update($process);
             $this->persistenceManager->persistAll();
 
