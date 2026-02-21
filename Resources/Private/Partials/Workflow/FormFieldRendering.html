@@ -44,7 +44,10 @@
                 required="{fieldRequired}"
                 pattern="{metadata.validation}"
                 data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"
-                data-max="{fieldMaxOccurs}"/>
+                data-max="{fieldMaxOccurs}"
+                data-lobid-field="{metadataChild.lobidField}"
+                data-lobid-enabled="{metadata.lobidEnabled}"
+                data-lobid-filter="{metadata.lobidFilter}"/>
     </f:case>
     <f:case value="textarea">
         <f:form.textarea

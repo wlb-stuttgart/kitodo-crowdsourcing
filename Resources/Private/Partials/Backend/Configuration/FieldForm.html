@@ -143,6 +143,28 @@
     </f:if>
 
     <f:if condition="{metadata.children}">
+        <div class="row mb-2 align-items-end">
+            <div class="col-md-3">
+                <div class="form-check form-switch mt-4">
+                    <f:form.checkbox
+                            id="meta-{metadataId}-lobidEnabled"
+                            class="form-check-input"
+                            name="metadata[{docType}][{metadataId}][lobidEnabled]"
+                            value="1"
+                            checked="{metadata.lobidEnabled}" />
+                    <label class="form-check-label" for="meta-{metadataId}-lobidEnabled">lobid Autovervollständigung aktivieren</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="meta-{metadataId}-lobidFilter" class="form-label">lobid Filter</label>
+                <f:form.textfield
+                        id="meta-{metadataId}-lobidFilter"
+                        class="form-control"
+                        name="metadata[{docType}][{metadataId}][lobidFilter]"
+                        value="{metadata.lobidFilter}"
+                        placeholder="z.B. type:Person" />
+            </div>
+        </div>
         <h4>Untergeordnete Metadatenkonfiguration</h4>
         <div class="accordion mb-2" id="metadataChildAccordion">
             <f:for each="{metadata.children}" as="metadataChild" key="metadataChildId">

@@ -113,6 +113,16 @@
                             value="{metadataChild.helptext}"
                             placeholder="Hilfetext - URLs als BBCode [url=http://example.com]Link Text[/url]" />
                 </div>
+
+                <div class="col-xs-6">
+                    <label for="meta-{metadataId}-{metadataChildId}-lobidField" class="form-label">lobid Feldname</label>
+                    <f:form.textfield
+                            id="meta-{metadataId}-{metadataChildId}-lobidField"
+                            class="form-control"
+                            name="metadata[{docType}][{metadataId}][children][{metadataChildId}][lobidField]"
+                            value="{metadataChild.lobidField}"
+                            placeholder="z.B. preferredName oder preferredNameEntityForThePerson->forename" />
+                </div>
             </f:then>
         </f:if>
     </div>
