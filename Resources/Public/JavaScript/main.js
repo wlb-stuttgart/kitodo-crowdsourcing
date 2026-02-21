@@ -29,6 +29,8 @@ $( document ).ready(function() {
 
     initDashbord();
 
+    initLobidAutocomplete();
+
 });
 
 function validateTabs() {
@@ -683,6 +685,208 @@ function initDashbord() {
     });
 
 
+}
+
+function initLobidAutocomplete() {
+    $('input[data-lobid-field]').each(function () {
+        var $input = $(this);
+        var lobidField = $input.data('lobid-field');
+        var lobidEnabled = $input.data('lobid-enabled');
+        var lobidFilter = $input.data('lobid-filter') || '';
+
+        if (!lobidField || !lobidEnabled) {
+            return;
+        }
+
+        // Wrap the input so the dropdown can be positioned relative to it
+        $input.wrap('<div class="lobid-input-wrapper"></div>');
+        var $wrapper = $input.parent();
+
+        var $dropdown = $('<ul class="lobid-autocomplete"></ul>').hide();
+        $wrapper.append($dropdown);
+
+        var debounceTimer = null;
+        var activeIndex = -1;
+
+        $input.on('input', function () {
+            var query = $(this).val().trim();
+            clearTimeout(debounceTimer);
+            activeIndex = -1;
+
+            if (query.length < 2) {
+                $dropdown.hide().empty();
+                return;
+            }
+
+            debounceTimer = setTimeout(function () {
+                lobidSearch(query, lobidField, lobidFilter, $dropdown, $input);
+            }, 300);
+        });
+
+        $input.on('keydown', function (e) {
+            var $items = $dropdown.find('li');
+            if (!$items.length) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = Math.min(activeIndex + 1, $items.length - 1);
+                $items.removeClass('lobid-active').eq(activeIndex).addClass('lobid-active');
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = Math.max(activeIndex - 1, 0);
+                $items.removeClass('lobid-active').eq(activeIndex).addClass('lobid-active');
+            } else if (e.key === 'Enter') {
+                var $active = $items.filter('.lobid-active');
+                if ($active.length) {
+                    e.preventDefault();
+                    $input.val($active.data('lobid-value'));
+                    lobidFillSiblingFields($active.data('lobid-entity'), $input);
+                    $dropdown.hide().empty();
+                    activeIndex = -1;
+                }
+            } else if (e.key === 'Escape') {
+                $dropdown.hide().empty();
+                activeIndex = -1;
+            }
+        });
+
+        $input.on('blur', function () {
+            setTimeout(function () { $dropdown.hide(); }, 200);
+        });
+
+        $input.on('focus', function () {
+            if ($dropdown.children().length > 0) {
+                $dropdown.show();
+            }
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('.lobid-input-wrapper').length) {
+            $('.lobid-autocomplete').hide();
+        }
+    });
+}
+
+function lobidFillSiblingFields(entity, $input) {
+    if (!entity) return;
+
+    $input.closest('.child-group').find('.child-metadata-field').each(function () {
+        var $siblingInput = $(this).find('input[data-lobid-field]').first();
+        if (!$siblingInput.length || $siblingInput[0] === $input[0]) return;
+
+        var siblingField = $siblingInput.data('lobid-field');
+        if (siblingField) {
+            $siblingInput.val(lobidExtractField(entity, siblingField, ''));
+        }
+    });
+}
+
+function lobidSearch(query, lobidField, lobidFilter, $dropdown, $input) {
+    var params = { q: query, format: 'json', size: 10 };
+    if (lobidFilter) {
+        params.filter = lobidFilter;
+    }
+
+    $.getJSON(
+        'https://lobid.org/gnd/search',
+        params,
+        function (data) {
+            $dropdown.empty();
+
+            if (!data.member || data.member.length === 0) {
+                $dropdown.hide();
+                return;
+            }
+
+            data.member.forEach(function (entity) {
+                var displayName = entity.preferredName || '';
+                var fieldValue = lobidExtractField(entity, lobidField, displayName);
+                var subline = lobidBuildSubline(entity);
+
+                var $item = $('<li></li>')
+                    .data('lobid-value', fieldValue)
+                    .data('lobid-entity', entity)
+                    .on('mousedown', function (e) {
+                        e.preventDefault();
+                        $input.val(fieldValue);
+                        lobidFillSiblingFields(entity, $input);
+                        $dropdown.hide().empty();
+                    });
+
+                $item.append($('<span></span>').text(displayName));
+                if (subline) {
+                    $item.append($('<small></small>').text(subline));
+                }
+
+                $dropdown.append($item);
+            });
+
+            $dropdown.show();
+        }
+    ).fail(function () {
+        $dropdown.hide();
+    });
+}
+
+function lobidExtractField(entity, fieldName, fallback) {
+    if (!fieldName) return fallback;
+
+    // Support nested field access with "->" notation, e.g. "preferredNameEntityForThePerson->forename"
+    var parts = fieldName.split('->').map(function (p) { return p.trim(); });
+    var current = entity;
+
+    for (var i = 0; i < parts.length; i++) {
+        if (current === null || current === undefined) return fallback;
+
+        // If current level is an array, descend into the first element
+        if (Array.isArray(current)) {
+            current = current[0];
+            if (current === null || current === undefined) return fallback;
+        }
+
+        if (typeof current !== 'object') return fallback;
+
+        current = current[parts[i]];
+    }
+
+    if (current === undefined || current === null) return fallback;
+
+    // Leaf is an array – take first element
+    if (Array.isArray(current)) {
+        current = current[0];
+        if (current === null || current === undefined) return fallback;
+    }
+
+    // Leaf is an object – prefer label, then id
+    if (typeof current === 'object' && current !== null) {
+        return current.label || current.id || fallback;
+    }
+
+    return String(current);
+}
+
+function lobidBuildSubline(entity) {
+    var parts = [];
+
+    if (entity.dateOfBirth) {
+        var dates = Array.isArray(entity.dateOfBirth) ? entity.dateOfBirth[0] : entity.dateOfBirth;
+        if (entity.dateOfDeath) {
+            var death = Array.isArray(entity.dateOfDeath) ? entity.dateOfDeath[0] : entity.dateOfDeath;
+            dates += ' \u2013 ' + death;
+        }
+        parts.push(dates);
+    }
+
+    if (entity.professionOrOccupation && entity.professionOrOccupation.length > 0) {
+        parts.push(entity.professionOrOccupation[0].label);
+    } else if (entity.type && Array.isArray(entity.type)) {
+        var type = entity.type.find(function (t) { return t !== 'AuthorityResource'; });
+        if (type) parts.push(type);
+    }
+
+    return parts.join(' \u00b7 ');
 }
 
 
