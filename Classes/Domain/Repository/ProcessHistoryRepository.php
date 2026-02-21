@@ -24,6 +24,72 @@ class ProcessHistoryRepository extends ProcessRepository
     }
 
     /**
+     * Returns the fe_user uid and edit count of the user who has edited the most processes overall.
+     *
+     * @return array{fe_user: int, edit_count: int}|null
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findMostActiveFeUserAllTime(): ?array
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_processhistory');
+
+        $queryBuilder = $connection->createQueryBuilder();
+        $row = $queryBuilder
+            ->select('fe_user')
+            ->addSelectLiteral('COUNT(*) AS edit_count')
+            ->from('tx_crowdsourcing_domain_model_processhistory')
+            ->where(
+                $queryBuilder->expr()->neq('fe_user', $queryBuilder->createNamedParameter(0, \Doctrine\DBAL\ParameterType::INTEGER))
+            )
+            ->groupBy('fe_user')
+            ->orderBy('edit_count', 'DESC')
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchAssociative();
+
+        return $row ?: null;
+    }
+
+    /**
+     * Returns the fe_user uid and edit count of the user who has edited the most processes in the previous calendar month.
+     *
+     * @return array{fe_user: int, edit_count: int}|null
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findMostActiveFeUserLastMonth(): ?array
+    {
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $startOfLastMonth = $now->modify('first day of last month')->setTime(0, 0, 0);
+        $startOfThisMonth = $now->modify('first day of this month')->setTime(0, 0, 0);
+
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_processhistory');
+
+        $queryBuilder = $connection->createQueryBuilder();
+        $row = $queryBuilder
+            ->select('fe_user')
+            ->addSelectLiteral('COUNT(*) AS edit_count')
+            ->from('tx_crowdsourcing_domain_model_processhistory')
+            ->where(
+                $queryBuilder->expr()->neq('fe_user', $queryBuilder->createNamedParameter(0, \Doctrine\DBAL\ParameterType::INTEGER))
+            )
+            ->andWhere(
+                $queryBuilder->expr()->gte('crdate', $queryBuilder->createNamedParameter($startOfLastMonth->getTimestamp(), \Doctrine\DBAL\ParameterType::INTEGER))
+            )
+            ->andWhere(
+                $queryBuilder->expr()->lt('crdate', $queryBuilder->createNamedParameter($startOfThisMonth->getTimestamp(), \Doctrine\DBAL\ParameterType::INTEGER))
+            )
+            ->groupBy('fe_user')
+            ->orderBy('edit_count', 'DESC')
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchAssociative();
+
+        return $row ?: null;
+    }
+
+    /**
      * @param string $identifier
      * @return mixed[]
      * @throws \Doctrine\DBAL\Exception

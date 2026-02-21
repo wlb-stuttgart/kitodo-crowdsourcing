@@ -7,12 +7,14 @@ use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use Wlb\Crowdsourcing\Domain\Model\ClickStatistic;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\ClickStatisticRepository;
+use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 
 class StatisticService
 {
     public function __construct(
         private readonly ProcessRepository $processRepository,
+        private readonly ProcessHistoryRepository $processHistoryRepository,
         private readonly ClickStatisticRepository $clickStatisticRepository,
         private readonly PersistenceManager $persistenceManager
     ) {
@@ -44,6 +46,26 @@ class StatisticService
         $statisticsArray['clicksByDate'] = $this->clickStatisticRepository->getClickSummaryByDate();
 
         return $statisticsArray;
+    }
+
+    /**
+     * Gibt den Frontend-User zurück, der insgesamt die meisten Prozesse bearbeitet hat.
+     *
+     * @return array{fe_user: int, edit_count: int}|null
+     */
+    public function getMostActiveUserAllTime(): ?array
+    {
+        return $this->processHistoryRepository->findMostActiveFeUserAllTime();
+    }
+
+    /**
+     * Gibt den Frontend-User zurück, der im letzten Kalendermonat die meisten Prozesse bearbeitet hat.
+     *
+     * @return array{fe_user: int, edit_count: int}|null
+     */
+    public function getMostActiveUserLastMonth(): ?array
+    {
+        return $this->processHistoryRepository->findMostActiveFeUserLastMonth();
     }
 
     /**
