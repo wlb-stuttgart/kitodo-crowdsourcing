@@ -83,8 +83,9 @@
                             <f:for each="{tab}" as="metadata" key="metadataId">
                                 <f:if condition="{metadata.active}">
                                     <div id="{metadataId}" class="form-group metadata-group metadatafield-{metadataId} pb-4 {f:if(condition: '{metadata.children}', then: 'group-with-children')}">
+
                                         <label for="meta-{metadataId}">
-                                            {metadata.label} ({metadata.minOccurs} / {metadata.maxOccurs})
+                                            {metadata.label} {f:if(condition='{metadata.minOccurs}', then: ' *')}
                                         </label>
 
                                         <f:variable name="maxOccurs">{metadata.maxOccurs - 1}</f:variable>
@@ -122,7 +123,7 @@
                                                             <f:for each="{metadata.children}" as="metadataChild" key="metadataChildId">
                                                                 <div class="child-metadata-field">
                                                                     <label for="meta-{metadataChildId}">
-                                                                        {metadataChild.label} ({metadataChild.minOccurs} / {metadataChild.maxOccurs})
+                                                                        {metadataChild.label} {f:if(condition='{metadataChild.minOccurs}', then: ' *')}
                                                                     </label>
                                                                     <f:variable name="child">1</f:variable>
                                                                     <f:variable name="maxOccurs">{metadataChild.maxOccurs - 1}</f:variable>
@@ -202,6 +203,7 @@
                     </f:for>
                 </div>
                 <div>
+                    Mit * gekennzeichnete Felder sind Pflichtfelder.
                     <div class="mt-3 mb-3">
                         <button id="prevBtn" class="btn btn-secondary">Zurück</button>
                         <button id="nextBtn" class="btn btn-primary">Weiter</button>
