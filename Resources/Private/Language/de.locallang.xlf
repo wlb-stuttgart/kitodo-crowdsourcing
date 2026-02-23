@@ -31,6 +31,18 @@
 			<source>Report a problem</source>
 			<target>Problem melden</target>
 		</trans-unit>
+		<trans-unit id="process.button.finishEditing">
+			<source>Finish Editing</source>
+			<target>Bearbeitung abschließen</target>
+		</trans-unit>
+		<trans-unit id="process.button.saveDraft">
+			<source>Save Draft</source>
+			<target>Zwischenspeichern</target>
+		</trans-unit>
+		<trans-unit id="process.button.discardChanges">
+			<source>Discard Changes</source>
+			<target>Bearbeitung verwerfen</target>
+		</trans-unit>
         <trans-unit id="error_notunique_global">
              <source>The %1$s is not unique</source>
             <target>Il campo %1$s non è univoco</target>

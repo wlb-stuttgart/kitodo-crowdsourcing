@@ -218,9 +218,16 @@
                 </f:if>
 
                 <div>
-                    <f:form.submit class="btn btn-success edit-submit-btn" name="save" value="Bearbeitung abschließen" />
-                    <f:form.submit class="btn btn-secondary edit-submit-btn" name="cache" value="Zwischenspeichern" />
-                    <f:form.submit class="btn btn-warning abortEdit edit-submit-btn" name="abort" value="Bearbeitung abbrechen" />
+                    <f:form.submit class="btn btn-success edit-submit-btn"
+                                   name="save"
+                                   value="{f:translate(key='process.button.finishEditing')}" />
+                    <f:form.submit class="btn btn-secondary edit-submit-btn"
+                                   name="cache"
+                                   value="{f:translate(key='process.button.saveDraft')}" />
+                    <f:form.submit class="btn btn-warning abortEdit edit-submit-btn"
+                                   name="abort"
+                                   value="{f:translate(key='process.button.discardChanges')}"
+                    />
                 </div>
             </f:form>
         </div>

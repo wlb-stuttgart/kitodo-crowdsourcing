@@ -23,6 +23,15 @@
 		<trans-unit id="process.button.reportProblem">
 			<source>Report a problem</source>
 		</trans-unit>
+		<trans-unit id="process.button.finishEditing">
+			<source>Finish Editing</source>
+		</trans-unit>
+		<trans-unit id="process.button.saveDraft">
+			<source>Save Draft</source>
+		</trans-unit>
+		<trans-unit id="process.button.discardChanges">
+			<source>Discard Changes</source>
+		</trans-unit>
         <trans-unit id="landingpage.header">
             <source>Protest sichtbar machen</source>
             <target>Protest sichtbar machen</target>
