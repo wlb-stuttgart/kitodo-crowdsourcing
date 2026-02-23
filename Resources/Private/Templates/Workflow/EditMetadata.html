@@ -96,9 +96,11 @@
                                                         <f:if condition="{i} >= {metadata.minOccurs}">
                                                             <f:then>
                                                                 <f:render partial="Workflow/FormFieldRendering" arguments="{_all}"/>
-                                                                <div class="input-group-text deleteField" style="cursor: pointer;">
-                                                                    <span class="fa-solid fa-trash"></span>
-                                                                </div>
+                                                                <f:if condition="{metadata.inputtype} != 'checkbox'">
+                                                                    <div class="input-group-text deleteField" style="cursor: pointer;">
+                                                                        <span class="fa-solid fa-trash"></span>
+                                                                    </div>
+                                                                </f:if>
                                                             </f:then>
                                                             <f:else>
                                                                 <f:variable name="required">1</f:variable>
@@ -156,7 +158,8 @@
                                                                     <f:if condition="{metadataChild.minOccurs} < {metadataChild.maxOccurs}">
                                                                         <f:then>
                                                                             <div style="display: block;">
-                                                                                <f:form.button class="addFormGroupField btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"
+                                                                                <f:form.button class="
+                                                                                addFormGroupField btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"
                                                                                                style="display: {f:if(condition: '{metadataChild.maxOccurs} > 1', then: 'block', else: 'none')};">
                                                                                 </f:form.button>
                                                                             </div>
@@ -175,11 +178,13 @@
                                             <f:then>
                                                 <f:if condition="!{metadata.children}">
                                                     <f:then>
-                                                        <div style="display: block;">
-                                                            <f:form.button class="addFormField btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"
-                                                                           style="display: {f:if(condition: '{metadataChild.maxOccurs} > 1', then: 'block', else: 'none')};">
-                                                            </f:form.button>
-                                                        </div>
+                                                        <f:if condition="{metadata.inputtype} != 'checkbox'">
+                                                            <div style="display: block;">
+                                                                <f:form.button class="addFormField btn btn-primary mb-2 mt-2 fa-solid fa-plus" type="button"
+                                                                               style="display: {f:if(condition: '{metadata.maxOccurs} > 1', then: 'block', else: 'none')};">
+                                                                </f:form.button>
+                                                            </div>
+                                                        </f:if>
                                                     </f:then>
                                                     <f:else>
                                                         <div style="display: block;">

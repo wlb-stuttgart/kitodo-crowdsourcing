@@ -109,20 +109,21 @@
                 </f:else>
             </f:if>
             <f:form.select.option value=""></f:form.select.option>
-            <f:for each="{options}" as="option" key="key" iteration="iteration">
-                <f:form.select.option value="{option}">
-                    <f:if condition="{child} == 1">
-                        <f:then>
-                            {rulesetDefinitions.{metadataChildId}.options.{option}}
-                        </f:then>
-                        <f:else>
-                            {rulesetDefinitions.{metadataId}.options.{option}}
-                        </f:else>
-                    </f:if>
+            <f:if condition="{options}">
+                <f:for each="{options}" as="option" key="key" iteration="iteration">
+                    <f:form.select.option value="{option}">
+                        <f:if condition="{child} == 1">
+                            <f:then>
+                                {rulesetDefinitions.{metadataChildId}.options.{option}}
+                            </f:then>
+                            <f:else>
+                                {rulesetDefinitions.{metadataId}.options.{option}}
+                            </f:else>
+                        </f:if>
 
-                </f:form.select.option>
-            </f:for>
-
+                    </f:form.select.option>
+                </f:for>
+            </f:if>
         </f:form.select>
     </f:case>
 </f:switch>

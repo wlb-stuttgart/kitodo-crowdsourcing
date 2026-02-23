@@ -216,6 +216,12 @@ function clickEvents() {
         }
     });
 
+    $('textarea.processForm:not([required]):not([data-required="1"])').each(function () {
+        if ($(this).val() === '' && $(this).data('max') !== 1) {
+            $(this).parent().hide();
+        }
+    });
+
     $('select.processForm:not([required]):not([data-required="1"])').each(function () {
         if ($(this).val() === '' && $(this).data('max') !== 1) {
             $(this).parent().hide();
