@@ -607,9 +607,6 @@ class WorkflowController extends ActionController
             $actionTaken = 'save';
             $process->updateMetadata($trustedMetadata);
 
-            // Set process to next state
-            $process->setNextState();
-
             $processHistory = new ProcessHistory();
             $data = $process->toArray();
 
@@ -622,6 +619,8 @@ class WorkflowController extends ActionController
 
             // Remove user
             $process->resetFeUser();
+            // Set process to next state
+            $process->setNextState();
 
             // Check if process is finished
             // Move directory to exported directory
@@ -760,8 +759,11 @@ class WorkflowController extends ActionController
         $lastHistoryProcess = $this->processHistoryRepository->getLastHistory($process->getRecordIdentifier());
         $data = $lastHistoryProcess->toArray();
         $this->processHistoryService->restoreFromArray($process, $data);
+        // The current state of a process is one state after the state of the last history entry.
+        $process->setNextState();
         // Reset user from history otherwise the process is blocked by the last edited user
         $process->resetFeUser();
+
         $this->persistenceManager->persistAll();
     }
 
@@ -792,7 +794,6 @@ class WorkflowController extends ActionController
         $stateReport[Process::WORKFLOW_STATE_NEW] = ['username' => '', 'progress' => 'upcoming'];
         $stateReport[Process::WORKFLOW_STATE_CORRECTION] = ['username' => '', 'progress' => 'upcoming'];
         $stateReport[Process::WORKFLOW_STATE_FINAL_CORRECTION] = ['username' => '', 'progress' => 'upcoming'];
-        $stateReport[Process::WORKFLOW_STATE_COMPLETED] = ['username' => '', 'progress' => 'upcoming'];
 
         $history = $this->processHistoryRepository->getProcessHistory($process->getRecordIdentifier());
 
@@ -804,12 +805,10 @@ class WorkflowController extends ActionController
                     $username = $feUser->getUsername();
                 }
 
-                // The state in the history is the state after the correction,
-                // but the fe_user is the user who did the step before the correction
                 $index = array_search($historyEntry->getState(), Process::WORKFLOW_STATES);
                 if ($index !== false && $index > 0) {
-                    $previousState = Process::WORKFLOW_STATES[$index - 1];
-                    $stateReport[$previousState] = [
+                    $state = Process::WORKFLOW_STATES[$index];
+                    $stateReport[$state] = [
                         'username' => $username,
                         'progress' => 'finished'
                     ];

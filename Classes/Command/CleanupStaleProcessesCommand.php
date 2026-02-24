@@ -187,6 +187,8 @@ class CleanupStaleProcessesCommand extends BaseCommand
             $data = $lastHistoryProcess->toArray();
 
             $this->processHistoryService->restoreFromArray($process, $data);
+            // The current state of a process is one state after the state of the last history entry.
+            $process->setNextState();
             $process->resetFeUser();
             $this->processRepository->update($process);
             $this->persistenceManager->persistAll();

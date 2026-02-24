@@ -11,6 +11,7 @@ use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 
 class Process extends AbstractEntity
 {
+    const WORKFLOW_STATE_INITIAL = 'INITIAL';
     const WORKFLOW_STATE_NEW = 'NEW';
     const WORKFLOW_STATE_CORRECTION = 'CORRECTION';
     const WORKFLOW_STATE_FINAL_CORRECTION = 'FINAL_CORRECTION';
@@ -21,6 +22,7 @@ class Process extends AbstractEntity
     const PROCESS_IMAGE_THUMB_DIRECTORY = 'thumbs';
 
     const WORKFLOW_STATES = [
+        self::WORKFLOW_STATE_INITIAL,
         self::WORKFLOW_STATE_NEW,
         self::WORKFLOW_STATE_CORRECTION,
         self::WORKFLOW_STATE_FINAL_CORRECTION,
@@ -152,7 +154,9 @@ class Process extends AbstractEntity
 
     public function setNextState(): void
     {
-        if ($this->state === self::WORKFLOW_STATE_NEW) {
+        if ($this->state === self::WORKFLOW_STATE_INITIAL) {
+            $this->state = self::WORKFLOW_STATE_NEW;
+        } else if ($this->state === self::WORKFLOW_STATE_NEW) {
             $this->state = self::WORKFLOW_STATE_CORRECTION;
         } else if ($this->state === self::WORKFLOW_STATE_CORRECTION) {
             $this->state = self::WORKFLOW_STATE_FINAL_CORRECTION;

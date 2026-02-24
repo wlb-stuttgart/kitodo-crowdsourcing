@@ -210,7 +210,8 @@ class ProcessImportService
                 $processHistory->setPid($this->storagePid);
                 $processHistory->setRecordIdentifier($identifier);
                 $processHistory->setMetadata($xmlData->saveXML());
-                $processHistory->setState(Process::WORKFLOW_STATE_NEW);
+                // The state in the history must be the state before the state NEW (starting state of a process)
+                $processHistory->setState(Process::WORKFLOW_STATE_INITIAL);
                 $processHistory->setImages($imageNames);
                 $processHistory->setType($typeNodes->item(0)->nodeValue);
                 $this->processHistoryRepository->add($processHistory);
