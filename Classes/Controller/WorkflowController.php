@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Pagination\SlidingWindowPagination;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Http\ForwardResponse;
@@ -36,6 +37,9 @@ use Wlb\Crowdsourcing\Services\ProcessImportService;
 use Wlb\Crowdsourcing\Services\RulesetService;
 use Wlb\Crowdsourcing\Services\SearchService;
 use Wlb\Crowdsourcing\Services\StatisticService;
+use TYPO3\CMS\Core\Http\ImmediateResponseException;
+use TYPO3\CMS\Core\Http\RedirectResponse;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 
 class WorkflowController extends ActionController
 {
@@ -72,6 +76,24 @@ class WorkflowController extends ActionController
             $this->actionMethodName,
             $this->request->getAttribute('originalRequest') ?? $this->request
         );
+
+        $unprotectedActions = [
+            'dashboardAction',
+            'landingPageAction'
+        ];
+
+        if (!in_array($this->actionMethodName, $unprotectedActions, true) &&
+            !$this->accessControlService->isCrowdsourcingUser()
+        ) {
+                $this->addFlashMessage(
+                    'Aus Sicherheitsgründen wurden Sie automatisch abgemeldet. Bitte loggen Sie sich erneut ein.',
+                    'Zugriff verweigert',
+                    ContextualFeedbackSeverity::ERROR
+                );
+
+                $dashboardUri = $this->uriBuilder->reset()->uriFor('dashboard');
+                throw new PropagateResponseException(new RedirectResponse($dashboardUri, 403));
+        }
     }
 
     /**
@@ -121,16 +143,6 @@ class WorkflowController extends ActionController
         $this->view->assign('infoBoxes', $infoBoxes);
 
         return $this->htmlResponse();
-    }
-
-    /**
-     * @return void
-     */
-    public function initializeListCampaignsAction()
-    {
-        if (!$this->accessControlService->isCrowdsourcingUser()) {
-            die("Access denied");
-        }
     }
 
     /**
@@ -187,16 +199,6 @@ class WorkflowController extends ActionController
         $this->view->assign('currentProcess', $currentProcess);
 
         return $this->htmlResponse();
-    }
-
-    /**
-     * @return void
-     */
-    public function initializeListProcessesAction()
-    {
-        if (!$this->accessControlService->isCrowdsourcingUser()) {
-            die("Access denied");
-        }
     }
 
     /**
