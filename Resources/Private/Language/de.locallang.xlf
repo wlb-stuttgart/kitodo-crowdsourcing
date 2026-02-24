@@ -173,6 +173,7 @@
         </trans-unit>
         <trans-unit id="process.editor.anonymous">
         	<source>Anonymous</source>
+        	<target>Anonym</target>
         </trans-unit>
         <trans-unit id="search.input.placeHolder">
             <source>Enter search term</source>
