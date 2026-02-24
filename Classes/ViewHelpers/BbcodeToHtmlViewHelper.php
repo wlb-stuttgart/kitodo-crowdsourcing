@@ -45,7 +45,7 @@ class BbcodeToHtmlViewHelper extends AbstractViewHelper
         }
 
         if (empty($target)) {
-            $target = '_blank';
+            $target = '_help';
         }
 
         return self::convertBbcodeLinks($text, $target, $cssClass);
@@ -88,14 +88,14 @@ class BbcodeToHtmlViewHelper extends AbstractViewHelper
         $replacements[] = function ($matches) use ($attributeString) {
             $url = self::sanitizeUrl($matches[1]);
             $linkText = htmlspecialchars($matches[2], ENT_QUOTES, 'UTF-8');
-            return '<a target="_help" href="' . $url . '"' . $attributeString . '>' . $linkText . '</a>';
+            return '<a href="' . $url . '"' . $attributeString . '>' . $linkText . '</a>';
         };
 
         // Replacement für [url]URL[/url]
         $replacements[] = function ($matches) use ($attributeString) {
             $url = self::sanitizeUrl($matches[1]);
             $linkText = htmlspecialchars($matches[1], ENT_QUOTES, 'UTF-8');
-            return '<a target="_help" href="' . $url . '"' . $attributeString . '>' . $linkText . '</a>';
+            return '<a href="' . $url . '"' . $attributeString . '>' . $linkText . '</a>';
         };
 
         // BBCode-Links durch HTML-Links ersetzen
