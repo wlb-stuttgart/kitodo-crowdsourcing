@@ -190,6 +190,10 @@
             <source>Campaign</source>
             <target>Kampagne</target>
         </trans-unit>
+        <trans-unit id="search.campaign.noTitle">
+            <source>[No title]</source>
+            <target>[Kein Titel]</target>
+        </trans-unit>
 		</body>
 	</file>
 </xliff>

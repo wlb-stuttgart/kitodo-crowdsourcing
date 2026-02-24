@@ -147,6 +147,9 @@
         <trans-unit id="search.facetLabel.campaign">
             <source>Campaign</source>
         </trans-unit>
+        <trans-unit id="search.campaign.noTitle">
+            <source>[No title]</source>
+        </trans-unit>
 		</body>
 	</file>
 </xliff>

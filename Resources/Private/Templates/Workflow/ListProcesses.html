@@ -134,7 +134,7 @@
                                                                     <f:else>
                                                                         <f:if condition="{facetField} == 'campaign_faceting'">
                                                                             <f:then>
-                                                                                <wlb:campaignTitle uid="{value}" />
+                                                                                <wlb:campaignTitle uid="{value}" fallback="{f:translate(key: 'search.campaign.noTitle')}" />
                                                                             </f:then>
                                                                             <f:else>
                                                                                 {value}

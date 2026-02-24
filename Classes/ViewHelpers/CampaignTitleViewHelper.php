@@ -36,7 +36,7 @@ class CampaignTitleViewHelper extends AbstractViewHelper
         }
 
         $campaign = $this->campaignRepository->findByUid($uid);
-        $title = $campaign ? $campaign->getTitle() : ($fallback !== '' ? $fallback : (string)$uid);
+        $title = $campaign ? $campaign->getTitle() : ($fallback !== '' ? $fallback : '');
 
         return self::$cache[$uid] = $title;
     }
