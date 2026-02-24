@@ -134,7 +134,7 @@
                                                                     <f:else>
                                                                         <f:if condition="{facetField} == 'campaign_faceting'">
                                                                             <f:then>
-                                                                                {campaignTitles.{value}}
+                                                                                <wlb:campaignTitle uid="{value}" />
                                                                             </f:then>
                                                                             <f:else>
                                                                                 {value}

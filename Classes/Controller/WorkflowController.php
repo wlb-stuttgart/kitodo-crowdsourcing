@@ -266,12 +266,6 @@ class WorkflowController extends ActionController
         $this->view->assign("facetCounters", $facetValueCounter);
         $this->view->assign("facets", $facetsFields);
 
-        $campaigns = $this->campaignRepository->findAll();
-        $campaignTitles = [];
-        foreach ($campaigns as $campaign) {
-            $campaignTitles[$campaign->getUid()] = $campaign->getTitle();
-        }
-        $this->view->assign('campaignTitles', $campaignTitles);
 
         $processEditAllowedByCurrentUser = [];
         foreach ($processes as $process) {
