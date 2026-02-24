@@ -132,7 +132,14 @@
                                                                         <f:translate key="process.state.{value}" default="{value}" />
                                                                     </f:then>
                                                                     <f:else>
-                                                                        {value}
+                                                                        <f:if condition="{facetField} == 'campaign_faceting'">
+                                                                            <f:then>
+                                                                                {campaignTitles.{value}}
+                                                                            </f:then>
+                                                                            <f:else>
+                                                                                {value}
+                                                                            </f:else>
+                                                                        </f:if>
                                                                     </f:else>
                                                                 </f:if>
                                                                 ({facetCounters.{facetField}.{iterator.index}})
