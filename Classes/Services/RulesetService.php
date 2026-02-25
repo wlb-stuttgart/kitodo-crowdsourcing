@@ -25,7 +25,7 @@ class RulesetService
         foreach ($this->rulesetXml->declaration->key as $key) {
             $metadataId = (string) $key->attributes()->{'id'};
             $metadataDefinitions[$metadataId]['label'] = (string) $key->label;
-            $metadataDefinitions[$metadataId]['type'] = (string) $key->codomain->attributes()->{'type'};
+            $metadataDefinitions[$metadataId]['type'] = isset($key->codomain) ? (string) $key->codomain->attributes()->{'type'} : '';
             $metadataDefinitions[$metadataId]['pattern'] = (string) $key->pattern;
             foreach ($key->option as $option) {
                 $optionValue = (string) $option->attributes()->{'value'};
@@ -34,7 +34,7 @@ class RulesetService
             foreach ($key->key as $secondKey) {
                 $metadataId = (string) $secondKey->attributes()->{'id'};
                 $metadataDefinitions[$metadataId]['label'] = (string) $secondKey->label;
-                $metadataDefinitions[$metadataId]['type'] = (string) $secondKey->codomain->attributes()->{'type'};
+                $metadataDefinitions[$metadataId]['type'] = isset($secondKey->codomain) ? (string) $secondKey->codomain->attributes()->{'type'} : '';
                 $metadataDefinitions[$metadataId]['pattern'] = (string) $secondKey->pattern;
                 foreach ($secondKey->option as $option) {
                     $optionValue = (string) $option->attributes()->{'value'};
@@ -43,7 +43,7 @@ class RulesetService
                 foreach ($secondKey->key as $thirdKey) {
                     $metadataId = (string) $thirdKey->attributes()->{'id'};
                     $metadataDefinitions[$metadataId]['label'] = (string) $thirdKey->label;
-                    $metadataDefinitions[$metadataId]['type'] = (string) $thirdKey->codomain->attributes()->{'type'};
+                    $metadataDefinitions[$metadataId]['type'] = isset($thirdKey->codomain) ? (string) $thirdKey->codomain->attributes()->{'type'} : '';
                     $metadataDefinitions[$metadataId]['pattern'] = (string) $thirdKey->pattern;
                     foreach ($thirdKey->option as $option) {
                         $optionValue = (string) $option->attributes()->{'value'};
@@ -92,7 +92,7 @@ class RulesetService
                             $inputType = $this->convertInputType($inputType);
                             $configurationRuleset[$divisionName][$permitKey]['inputtype'] = $inputType;
                         }
-                        if ($options = $metadataDefinitions[$permitKey]['options']) {
+                        if ($options = $metadataDefinitions[$permitKey]['options'] ?? null) {
                             $configurationRuleset[$divisionName][$permitKey]['options'] = $options;
                         }
                     }
@@ -110,7 +110,7 @@ class RulesetService
                                 $inputType = $this->convertInputType($inputType);
                                 $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['inputtype'] = $inputType;
                             }
-                            if ($options = $metadataDefinitions[$secondPermitKey]['options']) {
+                            if ($options = $metadataDefinitions[$secondPermitKey]['options'] ?? null) {
                                 $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['options'] = $options;
                             }
                         }
@@ -129,7 +129,7 @@ class RulesetService
                                     $inputType = $this->convertInputType($inputType);
                                     $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['inputtype'] = $inputType;
                                 }
-                                if ($options = $metadataDefinitions[$thirdPermitKey]['options']) {
+                                if ($options = $metadataDefinitions[$thirdPermitKey]['options'] ?? null) {
                                     $configurationRuleset[$divisionName][$permitKey]['children'][$secondPermitKey]['children'][$thirdPermitKey]['options'] = $options;
                                 }
                             }
