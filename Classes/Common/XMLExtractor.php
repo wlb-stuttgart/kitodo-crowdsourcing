@@ -16,6 +16,7 @@ class XMLExtractor
      */
     public function extractData($config, $xml, $parent = null)
     {
+        $data = [];
         foreach ($config['_fields'] as $field => $fieldConfig) {
             if (is_array($fieldConfig)) { // Handle subgroup
                 $fieldGroups = $parent

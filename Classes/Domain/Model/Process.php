@@ -308,7 +308,7 @@ class Process extends AbstractEntity
                                 $j = 0;
                                 foreach ($subMetadata as $subMetadataField) {
 //                                    if (!empty($subMetadata[$j])) {
-                                        if ($availableElements[$j]) {
+                                        if (isset($availableElements[$j])) {
                                             $availableElements[$j][0] = $subMetadata[$j];
                                         } else {
                                             // missing field for sub metadata

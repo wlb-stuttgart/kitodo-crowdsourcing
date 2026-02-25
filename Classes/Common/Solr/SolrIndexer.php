@@ -125,7 +125,7 @@ class SolrIndexer
             $indexConfig = [];
             foreach ($dbConfigArray[$process->getType()] as $metadataKey => $metadata) {
                 if ($metadata['active'] === '1') {
-                    if (is_array($metadata['children'])) {
+                    if (isset($metadata['children']) && is_array($metadata['children'])) {
                         $childNames = [];
                         $childFields = [];
                         foreach ($metadata['children'] as $metadataChildKey => $metdataChild) {
@@ -147,8 +147,10 @@ class SolrIndexer
                                 foreach ($fieldRepresentation as $field) {
                                     if (!empty($field)) {
                                         if ($field === 'this') {
-                                            foreach ($metadata['children'] as $metadataChildKey => $metdataChild) {
-                                                $childNames[$metadataChildKey] = true;
+                                            if (isset($metadata['children']) && is_array($metadata['children'])) {
+                                                foreach ($metadata['children'] as $metadataChildKey => $metdataChild) {
+                                                    $childNames[$metadataChildKey] = true;
+                                                }
                                             }
                                         } else {
                                             $childNames[trim($field)] = true;

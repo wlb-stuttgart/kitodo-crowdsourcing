@@ -180,6 +180,7 @@ class WorkflowController extends ActionController
         $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
         /** @var FrontendUser $user */
         $feUser = $this->frontendUserRepository->findByUid($userId);
+        $currentProcess = null;
 
         if ($feUser) {
             $currentProcess = $this->processRepository->findCurrentProcessByFeUser($feUser);
@@ -287,25 +288,26 @@ class WorkflowController extends ActionController
         $this->view->assign("importedPath", $importedPath);
         $this->view->assign("query", $query);
 
-        if ($this->request->getArguments()['errorMessage'] === 'editAnotherProcess') {
+        $arguments = $this->request->getArguments();
+        if (($arguments['errorMessage'] ?? null) === 'editAnotherProcess') {
             $this->view->assign('errorMessage', 'editAnotherProcess');
             // get current edit process
             $editingByCurrentUser = $this->processRepository->findCurrentProcessByFeUser($feUser);
             $this->view->assign('processCurrentUserEditing', $editingByCurrentUser);
 
 
-        } else if ($this->request->getArguments()['errorMessage'] === 'processTaken') {
+        } else if (($arguments['errorMessage'] ?? null) === 'processTaken') {
             $this->view->assign('errorMessage', 'processTaken');
-        } else if ($this->request->getArguments()['errorMessage'] === 'noRandomProcessAvailable') {
+        } else if (($arguments['errorMessage'] ?? null) === 'noRandomProcessAvailable') {
             $this->view->assign('errorMessage', 'noRandomProcessAvailable');
         }
 
-        if ($this->request->getArguments()['currentProcess'] !== null) {
-            $this->view->assign('currentProcess', $this->request->getArguments()['currentProcess']);
+        if (($arguments['currentProcess'] ?? null) !== null) {
+            $this->view->assign('currentProcess', $arguments['currentProcess']);
         }
 
-        if ($this->request->getArguments()['requestedProcess'] !== null) {
-            $this->view->assign('requestedProcess', $this->request->getArguments()['requestedProcess']);
+        if (($arguments['requestedProcess'] ?? null) !== null) {
+            $this->view->assign('requestedProcess', $arguments['requestedProcess']);
         }
 
 
