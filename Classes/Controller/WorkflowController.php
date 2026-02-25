@@ -697,7 +697,7 @@ class WorkflowController extends ActionController
         $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
         /** @var FrontendUser $user */
         $feUser = $this->frontendUserRepository->findByUid($userId);
-        $process = $this->processRepository->findRandomForNonCurrentUser($feUser);
+        $process = $this->processRepository->fetchRandomUnassignedProcess($feUser);
         if ($process) {
             return $this->redirect('editMetadata', 'Workflow', 'Crowdsourcing', ['process' => $process->getUid()]);
         } else {

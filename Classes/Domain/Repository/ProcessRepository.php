@@ -87,74 +87,19 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     }
 
     /**
+     * Finds a random process.
+     *
      * @param FrontendUser $feUser
      * @return Process|null
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Doctrine\DBAL\Driver\Exception
      * @throws \Doctrine\DBAL\Exception
      * @throws \Random\RandomException
      */
-    public function findRandomForNonCurrentUsedr(FrontendUser $feUser): ?Process
+    public function fetchRandomUnassignedProcess(FrontendUser $feUser): ?Process
     {
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tx_crowdsourcing_domain_model_process');
 
-        $subQueryBuilder = $connection->createQueryBuilder();
-        $subQueryBuilder
-            ->select('record_identifier')
-            ->from('tx_crowdsourcing_domain_model_processhistory')
-            ->where(
-                $subQueryBuilder->expr()->eq('fe_user', ':feUserUid')
-            );
-
-        $minPid = 1;
-        $maxPidQuery = $connection->createQueryBuilder();
-        $maxPid = (int)$maxPidQuery->select('uid')->from('tx_crowdsourcing_domain_model_process')->execute()->rowCount();
-        $attempts = 10;
-        $randomProcess = null;
-
-            for ($i = 0; $i < $attempts; $i++) {
-            $randomPid = random_int($minPid, $maxPid);
-
-            $queryBuilder = $connection->createQueryBuilder();
-            $queryBuilder
-                ->select('*')
-                ->from('tx_crowdsourcing_domain_model_process')
-                ->where(
-                    $queryBuilder->expr()->or(
-                        $queryBuilder->expr()->eq('fe_user', 0),
-                        $queryBuilder->expr()->isNull('fe_user')
-                    )
-                )
-                ->andWhere( $queryBuilder->expr()->eq('uid', ':uid'))
-                ->andWhere(
-                    $queryBuilder->expr()->notIn('record_identifier', $subQueryBuilder->getSQL())
-                )
-                ->setMaxResults(1)
-                ->setParameter('uid', $randomPid)
-                ->setParameter('feUserUid', $feUser->getUid());
-
-            $process = $queryBuilder->executeQuery()->fetchAssociative();
-            if ($process !== false) {
-                $randomProcess = $process;
-                break;
-            }
-        }
-
-
-        if ($process) {
-            return $this->findByUid($process['uid']);
-        }
-
-        return null;
-    }
-
-
-    public function findRandomForNonCurrentUser(FrontendUser $feUser): ?Process
-    {
-        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable('tx_crowdsourcing_domain_model_process');
-
+        // Build a subquery to find processes that are already edited by the user
         $subQueryBuilder = $connection->createQueryBuilder();
         $subQueryBuilder
             ->select('a.record_identifier')
@@ -168,44 +113,50 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
                 $subQueryBuilder->expr()->eq('b.fe_user', ':feUserUid')
             );
 
-        $minId = $connection->fetchOne('SELECT MIN(uid) FROM tx_crowdsourcing_domain_model_process');
-        $maxId = $connection->fetchOne('SELECT MAX(uid) FROM tx_crowdsourcing_domain_model_process');
+        // Find all processes that are not assigned to any user
+        $queryBuilder = $connection->createQueryBuilder();
+        $queryBuilder
+            ->from('tx_crowdsourcing_domain_model_process')
+            ->where(
+                $queryBuilder->expr()->or(
+                    $queryBuilder->expr()->eq('fe_user', 0),
+                    $queryBuilder->expr()->isNull('fe_user')
+                )
+            )
+            ->andWhere($queryBuilder->expr()->gt('campaign', 0))
+            ->andWhere($queryBuilder->expr()->isNotNull('campaign'))
+            ->andWhere(
+                $queryBuilder->expr()->notIn('record_identifier', $subQueryBuilder->getSQL())
+            )
+            ->setParameter('feUserUid', $feUser->getUid());
 
-        $attempts = 100;
-        $randomProcess = null;
+        // Count the total available processes
+        $queryBuilder->count('uid');
+        $totalAvailable = $queryBuilder->executeQuery()->fetchOne();
 
-        for ($i = 0; $i < $attempts; $i++) {
-            $randomUid = random_int($minId, $maxId);
+        if ($totalAvailable > 0) {
+            // Select a random process by offset
+            $randomOffset = random_int(0, $totalAvailable - 1);
 
-            $queryBuilder = $connection->createQueryBuilder();
             $queryBuilder
                 ->select('*')
-                ->from('tx_crowdsourcing_domain_model_process')
-                ->where(
-                    $queryBuilder->expr()->or(
-                        $queryBuilder->expr()->eq('fe_user', 0),
-                        $queryBuilder->expr()->isNull('fe_user')
-                    )
-                )
-                ->andWhere( $queryBuilder->expr()->eq('uid', ':uid'))
-                ->andWhere(
-                    $queryBuilder->expr()->notIn('record_identifier', $subQueryBuilder->getSQL())
-                )
-                ->setMaxResults(1)
-                ->setParameter('uid', $randomUid)
-                ->setParameter('feUserUid', $feUser->getUid());
+                ->setFirstResult($randomOffset)
+                ->setMaxResults(1);
 
             $process = $queryBuilder->executeQuery()->fetchAssociative();
 
-
-            if ($process !== false) {
-                $randomProcess = $process;
-                break;
+            // Handle race condition if a record was processed/deleted between count and select
+            if ($process === false && $totalAvailable > 0) {
+                $process = $queryBuilder
+                    ->setFirstResult(0)
+                    ->setMaxResults(1)
+                    ->executeQuery()
+                    ->fetchAssociative();
             }
-        }
 
-        if ($randomProcess) {
-            return $this->findByUid($randomProcess['uid']);
+            if ($process) {
+                return $this->findByUid($process['uid']);
+            }
         }
 
         return null;
