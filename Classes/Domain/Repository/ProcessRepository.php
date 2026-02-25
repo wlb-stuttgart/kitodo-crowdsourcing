@@ -113,25 +113,29 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
                 $subQueryBuilder->expr()->eq('b.fe_user', ':feUserUid')
             );
 
-        // Find all processes that are not assigned to any user
+        // Find all processes that are not assigned to any user and belong to an active campaign
         $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder
-            ->from('tx_crowdsourcing_domain_model_process')
+            ->from('tx_crowdsourcing_domain_model_process', 'p')
+            ->join('p', 'tx_crowdsourcing_domain_model_campaign', 'c',
+                $queryBuilder->expr()->eq('p.campaign', 'c.uid')
+            )
             ->where(
                 $queryBuilder->expr()->or(
-                    $queryBuilder->expr()->eq('fe_user', 0),
-                    $queryBuilder->expr()->isNull('fe_user')
+                    $queryBuilder->expr()->eq('p.fe_user', 0),
+                    $queryBuilder->expr()->isNull('p.fe_user')
                 )
             )
-            ->andWhere($queryBuilder->expr()->gt('campaign', 0))
-            ->andWhere($queryBuilder->expr()->isNotNull('campaign'))
+            ->andWhere($queryBuilder->expr()->gt('p.campaign', 0))
+            ->andWhere($queryBuilder->expr()->isNotNull('p.campaign'))
+            ->andWhere($queryBuilder->expr()->eq('c.workflow_state', $queryBuilder->createNamedParameter(\Wlb\Crowdsourcing\Domain\Model\Campaign::WORKFLOW_STATE_PUBLISHED)))
             ->andWhere(
-                $queryBuilder->expr()->notIn('record_identifier', $subQueryBuilder->getSQL())
+                $queryBuilder->expr()->notIn('p.record_identifier', $subQueryBuilder->getSQL())
             )
             ->setParameter('feUserUid', $feUser->getUid());
 
         // Count the total available processes
-        $queryBuilder->count('uid');
+        $queryBuilder->count('p.uid');
         $totalAvailable = $queryBuilder->executeQuery()->fetchOne();
 
         if ($totalAvailable > 0) {
@@ -139,7 +143,7 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             $randomOffset = random_int(0, $totalAvailable - 1);
 
             $queryBuilder
-                ->select('*')
+                ->select('p.*')
                 ->setFirstResult($randomOffset)
                 ->setMaxResults(1);
 
