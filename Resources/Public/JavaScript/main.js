@@ -22,6 +22,8 @@ $( document ).ready(function() {
     scrollButtons();
 
     tabNavigation();
+    
+    refreshTabNavigationButtons();
 
     loginAndRegisterModals();
 
@@ -97,6 +99,35 @@ function tabNavigation() {
     // Aktuellen Index auch beim manuellen Tab-Wechsel aktualisieren
     $tabs.on('shown.bs.tab', function (e) {
         currentIndex = $tabs.index($(e.target));
+    });
+}
+
+function toggleTabNavigationButtons() {
+    const $tabs = $('#nav-tab button');
+    let currentIndex = $tabs.index($tabs.filter('.active'));
+
+    if (currentIndex > $tabs.length - 2) {
+        $('#nextBtn').hide();
+    }
+
+    if (currentIndex > 0 && currentIndex < $tabs.length - 1) {
+        $('#nextBtn').show();
+    }
+
+    if (currentIndex > 0) {
+        $('#prevBtn').show();
+    }
+
+    if (currentIndex == 0) {
+        $('#prevBtn').hide();
+    }
+}
+
+function refreshTabNavigationButtons() {
+    toggleTabNavigationButtons();
+    $('#nav-tab .nav-link').on('shown.bs.tab', function (e) {
+        e.preventDefault();
+        toggleTabNavigationButtons();
     });
 }
 
