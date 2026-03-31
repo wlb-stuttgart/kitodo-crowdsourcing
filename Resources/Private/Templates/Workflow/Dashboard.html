@@ -11,25 +11,7 @@
 
     <wlb:userInfo as="userInfo" />
 
-    <div class="container-fluid mt-3">
-        <f:flashMessages as="flashMessages">
-            <f:for each="{flashMessages}" as="flashMessage">
-                <f:variable name="alertClass">
-                    <f:switch expression="{flashMessage.severity.value}">
-                        <f:case value="0">alert-success</f:case>
-                        <f:case value="1">alert-warning</f:case>
-                        <f:case value="2">alert-danger</f:case>
-                        <f:defaultCase>alert-info</f:defaultCase>
-                    </f:switch>
-                </f:variable>
-
-                <div class="alert {alertClass} alert-dismissible fade show" role="alert">
-                    {flashMessage.message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </f:for>
-        </f:flashMessages>
-    </div>
+    <f:render partial="Workflow/FlashMessages" arguments="{_all}"/>
 
     <div class="container-fluid mt-3 dashboard">
         <div class="row">

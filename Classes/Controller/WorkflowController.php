@@ -685,6 +685,13 @@ class WorkflowController extends ActionController
                 ['process' => $process->getUid()]
             );
         } else {
+
+            $this->addFlashMessage(
+                'Danke für Ihren wertvollen Beitrag. Gemeinsam machen wir Wissen für alle zugänglich.',
+                'Erfolgreich gespeichert!',
+                ContextualFeedbackSeverity::NOTICE
+            );
+
             return $this->redirect('listProcesses', null, null);
         }
     }
