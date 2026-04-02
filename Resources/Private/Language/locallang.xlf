@@ -147,6 +147,9 @@
         <trans-unit id="process.state.COMPLETED">
             <source>Finished</source>
         </trans-unit>
+        <trans-unit id="statistic.countAll">
+            <source>Total</source>
+        </trans-unit>
         <trans-unit id="process.editor.state.NEW">
         	<source>1. Editor</source>
         </trans-unit>
