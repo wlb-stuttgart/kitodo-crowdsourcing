@@ -122,6 +122,44 @@ class ProcessHistoryRepository extends ProcessRepository
     }
 
     /**
+     * Returns the count of distinct documents (by record_identifier) a user has edited,
+     * grouped by the current state of the document in the process table.
+     *
+     * @return array<string, int> e.g. ['NEW' => 3, 'CORRECTION' => 1, ...]
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function countDistinctByFeUserGroupedByState(int $feUserUid): array
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_processhistory');
+
+        $queryBuilder = $connection->createQueryBuilder();
+        $rows = $queryBuilder
+            ->select('p.state')
+            ->addSelectLiteral('COUNT(DISTINCT ph.record_identifier) AS cnt')
+            ->from('tx_crowdsourcing_domain_model_processhistory', 'ph')
+            ->join(
+                'ph',
+                'tx_crowdsourcing_domain_model_process',
+                'p',
+                $queryBuilder->expr()->eq('ph.record_identifier', $queryBuilder->quoteIdentifier('p.record_identifier'))
+            )
+            ->where($queryBuilder->expr()->eq(
+                'ph.fe_user',
+                $queryBuilder->createNamedParameter($feUserUid, \Doctrine\DBAL\ParameterType::INTEGER)
+            ))
+            ->groupBy('p.state')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['state']] = (int)$row['cnt'];
+        }
+        return $result;
+    }
+
+    /**
      * @param $process
      * @return array|object[]|QueryResultInterface
      * @throws InvalidQueryException

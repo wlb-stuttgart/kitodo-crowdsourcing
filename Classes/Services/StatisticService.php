@@ -5,6 +5,7 @@ namespace Wlb\Crowdsourcing\Services;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use Wlb\Crowdsourcing\Domain\Model\ClickStatistic;
+use Wlb\Crowdsourcing\Domain\Model\FrontendUser;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\ClickStatisticRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
@@ -46,6 +47,24 @@ class StatisticService
         $statisticsArray['clicksByDate'] = $this->clickStatisticRepository->getClickSummaryByDate();
 
         return $statisticsArray;
+    }
+
+    public function getStatisticsByUser(FrontendUser $feUser): array
+    {
+        $countsByState = $this->processHistoryRepository->countDistinctByFeUserGroupedByState($feUser->getUid());
+
+        $countNew             = $countsByState[Process::WORKFLOW_STATE_NEW]              ?? 0;
+        $countCorrection      = $countsByState[Process::WORKFLOW_STATE_CORRECTION]       ?? 0;
+        $countFinalCorrection = $countsByState[Process::WORKFLOW_STATE_FINAL_CORRECTION] ?? 0;
+        $countCompleted       = $countsByState[Process::WORKFLOW_STATE_COMPLETED]        ?? 0;
+
+        return [
+            'countAll'             => $countNew + $countCorrection + $countFinalCorrection + $countCompleted,
+            'countNew'             => $countNew,
+            'countCorrection'      => $countCorrection,
+            'countFinalCorrection' => $countFinalCorrection,
+            'countCompleted'       => $countCompleted,
+        ];
     }
 
     /**
