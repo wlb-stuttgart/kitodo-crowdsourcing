@@ -17,6 +17,7 @@ use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
 use TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Common\Solr\SolrSearcher;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
@@ -685,13 +686,14 @@ class WorkflowController extends ActionController
                 ['process' => $process->getUid()]
             );
         } else {
-
-            $this->addFlashMessage(
-                'Danke für Ihren wertvollen Beitrag. Gemeinsam machen wir Wissen für alle zugänglich.',
-                'Erfolgreich gespeichert!',
-                ContextualFeedbackSeverity::NOTICE
-            );
-
+            if ($actionTaken === 'save') {
+                $this->addFlashMessage(
+                    'Danke für Ihren wertvollen Beitrag. Gemeinsam machen wir Wissen für alle zugänglich.',
+                    'Erfolgreich gespeichert!',
+                    ContextualFeedbackSeverity::NOTICE
+                );
+            }
+            
             return $this->redirect('listProcesses', null, null);
         }
     }
