@@ -43,6 +43,10 @@
 			<source>Discard Changes</source>
 			<target>Bearbeitung verwerfen</target>
 		</trans-unit>
+		<trans-unit id="process.requiredFieldsNotice">
+			<source>Fields marked with * are mandatory.</source>
+			<target>Mit * gekennzeichnete Felder sind Pflichtfelder.</target>
+		</trans-unit>
         <trans-unit id="error_notunique_global">
              <source>The %1$s is not unique</source>
             <target>Il campo %1$s non è univoco</target>
