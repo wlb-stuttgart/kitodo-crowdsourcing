@@ -64,7 +64,10 @@ Klicken Sie dazu bitte den folgenden Link an:
 Aus Sicherheitsgründen ist dieser Link nur bis %s aktiv. Wenn Sie den Link vorher nicht aufrufen, müssen Sie die Schritte zum Zurücksetzen des Passworts wiederholen.
 Wenn Sie nicht darum gebeten haben, Ihr Passwort zurückzusetzen, können Sie diese E-Mail ignorieren. Ihr Passwort wird nicht geändert.</target>
 			</trans-unit>
+			<trans-unit id="login_help">
+                <source>Help</source>
+                <target>Hilfe</target>
+            </trans-unit>
 		</body>
-
 	</file>
 </xliff>

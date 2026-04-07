@@ -25,11 +25,17 @@ plugin.tx_crowdsourcing {
         # cat=plugin.tx_crowdsourcing//a; type=integer; label=User change password pageUid
         navigation.user.password =
 
-         # cat=plugin.tx_crowdsourcing//a; type=integer; label=Privacy link or pageUid
+         # cat=plugin.tx_crowdsourcing//a; type=string; label=Privacy link or pageUid
         crowdsourcingPrivacyLink =
 
-         # cat=plugin.tx_crowdsourcing//a; type=integer; label=GTC/AGB link or pageUid
+         # cat=plugin.tx_crowdsourcing//a; type=string; label=GTC/AGB link or pageUid
         crowdsourcingGtcLink =
+
+         # cat=plugin.tx_crowdsourcing//a; type=string; label=Register-Help link or pageUid
+        crowdsourcingRegisterHelpLink = https://www.wlb-stuttgart.de/projekte/crowdsourcing-hilfe/index.php/#Registrieren
+
+         # cat=plugin.tx_crowdsourcing//a; type=string; label=Login-Help link or pageUid
+        crowdsourcingLoginHelpLink = https://www.wlb-stuttgart.de/projekte/crowdsourcing-hilfe/index.php/#Anmelden
 
         # cat=plugin.tx_crowdsourcing//a; type=integer; label=Topic info box uid
         infoBox.topic =

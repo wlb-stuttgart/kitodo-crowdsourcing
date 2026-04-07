@@ -107,6 +107,10 @@
                 <a href="https://www.mitmachen.wlb-stuttgart.de"/>www.mitmachen.wlb-stuttgart.de</a>
                 <a href="https://www.wlb-stuttgart.de/sammlungen/sammlung-proteste/">www.wlb-stuttgart.de/sammlungen/sammlung-proteste/</a>]]></target>
              </trans-unit>
+             <trans-unit id="register_help">
+                <source>Help</source>
+                <target>Hilfe</target>
+             </trans-unit>
 		</body>
 	</file>
 </xliff>

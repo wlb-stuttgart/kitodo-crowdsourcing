@@ -50,6 +50,17 @@
                         </f:link.action>
                     </f:if>
 
+                    <f:if condition="{settings.crowdsourcingLoginHelpLink}">
+                        <div class="login-help">
+                            <f:link.typolink parameter="{settings.crowdsourcingLoginHelpLink}"
+                                             target="_blank"
+                                             additionalAttributes="{rel:'noopener'}">
+                                <f:translate extensionName="felogin" id="login_help"/>
+                            </f:link.typolink>
+                        </div>
+                    </f:if>
+
+
                     <f:section name="content">
                         <fieldset class="mb-3">
                             <div class="mb-3">

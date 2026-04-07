@@ -568,6 +568,10 @@ h1 {
     border-radius: 0;
 }
 
+#crowdsourcing-login .login-help {
+    margin-top: 10px;
+}
+
 #sfrForm #bargraph,
 #registerModal #bargraph {
     display: none;
@@ -637,6 +641,11 @@ h1 {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+
+#registerModal .register-help {
+    margin-top: 10px;
+}
+
 
 .tx-srfreecap-pi1-cant-read {
     width: auto;

@@ -48,6 +48,9 @@ Please click the following link:
 For security reasons, this link will only be active until %s. If you do not click the link before then, you will need to repeat the password reset steps.
 If you did not request to reset your password, you can ignore this email. Your password will not be changed.</source>
 			</trans-unit>
+			<trans-unit id="login_help">
+                <source>Help</source>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

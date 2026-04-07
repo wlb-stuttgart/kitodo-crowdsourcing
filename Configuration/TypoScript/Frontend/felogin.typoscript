@@ -24,6 +24,8 @@ plugin.tx_felogin_login {
         crowdsourcingUserGroup = {$plugin.tx_crowdsourcing.settings.crowdsourcingUserGroup}
         crowdsourcingRegister =  {$plugin.tx_crowdsourcing.settings.crowdsourcingRegister}
 
+        crowdsourcingLoginHelpLink = {$plugin.tx_crowdsourcing.settings.crowdsourcingLoginHelpLink}
+
         newPasswordMinLength =  12
     }
 }

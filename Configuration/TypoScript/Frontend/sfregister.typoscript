@@ -78,6 +78,7 @@ plugin.tx_sfregister.settings {
 
     privacyLink = {$plugin.tx_crowdsourcing.settings.crowdsourcingPrivacyLink}
     gtcLink = {$plugin.tx_crowdsourcing.settings.crowdsourcingGtcLink}
+    helpLink = {$plugin.tx_crowdsourcing.settings.crowdsourcingRegisterHelpLink}
 
     fields.configuration {
 
