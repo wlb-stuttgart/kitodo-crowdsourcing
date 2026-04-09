@@ -26,19 +26,19 @@ class StatisticService
         $statisticsArray = [];
 
         // Bestehende Prozess-Statistiken
-        $countAll = $this->processRepository->countAll();
+        $countAll = $this->processRepository->countAllActive();
         $statisticsArray['countAll'] = $countAll;
 
-        $countNew = $this->processRepository->findByState(Process::WORKFLOW_STATE_NEW)->count();
+        $countNew = $this->processRepository->countAllActiveByState(Process::WORKFLOW_STATE_NEW);
         $statisticsArray['countNew'] = $countNew;
 
-        $countCorrection = $this->processRepository->findByState(Process::WORKFLOW_STATE_CORRECTION)->count();
+        $countCorrection = $this->processRepository->countAllActiveByState(Process::WORKFLOW_STATE_CORRECTION);
         $statisticsArray['countCorrection'] = $countCorrection;
 
-        $countFinalCorrection = $this->processRepository->findByState(Process::WORKFLOW_STATE_FINAL_CORRECTION)->count();
+        $countFinalCorrection = $this->processRepository->countAllActiveByState(Process::WORKFLOW_STATE_FINAL_CORRECTION);
         $statisticsArray['countFinalCorrection'] = $countFinalCorrection;
 
-        $countCompleted = $this->processRepository->findByState(Process::WORKFLOW_STATE_COMPLETED)->count();
+        $countCompleted = $this->processRepository->countAllActiveByState(Process::WORKFLOW_STATE_COMPLETED);
         $statisticsArray['countCompleted'] = $countCompleted;
 
         // Neue Klick-Statistiken

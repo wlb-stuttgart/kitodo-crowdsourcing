@@ -185,4 +185,46 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         return $query->execute();
     }
     */
+
+
+    /**
+     * Counts all processes that are part of a campaign.
+     *
+     * @return int
+     */
+    public function countAllActive() {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->logicalAnd(
+                $query->logicalNot($query->equals('campaign', null)),
+                $query->logicalNot($query->equals('campaign', 0)),
+                $query->equals('hidden', 0),
+                $query->equals('deleted', 0)
+            )
+        );
+
+        return $query->execute()->count();
+    }
+
+    /**
+     * Counts all processes that are part of a campaign with a specific state.
+     *
+     * @param string $state
+     * @return int
+     */
+    public function countAllActiveByState(string $state) {
+        $query = $this->createQuery();
+        $query->matching(
+            $query->logicalAnd(
+                $query->logicalNot($query->equals('campaign', null)),
+                $query->logicalNot($query->equals('campaign', 0)),
+                $query->equals('hidden', 0),
+                $query->equals('deleted', 0),
+                $query->equals('state', $state)
+            )
+        );
+
+        return $query->execute()->count();
+    }
 }
