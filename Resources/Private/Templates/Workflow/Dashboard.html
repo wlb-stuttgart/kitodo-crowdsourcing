@@ -60,32 +60,53 @@
                     <h2>Statistik</h2>
                     <div class="card shadow-sm mt-3">
                         <div class="card-body">
+
                             <div class="row row-cols-2 row-cols-md-3 g-3 text-left">
-
                                 <div class="col">
-                                    <div class="text-muted small" style="white-space: normal;">Gesamt</div>
-                                    <div class="fs-4 fw-bold text-primary">{statistic.countAll}</div>
+                                    <div class="text-muted small" style="white-space: normal;">
+                                        {f:translate(key: 'statistic.countAll')}
+                                    </div>
+                                    <div class="fs-4 fw-bold">
+                                        <span class="badge chart-badge-total">{statistic.countAll}</span>
+                                    </div>
                                 </div>
 
                                 <div class="col">
-                                    <div class="text-muted small" style="white-space: normal;">Neu</div>
-                                    <div class="fs-4 fw-bold text-success">{statistic.countNew}</div>
+                                    <div class="text-muted small" style="white-space: normal;">
+                                        {f:translate(key: 'process.state.NEW')}
+                                    </div>
+                                    <div class="fs-4 fw-bold">
+                                        <span class="badge chart-badge-new" style="background-color: #ced4da;">{statistic.countNew}</span>
+                                    </div>
                                 </div>
 
                                 <div class="col">
-                                    <div class="text-muted small" style="white-space: normal;">Korrektur</div>
-                                    <div class="fs-4 fw-bold text-warning">{statistic.countCorrection}</div>
+                                    <div class="text-muted small" style="white-space: normal;">
+                                        {f:translate(key: 'process.state.CORRECTION')}
+                                    </div>
+                                    <div class="fs-4 fw-bold">
+                                        <span class="badge chart-badge-correction" style="background-color: #ffca28;">{statistic.countCorrection}</span>
+                                    </div>
                                 </div>
 
                                 <div class="col">
-                                    <div class="text-muted small" style="white-space: normal;">Endkorrektur</div>
-                                    <div class="fs-4 fw-bold text-secondary">{statistic.countFinalCorrection}</div>
+                                    <div class="text-muted small" style="white-space: normal;">
+                                        {f:translate(key: 'process.state.FINAL_CORRECTION')}
+                                    </div>
+                                    <div class="fs-4 fw-bold">
+                                        <span class="badge chart-badge-final-correction" style="background-color: #7d89f4;">{statistic.countFinalCorrection}</span>
+                                    </div>
                                 </div>
 
                                 <div class="col">
-                                    <div class="text-muted small" style="white-space: normal;">Abgeschlossen</div>
-                                    <div class="fs-4 fw-bold text-dark">{statistic.countCompleted}</div>
+                                    <div class="text-muted small" style="white-space: normal;">
+                                        {f:translate(key: 'process.state.COMPLETED')}
+                                    </div>
+                                    <div class="fs-4 fw-bold">
+                                        <span class="badge chart-badge-completed" style="background-color: #47c9a2;">{statistic.countCompleted}</span>
+                                    </div>
                                 </div>
+
 
                             </div>
 
@@ -157,27 +178,37 @@
 
                                             <div class="col">
                                                 <div class="text-muted small" style="white-space: normal;"><f:translate key="statistic.countAll" /></div>
-                                                <div class="fs-4 fw-bold text-primary">{userStatistic.countAll}</div>
+                                                <div class="fs-4 fw-bold">
+                                                    <span class="badge chart-badge-total">{statistic.countAll}</span>
+                                                </div>
                                             </div>
 
                                             <div class="col">
                                                 <div class="text-muted small" style="white-space: normal;"><f:translate key="process.state.NEW" /></div>
-                                                <div class="fs-4 fw-bold text-success">{userStatistic.countNew}</div>
+                                                <div class="fs-4 fw-bold">
+                                                    <span class="badge chart-badge-new">{userStatistic.countNew}</span>
+                                                </div>
                                             </div>
 
                                             <div class="col">
                                                 <div class="text-muted small" style="white-space: normal;"><f:translate key="process.state.CORRECTION" /></div>
-                                                <div class="fs-4 fw-bold text-warning">{userStatistic.countCorrection}</div>
+                                                <div class="fs-4 fw-bold">
+                                                    <span class="badge chart-badge-correction">{userStatistic.countCorrection}</span>
+                                                </div>
                                             </div>
 
                                             <div class="col">
                                                 <div class="text-muted small" style="white-space: normal;"><f:translate key="process.state.FINAL_CORRECTION" /></div>
-                                                <div class="fs-4 fw-bold text-secondary">{userStatistic.countFinalCorrection}</div>
+                                                <div class="fs-4 fw-bold">
+                                                    <span class="badge chart-badge-final-correction">{userStatistic.countFinalCorrection}</span>
+                                                </div>
                                             </div>
 
                                             <div class="col">
                                                 <div class="text-muted small" style="white-space: normal;"><f:translate key="process.state.COMPLETED" /></div>
-                                                <div class="fs-4 fw-bold text-dark">{userStatistic.countCompleted}</div>
+                                                <div class="fs-4 fw-bold">
+                                                    <span class="badge chart-badge-completed">{userStatistic.countCompleted}</span>
+                                                </div>
                                             </div>
 
                                         </div>

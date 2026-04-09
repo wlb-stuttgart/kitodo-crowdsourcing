@@ -59,6 +59,12 @@
 
     --modal-link: rgb(13, 110, 253);
     --modal-link-hover: rgb(10, 88, 202);
+
+    /* Frontend statistic chart colors */
+    --chart-color-new: #ced4da;
+    --chart-color-correction: #ffca28;
+    --chart-color-final-correction: #7d89f4;
+    --chart-color-completed: #47c9a2;
 }
 
 @font-face {
@@ -482,6 +488,31 @@ h1 {
     column-count: 2;
     column-gap: 20px;
 }
+
+.chart-badge-total {
+    color: white;
+    background-color: #495057;
+}
+.chart-badge-new {
+    color: #212529;
+    background-color: var(--chart-color-new);
+}
+
+.chart-badge-correction {
+    color: #212529;
+    background-color: var(--chart-color-correction);
+}
+
+.chart-badge-final-correction {
+    color: #212529;
+    background-color: var(--chart-color-final-correction);
+}
+
+.chart-badge-completed {
+    color: #212529;
+    background-color: var(--chart-color-completed);
+}
+
 
 .dashboard-user-processes .action-box {
         background-color: var(--color-btn-primary);
