@@ -24,8 +24,6 @@
 
         var labelHeight  = 18;
         var barHeight    = 28;
-        var legendHeight = 24;
-        var totalHeight  = labelHeight + 4 + barHeight + 12 + legendHeight;
         var barOffsetY   = labelHeight + 4;
         var width        = el.clientWidth || 400;
         var labelAll     = el.dataset.labelAll || 'Gesamt';
@@ -33,9 +31,7 @@
         var svg = d3.select(el)
             .append('svg')
             .attr('width', '100%')
-            .attr('height', totalHeight)
-            .attr('viewBox', '0 0 ' + width + ' ' + totalHeight)
-            .attr('preserveAspectRatio', 'none');
+            .attr('viewBox', '0 0 ' + width + ' 100'); // Vorläufige ViewBox
 
         svg.append('text')
             .attr('x', width)
@@ -68,9 +64,27 @@
         /* Legende */
         var legendY = barOffsetY + barHeight + 12;
         var legendX = 0;
+        var lineHeight = 20;
+        var dotSize = 10;
+        var marginX = 14;
+
         segments.forEach(function (seg) {
-            var dotSize   = 10;
-            var textWidth = seg.label.length * 7 + dotSize + 6;
+            // Hilfselement um die Breite des Textes zu messen
+            var tempText = svg.append('text')
+                .attr('font-size', '11')
+                .attr('visibility', 'hidden')
+                .text(seg.label + ' (' + seg.value + ')');
+            
+            var textWidth = tempText.node().getBBox().width;
+            tempText.remove();
+
+            var itemWidth = dotSize + 4 + textWidth;
+
+            // Prüfen ob das Item in die aktuelle Zeile passt
+            if (legendX > 0 && legendX + itemWidth > width) {
+                legendX = 0;
+                legendY += lineHeight;
+            }
 
             svg.append('rect')
                 .attr('x', legendX)
@@ -87,10 +101,35 @@
                 .attr('fill', '#495057')
                 .text(seg.label + ' (' + seg.value + ')');
 
-            legendX += textWidth + 14;
+            legendX += itemWidth + marginX;
         });
+
+        // SVG Höhe anpassen, falls Legende umgebrochen ist
+        var finalHeight = legendY + lineHeight;
+        svg.attr('height', finalHeight)
+           .attr('viewBox', '0 0 ' + width + ' ' + finalHeight);
+    }
+    
+    function initCharts() {
+        var statChart = document.getElementById('statistic-chart');
+        var userChart = document.getElementById('user-statistic-chart');
+
+        if (statChart) {
+            statChart.innerHTML = '';
+            renderChart(statChart);
+        }
+        if (userChart) {
+            userChart.innerHTML = '';
+            renderChart(userChart);
+        }
     }
 
-    renderChart(document.getElementById('statistic-chart'));
-    renderChart(document.getElementById('user-statistic-chart'));
+    initCharts();
+
+    var resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(initCharts, 200);
+    });
+
 })();
