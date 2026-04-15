@@ -93,6 +93,7 @@ class Campaign extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function removeProcess(\Wlb\Crowdsourcing\Domain\Model\Process $process): void
     {
         $this->processes->detach($process);
+        $process->removeCampaign();
     }
 
     /**

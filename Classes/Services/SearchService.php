@@ -2,7 +2,6 @@
 
 namespace Wlb\Crowdsourcing\Services;
 
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use Wlb\Crowdsourcing\Common\Solr\SolrSearcher;
 use Wlb\Crowdsourcing\Domain\Model\FrontendUser;
 use Wlb\Crowdsourcing\Domain\Model\SearchResult;
@@ -32,6 +31,10 @@ class SearchService
      */
     protected $feUser;
 
+    /**
+     * @var bool
+     */
+    protected $backendSearch = false;
 
     public function __construct(
         private readonly CampaignRepository $campaignRepository,
@@ -40,6 +43,11 @@ class SearchService
         private readonly MetadataConfigurationRepository $metadataConfigurationRepository
     )
     {
+    }
+
+    public function setBackendSearch(): void
+    {
+        $this->backendSearch = true;
     }
 
     /**
@@ -71,6 +79,7 @@ class SearchService
     /**
      * @param $offset
      * @param $itemsPerPage
+     * @param $backend
      * @return SearchResult
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
@@ -80,7 +89,7 @@ class SearchService
 
         $results = $this->solrSearcher->searchWithFacets(
             $this->campaignRepository->getActiveCampaignUids(),
-            $query, $offset, $itemsPerPage, $this->facets, $this->activeFacets, $this->getFeUser()
+            $query, $offset, $itemsPerPage, $this->facets, $this->activeFacets, $this->getFeUser(), $this->backendSearch
         );
 
         $documentIdentifiers = [];
@@ -108,7 +117,7 @@ class SearchService
         $query = empty($this->search)? '*' : $this->search;
         $results = $this->solrSearcher->searchWithFacets(
             $this->campaignRepository->getActiveCampaignUids(),
-            $query, 0, 0, $this->facets, $this->activeFacets
+            $query, 0, 0, $this->facets, $this->activeFacets, null, $this->backendSearch
         );
 
         return (int)$results->getData()['response']['numFound'] ?? 0;
@@ -145,4 +154,5 @@ class SearchService
             return $facets;
         }
     }
+
 }

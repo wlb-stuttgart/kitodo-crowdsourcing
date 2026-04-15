@@ -26,6 +26,7 @@ class SolrSearcher
      * @param array $facetFields
      * @param array $activeFacets
      * @param FrontendUser $currentUser
+     * @param bool $backendSearch
      * @return ResultInterface
      */
     public function searchWithFacets(
@@ -35,7 +36,8 @@ class SolrSearcher
         int $rows = 50,
         array $facetFields = [],
         array $activeFacets = [],
-        FrontendUser $currentUser = null
+        FrontendUser $currentUser = null,
+        bool $backendSearch = false
     ): ResultInterface
     {
         $query = $this->client->createSelect();
@@ -50,19 +52,20 @@ class SolrSearcher
 
         $query->setQuery($queryString);
 
-        $currentUserId = 0;
-        if ($currentUser instanceof FrontendUser) {
-            $currentUserId = $currentUser->getUid();
-        }
-
-        $query->addSort("query({!v='modifier_sorting:$currentUserId'})", $query::SORT_DESC);
-        $query->addSort("not(exists(modifier_sorting))", $query::SORT_DESC);
-        $query->addSort("termfreq(modifierHistory_faceting,$currentUserId)", $query::SORT_ASC);
-        $query->addSort("if(query({!v='state_faceting:COMPLETED'}),1,0)", $query::SORT_ASC);
-        $query->addSort("uid", $query::SORT_DESC);
-        
-        // Deliver only campaigns that are published.
-        if (!empty($activeCampaigns)) {
+        if ($backendSearch) {
+            // Deliver all processes, regardless of campaign.
+            $query->addSort("uid", $query::SORT_ASC);
+        } elseif (!empty($activeCampaigns)) {
+            // Deliver only campaigns that are published.
+            $currentUserId = 0;
+            if ($currentUser instanceof FrontendUser) {
+                $currentUserId = $currentUser->getUid();
+            }
+            $query->addSort("query({!v='modifier_sorting:$currentUserId'})", $query::SORT_DESC);
+            $query->addSort("not(exists(modifier_sorting))", $query::SORT_DESC);
+            $query->addSort("termfreq(modifierHistory_faceting,$currentUserId)", $query::SORT_ASC);
+            $query->addSort("if(query({!v='state_faceting:COMPLETED'}),1,0)", $query::SORT_ASC);
+            $query->addSort("uid", $query::SORT_DESC);
             $filterQuery = $query->createFilterQuery('campaignFilter');
             $filterQuery->setQuery('campaign_faceting:'.implode(' OR campaign_faceting:', $activeCampaigns));
             $query->addFilterQuery($filterQuery);

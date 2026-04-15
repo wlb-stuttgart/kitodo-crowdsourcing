@@ -6,84 +6,103 @@
 
     <style>
         .carousel-image {
-            object-fit: cover;
-            height: 300px;
+            object-fit: contain;
+            height: 150px;
             width: 100%;
+            object-position: right center;
+            background-color: transparent;
         }
     </style>
 
     <!-- Container for Process List Page -->
     <div class="container mt-5">
-        <div class="row text-center">
+        <div class="row">
             <div class="col-md-8 offset-md-2">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Manage Processes</h4>
-                        <p>Here is a list of processes associated with your campaigns. You can search, filter, and manage them.</p>
-                        <f:link.action action="listProcesses" arguments="{campaign:currentCampaign}" class="btn btn-primary btn-block">Close</f:link.action>
+                        <h4><f:translate key="campaignModule.processList.edit.header" arguments="{0: campaign.title}"/></h4>
+                        <h5>{f:translate(key: 'campaignModule.processList.edit.info')}</h5>
+                        <f:link.action action="listProcesses" arguments="{campaign:currentCampaign}" class="btn btn-primary btn-block">{f:translate(key: 'campaignModule.processList.button.close')}</f:link.action>
                     </div>
                     <div class="card-body">
-                        <!-- Search and Filter Bar -->
-                        <div class="row">
-                            <div class="col-md-4">
+                        <div class="row mt-2">
+                            <div class="col-12">
                                 <div class="mb-3">
-                                    <label for="searchTask" class="form-label">Search Processes</label>
-                                    <input type="text" class="form-control" id="searchTask" placeholder="{f:translate(key: 'search.input.placeHolder')}" onkeyup="filterTasks()">
+                                    <f:form action="editProcesses" object="{campaign}" objectName="campaign" method="post" enctype="multipart/form-data"
+                                            additionalParams="{campaign: '{campaign.uid}'}"
+                                            addQueryString="true">
+                                        <div class="mb-3">
+                                            <label for="searchProcess" class="form-label">{f:translate(key: 'campaignModule.searchProcess.label')}</label>
+                                            <div class="input-group">
+                                                <input type="text"
+                                                       class="form-control"
+                                                       id="searchProcess"
+                                                       name="query"
+                                                       value="{query}"
+                                                       placeholder="{f:translate(key: 'search.input.placeHolder')}">
+
+                                                <button type="submit" class="btn btn-secondary" aria-label="Suchen" style="color: white;">
+                                                    <core:icon identifier="actions-search" size="small" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </f:form>
                                 </div>
                             </div>
                         </div>
 
                         <table class="table table-striped" id="taskTable">
                             <tbody>
-                            <f:for each="{processes}" as="process">
-                                <tr class="task" id="process-{process.uid}" data-name="Create Campaign Landing Page" data-status="In Progress 100" data-priority="High">
-                                    <td>
-                                        <f:if condition="{process.campaign.uid} == {currentCampaign.uid}">
-                                            <f:then>
-                                                <f:link.action section="process-{process.uid}" action="removeProcessFromCampaign" arguments="{process:process, campaign:currentCampaign}" class="btn btn-danger btn-sm">Remove</f:link.action>
-                                            </f:then>
-                                            <f:else>
-                                                <f:link.action  section="process-{process.uid}" action="addProcessToCampaign" arguments="{process:process, campaign:currentCampaign}" class="btn btn-primary btn-sm">Add</f:link.action>
-                                            </f:else>
-                                        </f:if>
-                                    </td>
-                                    <td>
-                                        {process.metadataForDisplay.signatur}
-                                        <span class="badge bg-warning border-warning">
-                                            <f:translate key="campaignModule.process.state.{process.state}" />
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div id="carousel-{process.uid}" class="carousel slide">
-                                            <!-- Wrapper for slides -->
-                                            <div class="carousel-inner">
-                                                <f:for each="{process.images}" as="imageName" iteration="index">
-                                                    <div class="carousel-item {f:if(condition: '{index.index} == 0', then: 'active', else: '')}">
-                                                        <img src="{process.thumbsImageInfos.{index.index}.image}" class="d-block w-100 carousel-image" />
-                                                    </div>
-                                                </f:for>
+                                <f:for each="{processes}" as="process">
+                                    <tr class="process" id="process-{process.uid}"  data-name="{process.metadataForDisplay.signatur}">
+                                        <td>
+                                            <f:variable name="activeFacetsArray" value="{facet: activeFacets}"/>
+                                            <f:variable name="activeFacetsWhithQueryArray" value="{v:iterator.merge(a: activeFacetsArray, b: {query: query})}" />
+                                            <f:variable name="pageArguments" value="{v:iterator.merge(a: activeFacetsWhithQueryArray, b: {currentPage: paginator.currentPageNumber, campaign: campaign, process:process})}"/>
+
+                                            <f:if condition="{process.campaign.uid} == {currentCampaign.uid}">
+                                                <f:then>
+                                                    <f:link.action section="process-{process.uid}" action="removeProcessFromCampaign" arguments="{pageArguments}" class="btn btn-danger btn-sm">Remove</f:link.action>
+                                                </f:then>
+                                                <f:else>
+                                                    <f:link.action  section="process-{process.uid}" action="addProcessToCampaign" arguments="{pageArguments}" class="btn btn-primary btn-sm">Add</f:link.action>
+                                                </f:else>
+                                            </f:if>
+                                        </td>
+                                        <td>
+                                            <span class="fs-6">
+                                                {process.metadataForDisplay.signatur}
+                                                <span class="badge bg-warning border-warning">
+                                                    <f:translate key="process.state.{process.state}" />
+                                                </span>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div id="carousel-{process.uid}" class="carousel slide">
+                                                <!-- Wrapper for slides -->
+                                                <div class="carousel-inner">
+                                                    <f:for each="{process.images}" as="imageName" iteration="index">
+                                                        <div class="carousel-item {f:if(condition: '{index.index} == 0', then: 'active', else: '')}">
+                                                            <img src="{process.thumbsImageInfos.{index.index}.image}" class="d-block w-100 carousel-image" />
+                                                        </div>
+                                                    </f:for>
+                                                </div>
                                             </div>
-
-                                            <!-- Left and right controls -->
-                                            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{process.uid}" data-bs-slide="prev">
-                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                <span class="visually-hidden">Previous</span>
-                                            </button>
-                                            <button class="carousel-control-next" type="button" data-bs-target="#carousel-{process.uid}" data-bs-slide="next">
-                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                <span class="visually-hidden">Next</span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </f:for>
-
+                                        </td>
+                                    </tr>
+                                </f:for>
                             </tbody>
                         </table>
 
-                        <div class="alert alert-info" role="alert" style="display:none;" id="noTasksAlert">
-                            <strong>Info!</strong> You have no processes to manage at the moment.
-                        </div>
+                        <f:variable name="paginationAction">editProcesses</f:variable>
+                        <f:render partial="Backend/Campaign/Pagination" arguments="{_all}"/>
+
+                        <f:if condition="{paginator.searchResult.numFound} < 1">
+                            <div class="alert alert-info" role="alert" id="noProcessesAlert">
+                                <f:translate key="campaignModule.processList.noProcessesAlert" />
+                            </div>
+                        </f:if>
+
                     </div>
                 </div>
             </div>

@@ -46,7 +46,7 @@ return [
         'controllerActions' => [
             CampaignController::class =>
                 'list, new, create, edit, update, editProcesses, listProcesses, '
-                . 'addProcessToCampaign, removeProcessFromCampaign, publish, close, reopen'
+                . 'addProcessToCampaign, removeProcessFromCampaign, publish, close, reopen, delete'
         ]
     ],
     'tx_crowdsourcing_configuration' => [

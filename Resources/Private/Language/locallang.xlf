@@ -114,6 +114,27 @@
         <trans-unit id="campaignModule.button.removeProcessFromCampaign">
             <source>Remove</source>
         </trans-unit>
+        <trans-unit id="campaignModule.processList.header">
+            <source>Assigned processes</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.searchProcess.label">
+            <source>Search Processes</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.processList.noProcessesAlert">
+            <source>No processes found.</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.processList.edit.info">
+            <source>Add processes to or remove processes from the campaign.</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.processList.edit.header">
+            <source>Edit %s</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.processList.button.close">
+            <source>Close</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.processList.button.edit">
+            <source>Edit list</source>
+        </trans-unit>
         <trans-unit id="process.state.NEW">
             <source>New</source>
         </trans-unit>
