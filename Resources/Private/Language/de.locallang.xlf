@@ -191,6 +191,18 @@
             <source>Finished</source>
             <target>Fertig</target>
         </trans-unit>
+        <trans-unit id="statistic.countAll">
+            <source>Total</source>
+            <target>Gesamt</target>
+        </trans-unit>
+        <trans-unit id="statistic.personal">
+            <source>Personal Statistics</source>
+            <target>Persönliche Statistik</target>
+        </trans-unit>
+        <trans-unit id="statistic.overall">
+            <source>Statistics</source>
+            <target>Statistik</target>
+        </trans-unit>
         <trans-unit id="process.editor.state.NEW">
         	<source>1. Editor</source>
             <target>1. Erfasser</target>
