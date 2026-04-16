@@ -64,14 +64,14 @@
         /* Legende */
         var legendY = barOffsetY + barHeight + 12;
         var legendX = 0;
-        var lineHeight = 20;
-        var dotSize = 10;
-        var marginX = 14;
+        var lineHeight = 26;
+        var dotSize = 14;
+        var marginX = 20;
 
         segments.forEach(function (seg) {
             // Hilfselement um die Breite des Textes zu messen
             var tempText = svg.append('text')
-                .attr('font-size', '11')
+                .attr('font-size', '14')
                 .attr('visibility', 'hidden')
                 .text(seg.label + ' (' + seg.value + ')');
             
@@ -95,9 +95,9 @@
                 .attr('fill', seg.color);
 
             svg.append('text')
-                .attr('x', legendX + dotSize + 4)
+                .attr('x', legendX + dotSize + 6)
                 .attr('y', legendY + dotSize - 1)
-                .attr('font-size', '11')
+                .attr('font-size', '14')
                 .attr('fill', '#495057')
                 .text(seg.label + ' (' + seg.value + ')');
 
