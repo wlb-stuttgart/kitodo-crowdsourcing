@@ -112,6 +112,14 @@ class Process extends AbstractEntity
         $this->campaign = $campaign;
     }
 
+    /**
+     * Remove the campaign association for this process.
+     */
+    public function removeCampaign(): void
+    {
+        $this->campaign = null;
+    }
+
     public function getTitle(): string
     {
         return $this->title;

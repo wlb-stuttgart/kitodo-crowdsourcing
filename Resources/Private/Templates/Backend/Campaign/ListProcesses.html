@@ -4,62 +4,93 @@
 <f:section name="main">
     <style>
         .carousel-image {
-        object-fit: cover;
-        height: 300px;
-        width: 100%;
+            object-fit: contain;
+            height: 150px;
+            width: 100%;
+            object-position: right center;
+            background-color: transparent;
         }
     </style>
 
     <div class="container mt-5">
-        <h1>{campaign.title}</h1>
-        <h2>Processes</h2>
-
-        <f:link.action action="editProcesses" arguments="{campaign:campaign}" class="btn btn-primary w-100 mb-2">Edit List</f:link.action>
-        <f:link.action action="list" class="btn btn-primary w-100">Close</f:link.action>
-
         <div class="row">
-            <!-- Search Form -->
-            <div class="col-12">
-                <div class="row border-bottom pb-3 mb-3">
-                    <f:form action="listProcesses" method="post" name="searchForm" id="searchForm">
-                        <f:form.textfield name="search" placeholder="{f:translate(key: 'search.input.placeHolder')}" value="{search}" id="searchTask" class="form-control" />
-                    </f:form>
-                </div>
-            </div>
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>{campaign.title}</h4>
+                        <h5>{f:translate(key: 'campaignModule.processList.header')}</h5>
 
-            <!-- Documents List -->
-            <f:for each="{documents}" as="document">
-                <div class="col-12">
-                    <div class="row border-bottom pb-3 mb-3">
-                        <!-- Image on the Left (Carousel) -->
-                        <div class="col-md-4">
-                            <div id="carousel-{document.identifier}" class="carousel slide" data-bs-ride="carousel">
-                                <div class="carousel-inner">
-                                    <f:for each="{document.images}" as="imageName" iteration="index">
-                                        <div class="carousel-item {f:if(condition: '{index.index} == 0', then: 'active', else: '')}">
-                                            <img src="{document.thumbsImageInfos.{index.index}.image}" class="d-block w-100 carousel-image" />
+                        <f:link.action action="editProcesses" arguments="{campaign:campaign}" class="btn btn-primary w-100 mb-2">{f:translate(key: 'campaignModule.processList.button.edit')}</f:link.action>
+                        <f:link.action action="list" class="btn btn-primary w-100">{f:translate(key: 'campaignModule.processList.button.close')}</f:link.action>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <f:form action="listProcesses" object="{campaign}" objectName="campaign" method="post" enctype="multipart/form-data"
+                                            additionalParams="{campaign: '{campaign.uid}'}"
+                                            addQueryString="true">
+                                        <div class="mb-3">
+                                            <label for="searchProcess" class="form-label">{f:translate(key: 'campaignModule.searchProcess.label')}</label>
+                                                <div class="input-group">
+                                                <input type="text"
+                                                       class="form-control"
+                                                       id="searchProcess"
+                                                       name="query"
+                                                       value="{query}"
+                                                       placeholder="{f:translate(key: 'search.input.placeHolder')}">
+
+                                                <button type="submit" class="btn btn-secondary" aria-label="Suchen" style="color: white;">
+                                                    <core:icon identifier="actions-search" size="small" />
+                                                </button>
+                                            </div>
                                         </div>
-                                    </f:for>
+                                    </f:form>
                                 </div>
-                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{document.identifier}" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-{document.identifier}" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button>
                             </div>
                         </div>
-                            <!-- Text Content on the Right -->
-                        <div class="col-md-8">
-                            <h2>{document.metadataForDisplay.signatur}</h2>
-                            <div class="post-meta"></div>
-                            <p></p>
-                        </div>
+
+                        <table class="table table-striped" id="taskTable">
+                            <tbody>
+                                <f:for each="{documents}" as="document">
+                                    <tr class="process" id="process-{document.uid}" data-name="{document.metadataForDisplay.signatur}">
+                                        <td>
+                                            <span class="fs-6">
+                                                {document.metadataForDisplay.signatur}
+                                                <span class="badge bg-warning border-warning">
+                                                    <f:translate key="process.state.{document.state}" />
+                                                </span>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div id="carousel-{document.uid}" class="carousel slide">
+                                                <!-- Wrapper for slides -->
+                                                <div class="carousel-inner">
+                                                    <f:for each="{document.images}" as="imageName" iteration="index">
+                                                        <div class="carousel-item {f:if(condition: '{index.index} == 0', then: 'active', else: '')}">
+                                                            <img src="{document.thumbsImageInfos.{index.index}.image}" class="d-block w-100 carousel-image" />
+                                                        </div>
+                                                    </f:for>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </f:for>
+                            </tbody>
+                        </table>
+
+                        <f:variable name="paginationAction">listProcesses</f:variable>
+                        <f:render partial="Backend/Campaign/Pagination" arguments="{_all}"/>
+
+                        <f:if condition="{paginator.searchResult.numFound} < 1">
+                            <div class="alert alert-info" role="alert" id="noProcessesAlert">
+                                <f:translate key="campaignModule.processList.noProcessesAlert" />
+                            </div>
+                        </f:if>
                     </div>
                 </div>
-            </f:for>
+            </div>
         </div>
     </div>
 

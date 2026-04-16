@@ -12,14 +12,6 @@
                         <p></p>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="searchCampaign" class="form-label">Suchen</label>
-                                    <input type="text" class="form-control" id="searchCampaign" placeholder="{f:translate(key: 'search.input.placeHolder')}">
-                                </div>
-                            </div>
-                        </div>
 
                         <table class="table table-striped" id="campaignTable">
                             <colgroup>
@@ -33,11 +25,10 @@
                             </tr>
                             </thead>
                             <tbody>
-
                             <f:for each="{campaigns}" as="campaign">
                                 <tr class="campaign" data-name="{campaign.title}">
                                     <td>{campaign.title}</td>
-                                    <td>
+                                    <td class="d-flex flex-wrap justify-content-end gap-2">
                                         <f:link.action action="listProcesses" arguments="{campaign: campaign}" class="btn btn-primary btn-sm">
                                             Vorgänge
                                         </f:link.action>
@@ -48,7 +39,7 @@
 
                                         <f:if condition="{campaign.new}">
                                             <f:link.action action="publish" arguments="{campaign: campaign, page: currentPage}" class="btn btn-warning btn-sm">
-                                                Veröffentlichen
+                                                        Veröffentlichen
                                             </f:link.action>
                                         </f:if>
 
@@ -64,33 +55,23 @@
                                             </f:link.action>
                                         </f:if>
 
-                                        <a href="#" class="btn btn-danger btn-sm">Löschen</a>
+                                        <f:if condition="{campaign.processCount} > 0">
+                                            <f:then>
+                                                <a href="#" class="btn btn-danger btn-sm disabled">
+                                                    Löschen
+                                                </a>
+                                            </f:then>
+                                            <f:else>
+                                                <f:link.action action="delete" arguments="{campaign: campaign, page: currentPage}" class="btn btn-danger btn-sm">
+                                                    Löschen
+                                                </f:link.action>
+                                            </f:else>
+                                        </f:if>
                                     </td>
                                 </tr>
                             </f:for>
-
                             </tbody>
                         </table>
-
-                        <div class="pagination">
-                            <f:if condition="{currentPage} > 1">
-                                <a href="{f:uri.action(action: 'list', arguments: {page: previousPage})}" class="btn btn-secondary btn-sm">Vorherige</a>
-                            </f:if>
-
-                            <f:for each="{pageNumbers}" as="page">
-                                <a href="{f:uri.action(action: 'list', arguments: {page: page})}" class="btn btn-secondary btn-sm {f:if(condition: page == currentPage, then: 'active', else: '')}">
-                                    {page}
-                                </a>
-                            </f:for>
-
-                            <f:if condition="{currentPage} < {totalPages}">
-                                <a href="{f:uri.action(action: 'list', arguments: {page: nextPage})}" class="btn btn-secondary btn-sm">Nächste</a>
-                            </f:if>
-                        </div>
-
-                        <div class="alert alert-info d-none" role="alert" id="noCampaignsAlert">
-                            <strong>Info!</strong> Keine Kampagnen vorhanden.
-                        </div>
 
                         <f:link.action action="new" class="btn btn-primary btn-block">+</f:link.action>
                     </div>

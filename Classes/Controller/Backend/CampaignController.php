@@ -5,6 +5,7 @@ namespace Wlb\Crowdsourcing\Controller\Backend;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
+use TYPO3\CMS\Core\Pagination\SlidingWindowPagination;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
@@ -12,6 +13,7 @@ use Wlb\Crowdsourcing\Domain\Model\Campaign;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
+use Wlb\Crowdsourcing\Pagination\SearchResultPaginator;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 use Wlb\Crowdsourcing\Services\SearchService;
 
@@ -115,6 +117,7 @@ class CampaignController extends ActionController
      */
     public function listAction(int $page = 0): ResponseInterface
     {
+        /*
         $currentPage = $page > 0 ? $page : 1;
         $itemsPerPage = 10;
         $offset = ($currentPage - 1) * $itemsPerPage;
@@ -126,13 +129,16 @@ class CampaignController extends ActionController
 
         $campaigns = $this->campaignRepository->findByPage($offset, $itemsPerPage);
 
-        $this->moduleTemplate->assign('campaigns', $campaigns);
         $this->moduleTemplate->assign('currentPage', $currentPage);
         $this->moduleTemplate->assign('totalPages', $totalPages);
         $this->moduleTemplate->assign('itemsPerPage', $itemsPerPage);
         $this->moduleTemplate->assign('pageNumbers', $pageNumbers);
         $this->moduleTemplate->assign('previousPage', $previousPage);
         $this->moduleTemplate->assign('nextPage', $nextPage);
+        */
+
+        $campaigns = $this->campaignRepository->findAll();
+        $this->moduleTemplate->assign('campaigns', $campaigns);
 
         return $this->moduleTemplate->renderResponse('Backend/Campaign/List');
     }
@@ -151,10 +157,41 @@ class CampaignController extends ActionController
             $importedPath = $importedPath . '/';
         }
 
+        $query = '';
+        if ($this->request->hasArgument('query')) {
+            $query = (string)$this->request->getArgument('query');
+        }
+
+        $currentPage = $this->request->hasArgument('currentPage')
+            ? (int)$this->request->getArgument('currentPage') : 1;
+
+        $itemsPerPage = $this->settings['searchPagination']['itemsPerPage'] ?
+            $this->settings['searchPagination']['itemsPerPage'] : 20;
+
+        $maximumLinks = $this->settings['searchPagination']['maximumNumberOfLinks'] ?
+            $this->settings['searchPagination']['maximumNumberOfLinks'] : 10;
+
+
+        $facetsFields = $this->searchService->getFacetFields() ?? [];
+        $activeFacets = ['campaign_faceting' => [$campaign->getUid() => 1]];
+
+        $this->searchService->setQuery($query, $facetsFields, $activeFacets);
+        $this->searchService->setBackendSearch();
+
+        $paginator = new SearchResultPaginator($this->searchService, $currentPage, $itemsPerPage);
+        $pagination = new SlidingWindowPagination(
+            $paginator,
+            $maximumLinks,
+        );
+
+        $processes = $paginator->getSearchResult()->getProcesses();
+
+        $this->moduleTemplate->assign('pagination', $pagination);
+        $this->moduleTemplate->assign('paginator', $paginator);
         $this->moduleTemplate->assign("importedPath", $importedPath);
-        //$this->moduleTemplate->assign("search", $search);
+        $this->moduleTemplate->assign("query", $query);
         $this->moduleTemplate->assign("campaign", $campaign);
-        $this->moduleTemplate->assign("documents", $campaign->getProcesses());
+        $this->moduleTemplate->assign("documents", $processes);
 
         return $this->moduleTemplate->renderResponse('Backend/Campaign/ListProcesses');;
     }
@@ -174,7 +211,38 @@ class CampaignController extends ActionController
             $importedPath = $importedPath . '/';
         }
 
-        $processes = $this->processRepository->findAll();
+        $query = '';
+        if ($this->request->hasArgument('query')) {
+            $query = (string)$this->request->getArgument('query');
+        }
+
+        $facetsFields = $this->searchService->getFacetFields() ?? [];
+        $activeFacets = [];
+
+        $currentPage = $this->request->hasArgument('currentPage')
+            ? (int)$this->request->getArgument('currentPage') : 1;
+
+        $itemsPerPage = $this->settings['searchPagination']['itemsPerPage'] ?
+            $this->settings['searchPagination']['itemsPerPage'] : 20;
+
+        $maximumLinks = $this->settings['searchPagination']['maximumNumberOfLinks'] ?
+            $this->settings['searchPagination']['maximumNumberOfLinks'] : 10;
+
+
+        $this->searchService->setQuery($query, $facetsFields, $activeFacets);
+        $this->searchService->setBackendSearch();
+
+        $paginator = new SearchResultPaginator($this->searchService, $currentPage, $itemsPerPage);
+        $pagination = new SlidingWindowPagination(
+            $paginator,
+            $maximumLinks,
+        );
+
+        $processes = $paginator->getSearchResult()->getProcesses();
+
+        $this->moduleTemplate->assign('pagination', $pagination);
+        $this->moduleTemplate->assign('paginator', $paginator);
+        $this->moduleTemplate->assign("query", $query);
         $this->moduleTemplate->assign("campaign", $campaign);
         $this->moduleTemplate->assign("importedPath", $importedPath);
         $this->moduleTemplate->assign("processes", $processes);
@@ -206,6 +274,13 @@ class CampaignController extends ActionController
      */
     public function addProcessToCampaignAction(Process $process, Campaign $campaign): ResponseInterface
     {
+        $currentPage = $this->request->hasArgument('currentPage')
+            ? (int)$this->request->getArgument('currentPage') : 1;
+
+        $query = $this->request->hasArgument('query')
+            ? $this->request->getArgument('query') : "";
+
+
         $assignedCampaign = $process->getCampaign();
         if ($assignedCampaign) {
             $assignedCampaign->removeProcess($process);
@@ -220,7 +295,9 @@ class CampaignController extends ActionController
         $this->indexer->indexDocument($process);
 
         return $this->redirect('editProcesses', null, null, [
-            "campaign" => $campaign
+            "campaign" => $campaign,
+            "currentPage" => $currentPage,
+            "query" => $query
             //"processUid" => $process->getUid()
         ]);
     }
@@ -235,6 +312,12 @@ class CampaignController extends ActionController
      */
     public function removeProcessFromCampaignAction(Process $process, Campaign $campaign): ResponseInterface
     {
+        $currentPage = $this->request->hasArgument('currentPage')
+            ? (int)$this->request->getArgument('currentPage') : 1;
+
+        $query = $this->request->hasArgument('query')
+            ? $this->request->getArgument('query') : "";
+
         $assignedCampaign = $process->getCampaign();
         if ($assignedCampaign) {
             $assignedCampaign->removeProcess($process);
@@ -242,10 +325,12 @@ class CampaignController extends ActionController
 
         $this->campaignRepository->update($campaign);
 
-        $this->indexer->deleteDocument($process);
+        $this->indexer->indexDocument($process);
 
         return $this->redirect('editProcesses', null, null, [
-            "campaign" => $campaign
+            "campaign" => $campaign,
+            "currentPage" => $currentPage,
+            "query" => $query
             //"processUid" => $process->getUid()
         ]);
     }
@@ -258,7 +343,7 @@ class CampaignController extends ActionController
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
-    public function publishAction(Campaign $campaign, int $page): ResponseInterface
+    public function publishAction(Campaign $campaign, int $page = null): ResponseInterface
     {
         $campaign->changeWorkflowState(Campaign::WORKFLOW_STATE_PUBLISHED);
         $this->campaignRepository->update($campaign);
@@ -273,7 +358,7 @@ class CampaignController extends ActionController
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
-    public function closeAction(Campaign $campaign, int $page): ResponseInterface
+    public function closeAction(Campaign $campaign, int $page = null): ResponseInterface
     {
         $campaign->changeWorkflowState(Campaign::WORKFLOW_STATE_CLOSED);
         $this->campaignRepository->update($campaign);
@@ -288,10 +373,18 @@ class CampaignController extends ActionController
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
-    public function reopenAction(Campaign $campaign, int $page): ResponseInterface
+    public function reopenAction(Campaign $campaign, int $page = null): ResponseInterface
     {
         $campaign->changeWorkflowState(Campaign::WORKFLOW_STATE_PUBLISHED);
         $this->campaignRepository->update($campaign);
+        return $this->redirect('list', null, null, ['page' => $page]);
+    }
+
+    public function deleteAction(Campaign $campaign, int $page = null): ResponseInterface
+    {
+        if ($campaign->getProcesses()->count() === 0) {
+            $this->campaignRepository->remove($campaign);
+        }
         return $this->redirect('list', null, null, ['page' => $page]);
     }
 }
