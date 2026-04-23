@@ -238,14 +238,7 @@ class Process extends AbstractEntity
         $xml->registerXPathNamespace('kitodo', 'http://meta.kitodo.org/v1/');
         // Get title and signature
         $signature = (string) $xml->xpath('*[@name="Signatur"]')[0];
-        $title = (string) $xml->xpath('*[@name="4000"]/*[@name="4000_1"]')[0];
-        
-        if (empty($title)) {
-            $this->setTitle($signature);;
-        } else {
-            $this->setTitle($title);
-        }
-
+        $this->setTitle($signature);
     }
 
     /**
@@ -394,8 +387,6 @@ class Process extends AbstractEntity
         }
 
         $this->setMetadata($sxe->saveXML());
-
-        $this->setTitleFromMetadata();
     }
 
     public function getSignature()
