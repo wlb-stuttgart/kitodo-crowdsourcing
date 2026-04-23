@@ -47,6 +47,10 @@
 			<source>Fields marked with * are mandatory.</source>
 			<target>Mit * gekennzeichnete Felder sind Pflichtfelder.</target>
 		</trans-unit>
+		<trans-unit id="process.in_edit">
+			<source>In edit</source>
+			<target>In Bearbeitung</target>
+		</trans-unit>
         <trans-unit id="error_notunique_global">
              <source>The %1$s is not unique</source>
             <target>Il campo %1$s non è univoco</target>
@@ -174,6 +178,18 @@
         <trans-unit id="campaignModule.processList.button.edit">
             <source>Edit list</source>
             <target>Liste bearbeiten</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.processList.button.addProcessToCampaign">
+            <source>Assign</source>
+            <target>Zuweisen</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.processList.button.revokeEditing">
+            <source>Revoke editing</source>
+            <target>Bearbeitung entziehen</target>
+        </trans-unit>
+        <trans-unit id="campaignModule.processList.button.removeProcessFromCampaign">
+            <source>Unassign</source>
+            <target>Zuweisung entfernen</target>
         </trans-unit>
         <trans-unit id="process.state.NEW">
             <source>New</source>

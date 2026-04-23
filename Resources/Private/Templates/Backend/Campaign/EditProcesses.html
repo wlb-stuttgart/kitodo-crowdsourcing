@@ -55,26 +55,43 @@
                             <tbody>
                                 <f:for each="{processes}" as="process">
                                     <tr class="process" id="process-{process.uid}"  data-name="{process.metadataForDisplay.signatur}">
-                                        <td>
+                                        <td class="w-auto text-nowrap">
                                             <f:variable name="activeFacetsArray" value="{facet: activeFacets}"/>
                                             <f:variable name="activeFacetsWhithQueryArray" value="{v:iterator.merge(a: activeFacetsArray, b: {query: query})}" />
                                             <f:variable name="pageArguments" value="{v:iterator.merge(a: activeFacetsWhithQueryArray, b: {currentPage: paginator.currentPageNumber, campaign: campaign, process:process})}"/>
+                                            <div class="d-flex flex-column gap-2 align-items-start">
+                                                <f:if condition="{process.campaign.uid} == {currentCampaign.uid}">
+                                                    <f:then>
+                                                        <f:link.action section="process-{process.uid}" action="removeProcessFromCampaign" arguments="{pageArguments}" class="btn btn-danger btn-sm">
+                                                            <f:translate key="campaignModule.processList.button.removeProcessFromCampaign" />
+                                                        </f:link.action>
+                                                    </f:then>
+                                                    <f:else>
+                                                        <f:link.action  section="process-{process.uid}" action="addProcessToCampaign" arguments="{pageArguments}" class="btn btn-primary btn-sm">
+                                                            <f:translate key="campaignModule.processList.button.addProcessToCampaign" />
+                                                        </f:link.action>
+                                                    </f:else>
+                                                </f:if>
 
-                                            <f:if condition="{process.campaign.uid} == {currentCampaign.uid}">
-                                                <f:then>
-                                                    <f:link.action section="process-{process.uid}" action="removeProcessFromCampaign" arguments="{pageArguments}" class="btn btn-danger btn-sm">Remove</f:link.action>
-                                                </f:then>
-                                                <f:else>
-                                                    <f:link.action  section="process-{process.uid}" action="addProcessToCampaign" arguments="{pageArguments}" class="btn btn-primary btn-sm">Add</f:link.action>
-                                                </f:else>
-                                            </f:if>
+                                                <f:if condition="{process.feUser}">
+                                                    <f:link.action  section="process-{process.uid}" action="revokeProcessEditing" arguments="{pageArguments}" class="btn btn-warning btn-sm">
+                                                        <f:translate key="campaignModule.processList.button.revokeEditing" />
+                                                    </f:link.action>
+                                                </f:if>
+                                            </div>
                                         </td>
                                         <td>
                                             <span class="fs-6">
-                                                {process.metadataForDisplay.signatur}
-                                                <span class="badge bg-warning border-warning">
+                                                {process.metadataForDisplay.signatur}<br />
+                                                <span class="badge bg-info border-info">
                                                     <f:translate key="process.state.{process.state}" />
                                                 </span>
+                                                <f:if condition="{process.feUser}">
+                                                    <span class="badge bg-warning border-warning">
+                                                    <f:translate key="process.in_edit" arguments="{0: process.feUser.username}" />
+                                                </span>
+
+                                                </f:if>
                                             </span>
                                         </td>
                                         <td>

@@ -35,6 +35,9 @@
 		<trans-unit id="process.requiredFieldsNotice">
 			<source>Fields marked with * are mandatory.</source>
 		</trans-unit>
+		<trans-unit id="process.in_edit">
+			<source>In edit</source>
+		</trans-unit>
         <trans-unit id="landingpage.header">
             <source>Protest sichtbar machen</source>
             <target>Protest sichtbar machen</target>
@@ -134,6 +137,15 @@
         </trans-unit>
         <trans-unit id="campaignModule.processList.button.edit">
             <source>Edit list</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.processList.button.addProcessToCampaign">
+            <source>Assign</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.processList.button.removeProcessFromCampaign">
+            <source>Unassign</source>
+        </trans-unit>
+        <trans-unit id="campaignModule.processList.button.revokeEditing">
+            <source>Revoke editing</source>
         </trans-unit>
         <trans-unit id="process.state.NEW">
             <source>New</source>

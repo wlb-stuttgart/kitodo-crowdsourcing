@@ -14,6 +14,7 @@ use Wlb\Crowdsourcing\Common\Solr\SolrIndexer;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
+use Wlb\Crowdsourcing\Services\ProcessCleanupService;
 use Wlb\Crowdsourcing\Services\ProcessHistoryService;
 
 class CleanupStaleProcessesCommand extends BaseCommand
@@ -25,6 +26,7 @@ class CleanupStaleProcessesCommand extends BaseCommand
         private readonly PersistenceManager $persistenceManager,
         private readonly ProcessHistoryRepository $processHistoryRepository,
         private readonly ProcessHistoryService $processHistoryService,
+        private readonly ProcessCleanupService $processCleanupService,
         private readonly SolrIndexer $indexer,
     ) {
         parent::__construct();
@@ -108,7 +110,7 @@ class CleanupStaleProcessesCommand extends BaseCommand
             }
 
             // Clean up stale processes
-            $cleanedCount = $this->cleanupStaleProcesses($staleProcesses);
+            $cleanedCount = $this->processCleanupService->cleanupMultipleProcesses($staleProcesses);
 
             $io->success(sprintf('Erfolgreich %d sich in Bearbeitung befindende Prozesse zurückgesetzt.', $cleanedCount));
 
@@ -167,37 +169,5 @@ class CleanupStaleProcessesCommand extends BaseCommand
             ['ID', 'Record ID', 'Status', 'FE-User ID', 'Username', 'Letztes Update', 'Vor'],
             $tableRows
         );
-    }
-
-    /**
-     * Cleans up stale processes by resetting their user, restoring their previous state,
-     * and updating the repository accordingly.
-     *
-     * @param array $staleProcesses An array of stale processes to be cleaned up.
-     * @return int The count of stale processes that were successfully cleaned up.
-     */
-    private function cleanupStaleProcesses(array $staleProcesses): int
-    {
-        $cleanedCount = 0;
-
-        /** @var Process $process */
-        foreach ($staleProcesses as $process) {
-            $lastHistoryProcess = $this->processHistoryRepository->getLastHistory($process->getRecordIdentifier());
-
-            $data = $lastHistoryProcess->toArray();
-
-            $this->processHistoryService->restoreFromArray($process, $data);
-            // The current state of a process is one state after the state of the last history entry.
-            $process->setNextState();
-            $process->resetFeUser();
-            $this->processRepository->update($process);
-            $this->persistenceManager->persistAll();
-
-            $this->indexer->indexDocument($process);
-
-            $cleanedCount++;
-        }
-
-        return $cleanedCount;
     }
 }

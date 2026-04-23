@@ -15,6 +15,7 @@ use Wlb\Crowdsourcing\Domain\Repository\CampaignRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
 use Wlb\Crowdsourcing\Pagination\SearchResultPaginator;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
+use Wlb\Crowdsourcing\Services\ProcessCleanupService;
 use Wlb\Crowdsourcing\Services\SearchService;
 
 class CampaignController extends ActionController
@@ -27,6 +28,7 @@ class CampaignController extends ActionController
         private readonly SearchService $searchService,
         private readonly SolrIndexer $indexer,
         private readonly ModuleTemplateFactory $moduleTemplateFactory,
+        private readonly ProcessCleanupService $processCleanupService,
         protected ResourceFactory $resourceFactory
     )
     {
@@ -386,5 +388,21 @@ class CampaignController extends ActionController
             $this->campaignRepository->remove($campaign);
         }
         return $this->redirect('list', null, null, ['page' => $page]);
+    }
+
+    public function revokeProcessEditingAction(Process $process, Campaign $campaign): ResponseInterface
+    {
+        $currentPage = $this->request->hasArgument('currentPage')
+            ? (int)$this->request->getArgument('currentPage') : 1;
+
+        $query = $this->request->hasArgument('query')
+            ? $this->request->getArgument('query') : "";
+
+        $this->processCleanupService->cleanupSingleProcess($process);
+        return $this->redirect('editProcesses', null, null, [
+            "campaign" => $campaign,
+            "currentPage" => $currentPage,
+            "query" => $query
+        ]);
     }
 }
