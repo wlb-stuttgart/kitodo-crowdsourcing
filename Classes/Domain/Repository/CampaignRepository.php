@@ -2,6 +2,7 @@
 
 namespace Wlb\Crowdsourcing\Domain\Repository;
 
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use Wlb\Crowdsourcing\Domain\Model\Campaign;
 
 class CampaignRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
@@ -40,5 +41,20 @@ class CampaignRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return array_column($query->execute(true), 'uid');
+    }
+
+
+    /**
+     * @return \mixed[][]|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     */
+    public function findAllOrderedByCreationDate()
+    {
+        $query = $this->createQuery();
+
+        $query->setOrderings([
+            'crdate' => QueryInterface::ORDER_DESCENDING,
+        ]);
+
+        return $query->execute();
     }
 }

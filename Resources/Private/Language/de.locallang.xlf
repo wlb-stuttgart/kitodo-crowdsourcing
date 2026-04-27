@@ -207,6 +207,22 @@
             <source>Finished</source>
             <target>Fertig</target>
         </trans-unit>
+        <trans-unit id="dashboard.campaign">
+            <source>Campaign</source>
+            <target>Kampagne</target>
+        </trans-unit>
+        <trans-unit id="dashboard.action.continueProcess">
+            <source>Continue editing</source>
+            <target>Bearbeitung fortsetze</target>
+        </trans-unit>
+        <trans-unit id="dashboard.action.newProcess">
+            <source>Edit new poster</source>
+            <target>Neues Plakat bearbeiten</target>
+        </trans-unit>
+        <trans-unit id="dashboard.action.randomProcess">
+            <source>Random poster</source>
+            <target>Zufälliges Plakat</target>
+        </trans-unit>
         <trans-unit id="statistic.countAll">
             <source>Total</source>
             <target>Gesamt</target>

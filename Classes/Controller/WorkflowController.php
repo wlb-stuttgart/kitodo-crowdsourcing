@@ -192,12 +192,12 @@ class WorkflowController extends ActionController
             }
         }
 
-        /** @var Campaign $campaign */
-        $campaign = $this->campaignRepository->findAll()->getFirst();
+        /** @var Campaign[] $campaigns */
+        $campaigns = $this->campaignRepository->findAllOrderedByCreationDate();
 
         $this->view->assign('statistic', $this->statisticService->getStatistics());
         $this->view->assign('userStatistic', $feUser ? $this->statisticService->getStatisticsByUser($feUser) : null);
-        $this->view->assign('campaign', $campaign);
+        $this->view->assign('campaigns', $campaigns);
         $this->view->assign('currentProcess', $currentProcess);
 
         return $this->htmlResponse();

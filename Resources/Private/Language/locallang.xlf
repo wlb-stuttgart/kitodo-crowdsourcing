@@ -159,6 +159,18 @@
         <trans-unit id="process.state.COMPLETED">
             <source>Finished</source>
         </trans-unit>
+        <trans-unit id="dashboard.campaign">
+            <source>Campaign</source>
+        </trans-unit>
+        <trans-unit id="dashboard.action.continueProcess">
+            <source>Continue editing</source>
+        </trans-unit>
+        <trans-unit id="dashboard.action.newProcess">
+            <source>Edit new poster</source>
+        </trans-unit>
+        <trans-unit id="dashboard.action.randomProcess">
+            <source>Random poster</source>
+        </trans-unit>
         <trans-unit id="statistic.countAll">
             <source>Total</source>
         </trans-unit>
