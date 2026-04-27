@@ -139,10 +139,10 @@
             <source>Edit list</source>
         </trans-unit>
         <trans-unit id="campaignModule.processList.button.addProcessToCampaign">
-            <source>Assign</source>
+            <source>Add</source>
         </trans-unit>
         <trans-unit id="campaignModule.processList.button.removeProcessFromCampaign">
-            <source>Unassign</source>
+            <source>Remove</source>
         </trans-unit>
         <trans-unit id="campaignModule.processList.button.revokeEditing">
             <source>Revoke editing</source>

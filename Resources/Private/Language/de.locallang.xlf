@@ -180,16 +180,16 @@
             <target>Liste bearbeiten</target>
         </trans-unit>
         <trans-unit id="campaignModule.processList.button.addProcessToCampaign">
-            <source>Assign</source>
-            <target>Zuweisen</target>
+            <source>Add</source>
+            <target>Hinzufügen</target>
         </trans-unit>
         <trans-unit id="campaignModule.processList.button.revokeEditing">
             <source>Revoke editing</source>
             <target>Bearbeitung entziehen</target>
         </trans-unit>
         <trans-unit id="campaignModule.processList.button.removeProcessFromCampaign">
-            <source>Unassign</source>
-            <target>Zuweisung entfernen</target>
+            <source>Remove</source>
+            <target>Entfernen</target>
         </trans-unit>
         <trans-unit id="process.state.NEW">
             <source>New</source>

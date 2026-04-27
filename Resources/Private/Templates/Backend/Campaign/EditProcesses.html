@@ -72,25 +72,25 @@
                                                         </f:link.action>
                                                     </f:else>
                                                 </f:if>
-
-                                                <f:if condition="{process.feUser}">
-                                                    <f:link.action  section="process-{process.uid}" action="revokeProcessEditing" arguments="{pageArguments}" class="btn btn-warning btn-sm">
-                                                        <f:translate key="campaignModule.processList.button.revokeEditing" />
-                                                    </f:link.action>
-                                                </f:if>
                                             </div>
                                         </td>
                                         <td>
                                             <span class="fs-6">
                                                 {process.metadataForDisplay.signatur}<br />
-                                                <span class="badge bg-info border-info">
+                                                <span class="badge rounded-pill bg-info border-info">
                                                     <f:translate key="process.state.{process.state}" />
                                                 </span>
                                                 <f:if condition="{process.feUser}">
-                                                    <span class="badge bg-warning border-warning">
+                                                    <span class="badge rounded-pill bg-warning border-warning">
                                                     <f:translate key="process.in_edit" arguments="{0: process.feUser.username}" />
                                                 </span>
-
+                                                <div class="mt-2">
+                                                <f:if condition="{process.feUser}">
+                                                    <f:link.action  section="process-{process.uid}" action="revokeProcessEditing" arguments="{pageArguments}" class="btn btn-warning btn-sm">
+                                                        <f:translate key="campaignModule.processList.button.revokeEditing" />
+                                                    </f:link.action>
+                                                </f:if>
+                                                </div>
                                                 </f:if>
                                             </span>
                                         </td>
