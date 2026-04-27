@@ -30,13 +30,11 @@ class StatisticService
         $statisticsArray['countAll'] = $countAll;
 
         $countNew = $this->processRepository->countAllActiveByState(Process::WORKFLOW_STATE_NEW);
-        $statisticsArray['countNew'] = $countNew;
+        $statisticsArray['countUnedited'] = $countNew;
 
         $countCorrection = $this->processRepository->countAllActiveByState(Process::WORKFLOW_STATE_CORRECTION);
-        $statisticsArray['countCorrection'] = $countCorrection;
-
         $countFinalCorrection = $this->processRepository->countAllActiveByState(Process::WORKFLOW_STATE_FINAL_CORRECTION);
-        $statisticsArray['countFinalCorrection'] = $countFinalCorrection;
+        $statisticsArray['countInProgress'] = $countFinalCorrection + $countCorrection;
 
         $countCompleted = $this->processRepository->countAllActiveByState(Process::WORKFLOW_STATE_COMPLETED);
         $statisticsArray['countCompleted'] = $countCompleted;

@@ -174,8 +174,17 @@
         <trans-unit id="statistic.countAll">
             <source>Total</source>
         </trans-unit>
+        <trans-unit id="statistic.unedited">
+            <source>Unedited Posters</source>
+        </trans-unit>
+        <trans-unit id="statistic.inProgress">
+            <source>Posters in Progress</source>
+        </trans-unit>
+        <trans-unit id="statistic.completed">
+            <source>Completed Posters</source>
+        </trans-unit>
         <trans-unit id="statistic.personal">
-            <source>Personal Statistics</source>
+            <source>Your Statistics</source>
         </trans-unit>
         <trans-unit id="statistic.overall">
             <source>Statistics</source>

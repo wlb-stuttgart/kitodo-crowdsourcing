@@ -2,21 +2,21 @@
     function renderChart(el) {
         if (!el) return;
 
-        var countNew             = parseInt(el.dataset.countNew)             || 0;
-        var countCorrection      = parseInt(el.dataset.countCorrection)      || 0;
+        var countUnedited        = parseInt(el.dataset.countUnedited)        || 0;
+        var countInProgress      = parseInt(el.dataset.countInProgress)      || 0;
         var countCompleted       = parseInt(el.dataset.countCompleted)       || 0;
         var countAll             = parseInt(el.dataset.countAll)             || 0;
 
-        const colorNew             = getComputedStyle(document.documentElement).getPropertyValue('--chart-color-new').trim() || '#a0c5ce';
-        const colorCorrection      = getComputedStyle(document.documentElement).getPropertyValue('--chart-color-correction').trim() || '#499daf';
-        const colorCompleted       = getComputedStyle(document.documentElement).getPropertyValue('--chart-color-completed').trim() || '#3a7e8c';
+        const colorUnedited        = getComputedStyle(document.documentElement).getPropertyValue('--chart-color-unedited').trim()   || '#a0c5ce';
+        const colorInProgress      = getComputedStyle(document.documentElement).getPropertyValue('--chart-color-inprogress').trim() || '#499daf';
+        const colorCompleted       = getComputedStyle(document.documentElement).getPropertyValue('--chart-color-completed').trim()  || '#3a7e8c';
 
         if (countAll === 0) return;
 
         var segments = [
-            { label: el.dataset.labelCompleted       || 'Abgeschlossen', value: countCompleted,       color: colorCompleted },
-            { label: el.dataset.labelCorrection      || 'Korrektur',     value: countCorrection,      color: colorCorrection },
-            { label: el.dataset.labelNew             || 'Neu',           value: countNew,             color: colorNew }
+            { label: el.dataset.labelCompleted       || 'Abgeschlossene Plakate', value: countCompleted,       color: colorCompleted },
+            { label: el.dataset.labelInProgress      || 'Plakate in Bearbeitung', value: countInProgress,      color: colorInProgress },
+            { label: el.dataset.labelUnedited        || 'Unbearbeitete Plakate', value: countUnedited,         color: colorUnedited }
         ];
 
         var barHeight    = 28;

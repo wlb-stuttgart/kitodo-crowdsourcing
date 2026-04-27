@@ -227,9 +227,21 @@
             <source>Total</source>
             <target>Gesamt</target>
         </trans-unit>
+        <trans-unit id="statistic.unedited">
+            <source>Unedited Posters</source>
+            <target>Unbearbeitete Plakate</target>
+        </trans-unit>
+        <trans-unit id="statistic.inProgress">
+            <source>Posters in Progress</source>
+            <target>Plakate in Bearbeitung</target>
+        </trans-unit>
+        <trans-unit id="statistic.completed">
+            <source>Completed Posters</source>
+            <target>Abgeschlossene Plakate</target>
+        </trans-unit>
         <trans-unit id="statistic.personal">
-            <source>Personal Statistics</source>
-            <target>Persönliche Statistik</target>
+            <source>Your Statistics</source>
+            <target>Ihre Statistik</target>
         </trans-unit>
         <trans-unit id="statistic.overall">
             <source>Statistics</source>
