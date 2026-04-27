@@ -4,12 +4,12 @@
     <h2><f:translate key="statistic.overall" /> &bdquo;{campaign.title}&ldquo;</h2>
     <div class="card shadow-sm mt-3">
         <div class="card-body">
-            <div class="mt-3"
+            <div class="mt-3 statistic-chart"
                  id="statistic-chart"
-                 data-count-unedited="{statistic.countUnedited}"
-                 data-count-in-progress="{statistic.countInProgress}"
-                 data-count-completed="{statistic.countCompleted}"
-                 data-count-all="{statistic.countAll}"
+                 data-count-unedited="{statistic.countUnedited.{campaign.uid}}"
+                 data-count-in-progress="{statistic.countInProgress.{campaign.uid}}"
+                 data-count-completed="{statistic.countCompleted.{campaign.uid}}"
+                 data-count-all="{statistic.countAll.{campaign.uid}}"
                  data-label-unedited="{f:translate(key: 'statistic.unedited')}"
                  data-label-in-progress="{f:translate(key: 'statistic.inProgress')}"
                  data-label-completed="{f:translate(key: 'statistic.completed')}">

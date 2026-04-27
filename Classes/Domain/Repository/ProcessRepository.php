@@ -195,14 +195,12 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     public function countAllActive() {
         $query = $this->createQuery();
 
-        $query->matching(
-            $query->logicalAnd(
-                $query->logicalNot($query->equals('campaign', null)),
-                $query->logicalNot($query->equals('campaign', 0)),
-                $query->equals('hidden', 0),
-                $query->equals('deleted', 0)
-            )
-        );
+        $constraints = [
+            $query->logicalNot($query->equals('campaign', null)),
+            $query->logicalNot($query->equals('campaign', 0)),
+            $query->equals('hidden', 0),
+            $query->equals('deleted', 0)
+        ];
 
         return $query->execute()->count();
     }
@@ -215,16 +213,97 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      */
     public function countAllActiveByState(string $state) {
         $query = $this->createQuery();
+
+        $constraints = [
+            $query->logicalNot($query->equals('campaign', null)),
+            $query->logicalNot($query->equals('campaign', 0)),
+            $query->equals('hidden', 0),
+            $query->equals('deleted', 0),
+            $query->equals('state', $state),
+        ];
+
         $query->matching(
-            $query->logicalAnd(
-                $query->logicalNot($query->equals('campaign', null)),
-                $query->logicalNot($query->equals('campaign', 0)),
-                $query->equals('hidden', 0),
-                $query->equals('deleted', 0),
-                $query->equals('state', $state)
-            )
+            $query->logicalAnd(...$constraints)
         );
 
         return $query->execute()->count();
     }
+
+
+    /**
+     * Counts all active processes grouped by campaign.
+     *
+     * @return array<int, int>
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function countAllActiveGroupedByCampaign(): array
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_process');
+
+        $queryBuilder = $connection->createQueryBuilder();
+
+        $rows = $queryBuilder
+            ->select('campaign')
+            ->addSelectLiteral('COUNT(uid) AS count')
+            ->from('tx_crowdsourcing_domain_model_process')
+            ->where($queryBuilder->expr()->isNotNull('campaign'))
+            ->andWhere($queryBuilder->expr()->gt('campaign', 0))
+            ->andWhere($queryBuilder->expr()->eq('hidden', 0))
+            ->andWhere($queryBuilder->expr()->eq('deleted', 0))
+            ->groupBy('campaign')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $counts = [];
+
+        foreach ($rows as $row) {
+            $counts[(int)$row['campaign']] = (int)$row['count'];
+        }
+
+        return $counts;
+    }
+
+
+    /**
+     * Counts all active processes with a specific state grouped by campaign.
+     *
+     * @param string $state
+     * @return array<int, int>
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function countAllActiveByStateGroupedByCampaign(string $state): array
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_process');
+
+        $queryBuilder = $connection->createQueryBuilder();
+
+        $rows = $queryBuilder
+            ->select('campaign')
+            ->addSelectLiteral('COUNT(uid) AS count')
+            ->from('tx_crowdsourcing_domain_model_process')
+            ->where($queryBuilder->expr()->isNotNull('campaign'))
+            ->andWhere($queryBuilder->expr()->gt('campaign', 0))
+            ->andWhere($queryBuilder->expr()->eq('hidden', 0))
+            ->andWhere($queryBuilder->expr()->eq('deleted', 0))
+            ->andWhere(
+                $queryBuilder->expr()->eq(
+                    'state',
+                    $queryBuilder->createNamedParameter($state)
+                )
+            )
+            ->groupBy('campaign')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $counts = [];
+
+        foreach ($rows as $row) {
+            $counts[(int)$row['campaign']] = (int)$row['count'];
+        }
+
+        return $counts;
+    }
 }
+

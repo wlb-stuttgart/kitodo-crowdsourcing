@@ -21,22 +21,37 @@ class StatisticService
     ) {
     }
 
+    /**
+     * @return array
+     */
     public function getStatistics()
     {
         $statisticsArray = [];
 
         // Bestehende Prozess-Statistiken
-        $countAll = $this->processRepository->countAllActive();
+        $countAll = $this->processRepository->countAllActiveGroupedByCampaign();
         $statisticsArray['countAll'] = $countAll;
 
-        $countNew = $this->processRepository->countAllActiveByState(Process::WORKFLOW_STATE_NEW);
+        $countNew = $this->processRepository->countAllActiveByStateGroupedByCampaign(Process::WORKFLOW_STATE_NEW);
         $statisticsArray['countUnedited'] = $countNew;
 
-        $countCorrection = $this->processRepository->countAllActiveByState(Process::WORKFLOW_STATE_CORRECTION);
-        $countFinalCorrection = $this->processRepository->countAllActiveByState(Process::WORKFLOW_STATE_FINAL_CORRECTION);
-        $statisticsArray['countInProgress'] = $countFinalCorrection + $countCorrection;
+        $countCorrectionByCampaign = $this->processRepository->countAllActiveByStateGroupedByCampaign(Process::WORKFLOW_STATE_CORRECTION);
+        $countFinalCorrectionByCampaign = $this->processRepository->countAllActiveByStateGroupedByCampaign(Process::WORKFLOW_STATE_FINAL_CORRECTION);
 
-        $countCompleted = $this->processRepository->countAllActiveByState(Process::WORKFLOW_STATE_COMPLETED);
+        $countInProgressByCampaign = [];
+
+        foreach ($countCorrectionByCampaign as $campaignUid => $countCorrection) {
+            $countInProgressByCampaign[$campaignUid] = $countCorrection;
+        }
+
+        foreach ($countFinalCorrectionByCampaign as $campaignUid => $countFinalCorrection) {
+            $countInProgressByCampaign[$campaignUid] = ($countInProgressByCampaign[$campaignUid] ?? 0)
+                + $countFinalCorrection;
+        }
+
+        $statisticsArray['countInProgress'] = $countInProgressByCampaign;
+
+        $countCompleted = $this->processRepository->countAllActiveByStateGroupedByCampaign(Process::WORKFLOW_STATE_COMPLETED);
         $statisticsArray['countCompleted'] = $countCompleted;
 
         // Neue Klick-Statistiken

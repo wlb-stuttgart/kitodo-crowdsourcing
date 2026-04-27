@@ -112,13 +112,14 @@
     }
     
     function initCharts() {
-        var statChart = document.getElementById('statistic-chart');
+        var statCharts = document.querySelectorAll('.statistic-chart');
         var userChart = document.getElementById('user-statistic-chart');
 
-        if (statChart) {
+        statCharts.forEach(function (statChart) {
             statChart.innerHTML = '';
             renderChart(statChart);
-        }
+        });
+
         if (userChart) {
             userChart.innerHTML = '';
             renderChart(userChart);
