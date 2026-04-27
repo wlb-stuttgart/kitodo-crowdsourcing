@@ -28,13 +28,6 @@
                 </div>
 
                 <div class="col">
-                    <div class="text-muted small" style="white-space: normal;"><f:translate key="process.state.FINAL_CORRECTION" /></div>
-                    <div class="fs-4 fw-bold">
-                        <span class="badge chart-badge-final-correction">{userStatistic.countFinalCorrection}</span>
-                    </div>
-                </div>
-
-                <div class="col">
                     <div class="text-muted small" style="white-space: normal;"><f:translate key="process.state.COMPLETED" /></div>
                     <div class="fs-4 fw-bold">
                         <span class="badge chart-badge-completed">{userStatistic.countCompleted}</span>
@@ -47,14 +40,11 @@
                  id="user-statistic-chart"
                  data-count-new="{userStatistic.countNew}"
                  data-count-correction="{userStatistic.countCorrection}"
-                 data-count-final-correction="{userStatistic.countFinalCorrection}"
                  data-count-completed="{userStatistic.countCompleted}"
                  data-count-all="{userStatistic.countAll}"
                  data-label-new="{f:translate(key: 'process.state.NEW')}"
                  data-label-correction="{f:translate(key: 'process.state.CORRECTION')}"
-                 data-label-final-correction="{f:translate(key: 'process.state.FINAL_CORRECTION')}"
-                 data-label-completed="{f:translate(key: 'process.state.COMPLETED')}"
-                 data-label-all="{f:translate(key: 'statistic.countAll')}">
+                 data-label-completed="{f:translate(key: 'process.state.COMPLETED')}">
             </div>
         </div>
     </div>

@@ -20,7 +20,7 @@
                         {f:translate(key: 'process.state.NEW')}
                     </div>
                     <div class="fs-4 fw-bold">
-                        <span class="badge chart-badge-new" style="background-color: #ced4da;">{statistic.countNew}</span>
+                        <span class="badge chart-badge-new" style="background-color: #a0c5ce;">{statistic.countNew}</span>
                     </div>
                 </div>
 
@@ -29,16 +29,7 @@
                         {f:translate(key: 'process.state.CORRECTION')}
                     </div>
                     <div class="fs-4 fw-bold">
-                        <span class="badge chart-badge-correction" style="background-color: #ffca28;">{statistic.countCorrection}</span>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="text-muted small" style="white-space: normal;">
-                        {f:translate(key: 'process.state.FINAL_CORRECTION')}
-                    </div>
-                    <div class="fs-4 fw-bold">
-                        <span class="badge chart-badge-final-correction" style="background-color: #7d89f4;">{statistic.countFinalCorrection}</span>
+                        <span class="badge chart-badge-correction" style="background-color: #499daf;">{statistic.countCorrection}</span>
                     </div>
                 </div>
 
@@ -47,7 +38,7 @@
                         {f:translate(key: 'process.state.COMPLETED')}
                     </div>
                     <div class="fs-4 fw-bold">
-                        <span class="badge chart-badge-completed" style="background-color: #47c9a2;">{statistic.countCompleted}</span>
+                        <span class="badge chart-badge-completed" style="background-color: #3a7e8c;">{statistic.countCompleted}</span>
                     </div>
                 </div>
             </div>
@@ -57,14 +48,11 @@
                  id="statistic-chart"
                  data-count-new="{statistic.countNew}"
                  data-count-correction="{statistic.countCorrection}"
-                 data-count-final-correction="{statistic.countFinalCorrection}"
                  data-count-completed="{statistic.countCompleted}"
                  data-count-all="{statistic.countAll}"
                  data-label-new="{f:translate(key: 'process.state.NEW')}"
                  data-label-correction="{f:translate(key: 'process.state.CORRECTION')}"
-                 data-label-final-correction="{f:translate(key: 'process.state.FINAL_CORRECTION')}"
-                 data-label-completed="{f:translate(key: 'process.state.COMPLETED')}"
-                 data-label-all="{f:translate(key: 'statistic.countAll')}">
+                 data-label-completed="{f:translate(key: 'process.state.COMPLETED')}">
             </div>
         </div>
     </div>

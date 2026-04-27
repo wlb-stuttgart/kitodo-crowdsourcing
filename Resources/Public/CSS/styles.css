@@ -61,10 +61,10 @@
     --modal-link-hover: rgb(10, 88, 202);
 
     /* Frontend statistic chart colors */
-    --chart-color-new: #ced4da;
-    --chart-color-correction: #ffca28;
+    --chart-color-new: #a0c5ce;
+    --chart-color-correction: #499daf;
     --chart-color-final-correction: #7d89f4;
-    --chart-color-completed: #47c9a2;
+    --chart-color-completed: #3a7e8c;
 }
 
 @font-face {
