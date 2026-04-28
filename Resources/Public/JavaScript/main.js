@@ -784,14 +784,13 @@ function lobidFillSiblingFields(entity, $input) {
 }
 
 function lobidSearch(query, lobidField, lobidFilter, $dropdown, $input) {
-    var params = { q: query, format: 'json', size: 10 };
+    var url = 'https://lobid.org/gnd/search?q=' + encodeURIComponent(query) + '&format=json&size=10';
     if (lobidFilter) {
-        params.filter = lobidFilter;
+        url += '&filter=' + lobidFilter;
     }
 
     $.getJSON(
-        'https://lobid.org/gnd/search',
-        params,
+        url,
         function (data) {
             $dropdown.empty();
 
