@@ -184,6 +184,39 @@ class ProcessHistoryRepository extends ProcessRepository
      */
     public function findTopTenEditorsByCampaign(): array
     {
+        return $this->findTopTenEditorsByCampaignInternal();
+    }
+
+    /**
+     * Returns the top 10 editors for each campaign in the previous calendar month.
+     *
+     * @return array
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findTopTenEditorsByCampaignLastMonth(): array
+    {
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $startOfLastMonth = $now->modify('first day of last month')->setTime(0, 0, 0);
+        $startOfThisMonth = $now->modify('first day of this month')->setTime(0, 0, 0);
+
+        // Get the start of the last 30 days
+        //$now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        //$startOfLastMonth = $now->modify('-30 days');
+        //$startOfThisMonth   = $now;
+
+        return $this->findTopTenEditorsByCampaignInternal($startOfLastMonth, $startOfThisMonth);
+    }
+
+    /**
+     * Internal method to find top 10 editors by campaign, optionally filtered by date range.
+     *
+     * @param \DateTimeImmutable|null $startDate
+     * @param \DateTimeImmutable|null $endDate
+     * @return array
+     * @throws \Doctrine\DBAL\Exception
+     */
+    protected function findTopTenEditorsByCampaignInternal(?\DateTimeImmutable $startDate = null, ?\DateTimeImmutable $endDate = null): array
+    {
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tx_crowdsourcing_domain_model_processhistory');
 
@@ -195,7 +228,7 @@ class ProcessHistoryRepository extends ProcessRepository
             Process::WORKFLOW_STATE_FINAL_CORRECTION,
         ];
 
-        $rows = $queryBuilder
+        $queryBuilder
             ->select('p.campaign', 'ph.fe_user')
             ->addSelectLiteral('COUNT(DISTINCT ph.record_identifier) AS edit_count')
             ->from('tx_crowdsourcing_domain_model_processhistory', 'ph')
@@ -218,7 +251,21 @@ class ProcessHistoryRepository extends ProcessRepository
                         \Doctrine\DBAL\ArrayParameterType::STRING
                     )
                 )
-            )
+            );
+
+        if ($startDate !== null) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->gte('ph.crdate', $queryBuilder->createNamedParameter($startDate->getTimestamp(), \Doctrine\DBAL\ParameterType::INTEGER))
+            );
+        }
+
+        if ($endDate !== null) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->lt('ph.crdate', $queryBuilder->createNamedParameter($endDate->getTimestamp(), \Doctrine\DBAL\ParameterType::INTEGER))
+            );
+        }
+
+        $rows = $queryBuilder
             ->groupBy('p.campaign', 'ph.fe_user')
             ->orderBy('p.campaign', 'ASC')
             ->addOrderBy('edit_count', 'DESC')
@@ -247,7 +294,7 @@ class ProcessHistoryRepository extends ProcessRepository
      * Returns the count of distinct posters edited by a frontend user,
      * grouped by campaign for the states NEW, CORRECTION and FINAL_CORRECTION.
      *
-     * @return array<int, int>
+     * @return array
      * @throws \Doctrine\DBAL\Exception
      */
     public function countEditedProcessesByFeUserGroupedByCampaign(int $feUserUid): array
@@ -312,7 +359,7 @@ class ProcessHistoryRepository extends ProcessRepository
      * Returns the count of distinct posters edited by a frontend user in the previous calendar month,
      * grouped by campaign for the states NEW, CORRECTION and FINAL_CORRECTION.
      *
-     * @return array<int, int>
+     * @return array
      * @throws \Doctrine\DBAL\Exception
      */
     public function countEditedProcessesByFeUserGroupedByCampaignLastMonth(int $feUserUid): array

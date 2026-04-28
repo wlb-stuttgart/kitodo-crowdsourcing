@@ -59,6 +59,7 @@ class StatisticService
         $statisticsArray['clicksByActionType'] = $this->clickStatisticRepository->getClickSummaryByActionType();
         $statisticsArray['clicksByDate'] = $this->clickStatisticRepository->getClickSummaryByDate();
         $statisticsArray['topTenEditorsByCampaign'] = $this->getTopTenEditorsByCampaign();
+        $statisticsArray['topTenEditorsByCampaignLastMonth'] = $this->getTopTenEditorsByCampaignLastMonth();
 
         return $statisticsArray;
     }
@@ -106,6 +107,17 @@ class StatisticService
     {
         return $this->processHistoryRepository->findTopTenEditorsByCampaign();
     }
+
+    /**
+     * Returns the top 10 editors for each campaign in the previous calendar month.
+     *
+     * @return array<int, array<int, array{fe_user: int, edit_count: int}>>
+     */
+    public function getTopTenEditorsByCampaignLastMonth(): array
+    {
+        return $this->processHistoryRepository->findTopTenEditorsByCampaignLastMonth();
+    }
+
 
     /**
      * Protokolliert einen Klick in der Datenbank
