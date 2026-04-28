@@ -264,12 +264,12 @@
             <target>Statistik</target>
         </trans-unit>
         <trans-unit id="statistic.topTen.overall">
-            <source>Top 10 Overall</source>
+            <source>TOP 10 Overall</source>
             <target>TOP 10 der Kampagne</target>
         </trans-unit>
         <trans-unit id="statistic.topTen.lastMonth">
-            <source>Top 10 Last Month</source>
-            <target>Top 10 des vergangenen Monats</target>
+            <source>TOP 10 Last Month</source>
+            <target>TOP 10 des vergangenen Monats</target>
         </trans-unit>
         <trans-unit id="statistic.topTen.count.singular">
             <source>%s Poster</source>

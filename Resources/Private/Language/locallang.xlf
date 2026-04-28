@@ -202,10 +202,10 @@
             <source>Statistics</source>
         </trans-unit>
         <trans-unit id="statistic.topTen.overall">
-            <source>Top 10 Overall</source>
+            <source>TOP 10 Overall</source>
         </trans-unit>
         <trans-unit id="statistic.topTen.lastMonth">
-            <source>Top 10 Last Month</source>
+            <source>TOP 10 Last Month</source>
         </trans-unit>
         <trans-unit id="statistic.topTen.user">
             <source>User</source>
