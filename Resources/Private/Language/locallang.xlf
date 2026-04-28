@@ -201,6 +201,30 @@
         <trans-unit id="statistic.overall">
             <source>Statistics</source>
         </trans-unit>
+        <trans-unit id="statistic.topTen.overall">
+            <source>Top 10 Overall</source>
+        </trans-unit>
+        <trans-unit id="statistic.topTen.lastMonth">
+            <source>Top 10 Last Month</source>
+        </trans-unit>
+        <trans-unit id="statistic.topTen.user">
+            <source>User</source>
+        </trans-unit>
+        <trans-unit id="statistic.topTen.edits">
+            <source>Edits</source>
+        </trans-unit>
+        <trans-unit id="statistic.topTen.count.singular">
+            <source>%s Poster</source>
+        </trans-unit>
+        <trans-unit id="statistic.topTen.count.plural">
+            <source>%s Posters</source>
+        </trans-unit>
+        <trans-unit id="statistic.topTen.showMore">
+            <source>Show more</source>
+        </trans-unit>
+        <trans-unit id="statistic.topTen.showLess">
+            <source>Show less</source>
+        </trans-unit>
         <trans-unit id="process.editor.state.NEW">
         	<source>1. Editor</source>
         </trans-unit>

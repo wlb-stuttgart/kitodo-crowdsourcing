@@ -819,6 +819,14 @@ h1 {
     color: #6c757d !important;
 }
 
+.toggle-show-more.collapsed .show-less-text {
+    display: none;
+}
+
+.toggle-show-more:not(.collapsed) .show-more-text {
+    display: none;
+}
+
 .state-badge {
     display: inline-block;
     padding: 0.35em 0.8em;

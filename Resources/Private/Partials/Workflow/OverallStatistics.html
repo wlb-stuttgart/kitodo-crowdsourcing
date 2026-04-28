@@ -1,4 +1,5 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:wlb="http://typo3.org/ns/Wlb/Crowdsourcing/ViewHelpers"
       data-namespace-typo3-fluid="true">
 
     <h2><f:translate key="statistic.overall" /> &bdquo;{campaign.title}&ldquo;</h2>
@@ -14,6 +15,17 @@
                  data-label-in-progress="{f:translate(key: 'statistic.inProgress')}"
                  data-label-completed="{f:translate(key: 'statistic.completed')}">
             </div>
+
+            <f:variable name="topTenOverall" value="{statistic.topTenEditorsByCampaign.{campaign.uid}}" />
+            <f:variable name="topTenLastMonth" value="{statistic.topTenEditorsByCampaignLastMonth.{campaign.uid}}" />
+
+            <f:if condition="{topTenOverall} || {topTenLastMonth}">
+                <div class="row mt-4">
+                    <f:render partial="Workflow/TopTenList" arguments="{list: topTenOverall, titleKey: 'statistic.topTen.overall', id: 'Overall', campaign: campaign, initialCount: 3}" />
+                    <f:render partial="Workflow/TopTenList" arguments="{list: topTenLastMonth, titleKey: 'statistic.topTen.lastMonth', id: 'LastMonth', campaign: campaign, initialCount: 3}" />
+                </div>
+            </f:if>
+
         </div>
     </div>
 </html>

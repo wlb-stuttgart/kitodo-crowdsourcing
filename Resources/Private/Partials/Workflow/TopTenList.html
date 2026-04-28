@@ -1,0 +1,59 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:wlb="http://typo3.org/ns/Wlb/Crowdsourcing/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+    <f:variable name="initialCount" value="{f:if(condition: initialCount, then: initialCount, else: 2)}" />
+    <f:if condition="{list}">
+        <div class="col-md-6">
+            <h4 class="fw-bold"><f:translate key="{titleKey}" /></h4>
+            <div class="accordion" id="accordion-{id}-{campaign.uid}">
+                <div class="accordion-item border-0">
+                    <div class="accordion-header" id="heading-{id}-{campaign.uid}">
+                        <div class="list-group list-group-flush">
+                            <f:for each="{list}" as="editor" iteration="iter">
+                                <f:if condition="{iter.cycle} <= {initialCount}">
+                                    <div class="list-group-item bg-transparent px-0 py-0 border-0 small text-break">
+                                        <span>
+                                            <span class="fw-bold">{iter.cycle}.</span>
+                                            <wlb:userName feUserUid="{editor.fe_user}" />
+                                            (<f:translate key="statistic.topTen.count.{f:if(condition: '{editor.edit_count} == 1', then: 'singular', else: 'plural')}" arguments="{0: editor.edit_count}" />)
+                                        </span>
+                                    </div>
+                                </f:if>
+                            </f:for>
+                        </div>
+                    </div>
+
+                    <f:if condition="{f:count(subject: list)} > {initialCount}">
+                        <div id="collapse-{id}-{campaign.uid}" class="accordion-collapse collapse" aria-labelledby="heading-{id}-{campaign.uid}" data-bs-parent="#accordion-{id}-{campaign.uid}">
+                            <div class="accordion-body p-0">
+                                <div class="list-group list-group-flush">
+                                    <f:for each="{list}" as="editor" iteration="iter">
+                                        <f:if condition="{iter.cycle} > {initialCount}">
+                                            <div class="list-group-item bg-transparent px-0 py-0 border-0 small text-break">
+                                                <span>
+                                                    <span class="fw-bold">{iter.cycle}.</span>
+                                                    <wlb:userName feUserUid="{editor.fe_user}" />
+                                                    (<f:translate key="statistic.topTen.count.{f:if(condition: '{editor.edit_count} == 1', then: 'singular', else: 'plural')}" arguments="{0: editor.edit_count}" />)
+                                                </span>
+                                            </div>
+                                        </f:if>
+                                    </f:for>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="p-0 toggle-show-more collapsed d-block mt-1 text-secondary text-decoration-none text-start"
+                           role="button"
+                           data-bs-toggle="collapse"
+                           href="#collapse-{id}-{campaign.uid}"
+                           aria-expanded="false"
+                           aria-controls="collapse-{id}-{campaign.uid}">
+                            <span class="show-more-text fst-italic" style="font-size: 0.75em;"><f:translate key="statistic.topTen.showMore" /></span>
+                            <span class="show-less-text fst-italic" style="font-size: 0.75em;"><f:translate key="statistic.topTen.showLess" /></span>
+                        </a>
+                    </f:if>
+                </div>
+            </div>
+        </div>
+    </f:if>
+</html>

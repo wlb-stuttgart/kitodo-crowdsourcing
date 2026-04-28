@@ -263,6 +263,30 @@
             <source>Statistics</source>
             <target>Statistik</target>
         </trans-unit>
+        <trans-unit id="statistic.topTen.overall">
+            <source>Top 10 Overall</source>
+            <target>TOP 10 der Kampagne</target>
+        </trans-unit>
+        <trans-unit id="statistic.topTen.lastMonth">
+            <source>Top 10 Last Month</source>
+            <target>Top 10 des vergangenen Monats</target>
+        </trans-unit>
+        <trans-unit id="statistic.topTen.count.singular">
+            <source>%s Poster</source>
+            <target>%s Plakat</target>
+        </trans-unit>
+        <trans-unit id="statistic.topTen.count.plural">
+            <source>%s Posters</source>
+            <target>%s Plakate</target>
+        </trans-unit>
+        <trans-unit id="statistic.topTen.showMore">
+            <source>Show more</source>
+            <target>mehr anzeigen</target>
+        </trans-unit>
+        <trans-unit id="statistic.topTen.showLess">
+            <source>Show less</source>
+            <target>weniger anzeigen</target>
+        </trans-unit>
         <trans-unit id="process.editor.state.NEW">
         	<source>1. Editor</source>
             <target>1. Erfasser</target>
