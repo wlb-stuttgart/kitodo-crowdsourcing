@@ -243,6 +243,22 @@
             <source>Your Statistics</source>
             <target>Ihre Statistik</target>
         </trans-unit>
+        <trans-unit id="statistic.personal.editedCount.singular">
+            <source>You have contributed to %s poster in this campaign.</source>
+            <target>Sie haben an %s Plakat in dieser Kampagne mitgearbeitet.</target>
+        </trans-unit>
+        <trans-unit id="statistic.personal.editedCount.plural">
+            <source>You have contributed to %s posters in this campaign.</source>
+            <target>Sie haben an %s Plakaten in dieser Kampagne mitgearbeitet.</target>
+        </trans-unit>
+        <trans-unit id="statistic.personal.editedLastMonth.singular">
+            <source>Last month you edited %s poster.</source>
+            <target>Im vergangenen Monat haben Sie %s Plakat bearbeitet.</target>
+        </trans-unit>
+        <trans-unit id="statistic.personal.editedLastMonth.plural">
+            <source>Last month you edited %s posters.</source>
+            <target>Im vergangenen Monat haben Sie %s Plakate bearbeitet.</target>
+        </trans-unit>
         <trans-unit id="statistic.overall">
             <source>Statistics</source>
             <target>Statistik</target>

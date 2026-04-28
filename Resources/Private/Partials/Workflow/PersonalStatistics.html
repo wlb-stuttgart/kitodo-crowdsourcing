@@ -2,8 +2,40 @@
       data-namespace-typo3-fluid="true">
 
     <h2><f:translate key="statistic.personal" /></h2>
-    <div class="card shadow-sm mt-3">
-        <div class="card-body">
+    <div class="cardd shadow-sm mt-3">
+        <div class="cdard-body">
+            <f:variable name="editedCount" value="{userStatistic.editedCount.{campaign.uid}}" />
+            <f:variable name="editedLastMonth" value="{userStatistic.editedLastMonth.{campaign.uid}}" />
+            <f:variable name="editedCountSafe" value="{f:if(condition: editedCount, then: editedCount, else: 0)}" />
+            <f:variable name="editedLastMonthSafe" value="{f:if(condition: editedLastMonth, then: editedLastMonth, else: 0)}" />
+            <f:variable name="editedCountFormatted"><span class="personal-count">{editedCountSafe}</span></f:variable>
+            <f:variable name="editedLastMonthFormatted"><span class="personal-count">{editedLastMonthSafe}</span></f:variable>
+
+            <f:if condition="{editedCountSafe} == 1">
+                <f:then>
+                    <f:format.raw>
+                        <f:translate key="statistic.personal.editedCount.singular" arguments="{0: editedCountFormatted}" />
+                    </f:format.raw>
+                </f:then>
+                <f:else>
+                    <f:format.raw>
+                        <f:translate key="statistic.personal.editedCount.plural" arguments="{0: editedCountFormatted}" />
+                    </f:format.raw>
+                </f:else>
+            </f:if>
+
+            <f:if condition="{editedLastMonthSafe} == 1">
+                <f:then>
+                    <f:format.raw>
+                        <f:translate key="statistic.personal.editedLastMonth.singular" arguments="{0: editedLastMonthFormatted}" />
+                    </f:format.raw>
+                </f:then>
+                <f:else>
+                    <f:format.raw>
+                        <f:translate key="statistic.personal.editedLastMonth.plural" arguments="{0: editedLastMonthFormatted}" />
+                    </f:format.raw>
+                </f:else>
+            </f:if>
         </div>
     </div>
 </html>

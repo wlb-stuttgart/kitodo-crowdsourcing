@@ -62,21 +62,17 @@ class StatisticService
         return $statisticsArray;
     }
 
-    public function getStatisticsByUser(FrontendUser $feUser): array
+    public function getPersonalStatistics(FrontendUser $feUser): array
     {
-        $countsByState = $this->processHistoryRepository->countDistinctByFeUserGroupedByState($feUser->getUid());
+        $editedCountsByCampaign = $this->processHistoryRepository
+            ->countEditedProcessesByFeUserGroupedByCampaign($feUser->getUid());
 
-        $countNew             = $countsByState[Process::WORKFLOW_STATE_NEW]              ?? 0;
-        $countCorrection      = $countsByState[Process::WORKFLOW_STATE_CORRECTION]       ?? 0;
-        $countFinalCorrection = $countsByState[Process::WORKFLOW_STATE_FINAL_CORRECTION] ?? 0;
-        $countCompleted       = $countsByState[Process::WORKFLOW_STATE_COMPLETED]        ?? 0;
+         $editedLastMonthByCampaign = $this->processHistoryRepository
+            ->countEditedProcessesByFeUserGroupedByCampaignLastMonth($feUser->getUid());
 
         return [
-            'countAll'             => $countNew + $countCorrection + $countFinalCorrection + $countCompleted,
-            'countNew'             => $countNew,
-            'countCorrection'      => $countCorrection,
-            'countFinalCorrection' => $countFinalCorrection,
-            'countCompleted'       => $countCompleted,
+            'editedCount'      => $editedCountsByCampaign,
+            'editedLastMonth'       => $editedLastMonthByCampaign
         ];
     }
 

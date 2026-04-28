@@ -6,6 +6,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use Wlb\Crowdsourcing\Domain\Model\Process;
 
 class ProcessHistoryRepository extends ProcessRepository
 {
@@ -174,4 +175,155 @@ class ProcessHistoryRepository extends ProcessRepository
         $result = $query->execute();
         return $result;
     }
+
+    /**
+     * Returns the count of distinct posters edited by a frontend user,
+     * grouped by campaign for the states NEW, CORRECTION and FINAL_CORRECTION.
+     *
+     * @return array<int, int>
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function countEditedProcessesByFeUserGroupedByCampaign(int $feUserUid): array
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_processhistory');
+
+        $queryBuilder = $connection->createQueryBuilder();
+
+        $states = [
+            Process::WORKFLOW_STATE_NEW,
+            Process::WORKFLOW_STATE_CORRECTION,
+            Process::WORKFLOW_STATE_FINAL_CORRECTION,
+        ];
+
+        $rows = $queryBuilder
+            ->select('p.campaign')
+            ->addSelectLiteral('COUNT(DISTINCT ph.record_identifier) AS cnt')
+            ->from('tx_crowdsourcing_domain_model_processhistory', 'ph')
+            ->join(
+                'ph',
+                'tx_crowdsourcing_domain_model_process',
+                'p',
+                $queryBuilder->expr()->eq(
+                    'ph.record_identifier',
+                    $queryBuilder->quoteIdentifier('p.record_identifier')
+                )
+            )
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'ph.fe_user',
+                    $queryBuilder->createNamedParameter($feUserUid, \Doctrine\DBAL\ParameterType::INTEGER)
+                )
+            )
+            ->andWhere($queryBuilder->expr()->isNotNull('p.campaign'))
+            ->andWhere($queryBuilder->expr()->gt('p.campaign', 0))
+            ->andWhere(
+                $queryBuilder->expr()->in(
+                    'p.state',
+                    $queryBuilder->createNamedParameter(
+                        $states,
+                        \Doctrine\DBAL\ArrayParameterType::STRING
+                    )
+                )
+            )
+            ->groupBy('p.campaign')
+            ->orderBy('p.campaign', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $result = [];
+
+        foreach ($rows as $row) {
+            $result[(int)$row['campaign']] = (int)$row['cnt'];
+        }
+
+        return $result;
+    }
+
+
+    /**
+     * Returns the count of distinct posters edited by a frontend user in the previous calendar month,
+     * grouped by campaign for the states NEW, CORRECTION and FINAL_CORRECTION.
+     *
+     * @return array<int, int>
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function countEditedProcessesByFeUserGroupedByCampaignLastMonth(int $feUserUid): array
+    {
+        // Get the start and end of the previous month
+        $endOfPeriod = new \DateTimeImmutable('first day of this month 00:00:00');
+        $startOfPeriod = $endOfPeriod->modify('-1 month');
+
+        // Get the start of the last 30 days
+        //$now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        //$startOfPeriod = $now->modify('-30 days');
+        //$endOfPeriod   = $now;
+
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_processhistory');
+
+        $queryBuilder = $connection->createQueryBuilder();
+
+        $states = [
+            Process::WORKFLOW_STATE_NEW,
+            Process::WORKFLOW_STATE_CORRECTION,
+            Process::WORKFLOW_STATE_FINAL_CORRECTION,
+        ];
+
+        $rows = $queryBuilder
+            ->select('p.campaign')
+            ->addSelectLiteral('COUNT(DISTINCT ph.record_identifier) AS cnt')
+            ->from('tx_crowdsourcing_domain_model_processhistory', 'ph')
+            ->join(
+                'ph',
+                'tx_crowdsourcing_domain_model_process',
+                'p',
+                $queryBuilder->expr()->eq(
+                    'ph.record_identifier',
+                    $queryBuilder->quoteIdentifier('p.record_identifier')
+                )
+            )
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'ph.fe_user',
+                    $queryBuilder->createNamedParameter($feUserUid, \Doctrine\DBAL\ParameterType::INTEGER)
+                )
+            )
+            ->andWhere(
+                $queryBuilder->expr()->gte(
+                    'ph.crdate',
+                    $queryBuilder->createNamedParameter($startOfPeriod->getTimestamp(), \Doctrine\DBAL\ParameterType::INTEGER)
+                )
+            )
+            ->andWhere(
+                $queryBuilder->expr()->lt(
+                    'ph.crdate',
+                    $queryBuilder->createNamedParameter($endOfPeriod->getTimestamp(), \Doctrine\DBAL\ParameterType::INTEGER)
+                )
+            )
+            ->andWhere($queryBuilder->expr()->isNotNull('p.campaign'))
+            ->andWhere($queryBuilder->expr()->gt('p.campaign', 0))
+            ->andWhere(
+                $queryBuilder->expr()->in(
+                    'p.state',
+                    $queryBuilder->createNamedParameter(
+                        $states,
+                        \Doctrine\DBAL\ArrayParameterType::STRING
+                    )
+                )
+            )
+            ->groupBy('p.campaign')
+            ->orderBy('p.campaign', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $result = [];
+
+        foreach ($rows as $row) {
+            $result[(int)$row['campaign']] = (int)$row['cnt'];
+        }
+
+        return $result;
+    }
+
 }

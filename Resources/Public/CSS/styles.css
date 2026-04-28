@@ -489,6 +489,13 @@ h1 {
     column-gap: 20px;
 }
 
+
+#crowdsourcing .dashboard .personal-count {
+    color: var(--color-btn-primary);
+    font-weight: var(--font-semibold);
+    font-size: 24px;
+}
+
 .chart-badge-total {
     color: white;
     background-color: #495057;
