@@ -177,6 +177,73 @@ class ProcessHistoryRepository extends ProcessRepository
     }
 
     /**
+     * Returns the top 10 editors for each campaign.
+     *
+     * @return array
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findTopTenEditorsByCampaign(): array
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_processhistory');
+
+        $queryBuilder = $connection->createQueryBuilder();
+
+        $states = [
+            Process::WORKFLOW_STATE_NEW,
+            Process::WORKFLOW_STATE_CORRECTION,
+            Process::WORKFLOW_STATE_FINAL_CORRECTION,
+        ];
+
+        $rows = $queryBuilder
+            ->select('p.campaign', 'ph.fe_user')
+            ->addSelectLiteral('COUNT(DISTINCT ph.record_identifier) AS edit_count')
+            ->from('tx_crowdsourcing_domain_model_processhistory', 'ph')
+            ->join(
+                'ph',
+                'tx_crowdsourcing_domain_model_process',
+                'p',
+                $queryBuilder->expr()->eq(
+                    'ph.record_identifier',
+                    $queryBuilder->quoteIdentifier('p.record_identifier')
+                )
+            )
+            ->where($queryBuilder->expr()->gt('p.campaign', 0))
+            ->andWhere($queryBuilder->expr()->neq('ph.fe_user', 0))
+            ->andWhere(
+                $queryBuilder->expr()->in(
+                    'ph.state',
+                    $queryBuilder->createNamedParameter(
+                        $states,
+                        \Doctrine\DBAL\ArrayParameterType::STRING
+                    )
+                )
+            )
+            ->groupBy('p.campaign', 'ph.fe_user')
+            ->orderBy('p.campaign', 'ASC')
+            ->addOrderBy('edit_count', 'DESC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $campaignUid = (int)$row['campaign'];
+            if (!isset($result[$campaignUid])) {
+                $result[$campaignUid] = [];
+            }
+
+            if (count($result[$campaignUid]) < 10) {
+                $result[$campaignUid][] = [
+                    'fe_user' => (int)$row['fe_user'],
+                    'edit_count' => (int)$row['edit_count']
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns the count of distinct posters edited by a frontend user,
      * grouped by campaign for the states NEW, CORRECTION and FINAL_CORRECTION.
      *

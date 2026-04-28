@@ -58,6 +58,7 @@ class StatisticService
         $statisticsArray['totalClicks'] = $this->clickStatisticRepository->countAll();
         $statisticsArray['clicksByActionType'] = $this->clickStatisticRepository->getClickSummaryByActionType();
         $statisticsArray['clicksByDate'] = $this->clickStatisticRepository->getClickSummaryByDate();
+        $statisticsArray['topTenEditorsByCampaign'] = $this->getTopTenEditorsByCampaign();
 
         return $statisticsArray;
     }
@@ -94,6 +95,16 @@ class StatisticService
     public function getMostActiveUserLastMonth(): ?array
     {
         return $this->processHistoryRepository->findMostActiveFeUserLastMonth();
+    }
+
+    /**
+     * Returns the top 10 editors for each campaign.
+     *
+     * @return array<int, array<int, array{fe_user: int, edit_count: int}>>
+     */
+    public function getTopTenEditorsByCampaign(): array
+    {
+        return $this->processHistoryRepository->findTopTenEditorsByCampaign();
     }
 
     /**
