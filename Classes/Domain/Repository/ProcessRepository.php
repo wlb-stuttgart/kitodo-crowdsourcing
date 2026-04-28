@@ -128,7 +128,27 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             )
             ->andWhere($queryBuilder->expr()->gt('p.campaign', 0))
             ->andWhere($queryBuilder->expr()->isNotNull('p.campaign'))
-            ->andWhere($queryBuilder->expr()->eq('c.workflow_state', $queryBuilder->createNamedParameter(\Wlb\Crowdsourcing\Domain\Model\Campaign::WORKFLOW_STATE_PUBLISHED)))
+            ->andWhere($queryBuilder->expr()->eq('p.hidden', 0))
+            ->andWhere($queryBuilder->expr()->eq('p.deleted', 0))
+            ->andWhere($queryBuilder->expr()->eq('c.hidden', 0))
+            ->andWhere($queryBuilder->expr()->eq('c.deleted', 0))
+            ->andWhere($queryBuilder->expr()->eq(
+                'c.workflow_state',
+                $queryBuilder->createNamedParameter(\Wlb\Crowdsourcing\Domain\Model\Campaign::WORKFLOW_STATE_PUBLISHED)
+            ))
+            ->andWhere(
+                $queryBuilder->expr()->in(
+                    'p.state',
+                    $queryBuilder->createNamedParameter(
+                        [
+                            Process::WORKFLOW_STATE_NEW,
+                            Process::WORKFLOW_STATE_CORRECTION,
+                            Process::WORKFLOW_STATE_FINAL_CORRECTION,
+                        ],
+                        \Doctrine\DBAL\ArrayParameterType::STRING
+                    )
+                )
+            )
             ->andWhere(
                 $queryBuilder->expr()->notIn('p.record_identifier', $subQueryBuilder->getSQL())
             )
