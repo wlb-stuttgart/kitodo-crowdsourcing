@@ -219,7 +219,7 @@ class ProcessHistoryRepository extends ProcessRepository
             ->andWhere($queryBuilder->expr()->gt('p.campaign', 0))
             ->andWhere(
                 $queryBuilder->expr()->in(
-                    'p.state',
+                    'ph.state',
                     $queryBuilder->createNamedParameter(
                         $states,
                         \Doctrine\DBAL\ArrayParameterType::STRING
@@ -305,7 +305,7 @@ class ProcessHistoryRepository extends ProcessRepository
             ->andWhere($queryBuilder->expr()->gt('p.campaign', 0))
             ->andWhere(
                 $queryBuilder->expr()->in(
-                    'p.state',
+                    'ph.state',
                     $queryBuilder->createNamedParameter(
                         $states,
                         \Doctrine\DBAL\ArrayParameterType::STRING
