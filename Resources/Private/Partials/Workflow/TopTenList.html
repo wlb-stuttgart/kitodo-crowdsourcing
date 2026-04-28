@@ -12,11 +12,13 @@
                         <div class="list-group list-group-flush">
                             <f:for each="{list}" as="editor" iteration="iter">
                                 <f:if condition="{iter.cycle} <= {initialCount}">
-                                    <div class="list-group-item bg-transparent px-0 py-0 border-0 small text-break">
-                                        <span>
-                                            <span class="fw-bold">{iter.cycle}.</span>
-                                            <wlb:userName feUserUid="{editor.fe_user}" />
-                                            (<f:translate key="statistic.topTen.count.{f:if(condition: '{editor.edit_count} == 1', then: 'singular', else: 'plural')}" arguments="{0: editor.edit_count}" />)
+                                    <div class="list-group-item bg-transparent px-0 py-0 border-0 small text-break d-flex align-items-start">
+                                        <span class="fw-bold me-1" style="min-width: 1.5rem;">{iter.cycle}.</span>
+                                        <span class="d-flex flex-wrap align-items-baseline">
+                                            <span class="me-1"><wlb:userName feUserUid="{editor.fe_user}" /> sdfsdfdf sdfsdfsdfdsfd</span>
+                                            <span class="text-nowrap">
+                                                (<f:translate key="statistic.topTen.count.{f:if(condition: '{editor.edit_count} == 1', then: 'singular', else: 'plural')}" arguments="{0: editor.edit_count}" />)
+                                            </span>
                                         </span>
                                     </div>
                                 </f:if>
@@ -30,11 +32,13 @@
                                 <div class="list-group list-group-flush">
                                     <f:for each="{list}" as="editor" iteration="iter">
                                         <f:if condition="{iter.cycle} > {initialCount}">
-                                            <div class="list-group-item bg-transparent px-0 py-0 border-0 small text-break">
-                                                <span>
-                                                    <span class="fw-bold">{iter.cycle}.</span>
-                                                    <wlb:userName feUserUid="{editor.fe_user}" />
-                                                    (<f:translate key="statistic.topTen.count.{f:if(condition: '{editor.edit_count} == 1', then: 'singular', else: 'plural')}" arguments="{0: editor.edit_count}" />)
+                                            <div class="list-group-item bg-transparent px-0 py-0 border-0 small text-break d-flex align-items-start">
+                                                <span class="fw-bold me-1" style="min-width: 1.5rem;">{iter.cycle}.</span>
+                                                <span class="d-flex flex-wrap align-items-baseline">
+                                                    <span class="me-1"><wlb:userName feUserUid="{editor.fe_user}" /></span>
+                                                    <span class="text-nowrap">
+                                                        (<f:translate key="statistic.topTen.count.{f:if(condition: '{editor.edit_count} == 1', then: 'singular', else: 'plural')}" arguments="{0: editor.edit_count}" />)
+                                                    </span>
                                                 </span>
                                             </div>
                                         </f:if>
