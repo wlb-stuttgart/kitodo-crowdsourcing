@@ -758,7 +758,7 @@ class WorkflowController extends ActionController
         $process->resetFeUser();
         $lastHistoryProcess = $this->processHistoryRepository->getLastHistory($process->getRecordIdentifier());
         $data = $lastHistoryProcess->toArray();
-        $this->processHistoryService->restoreFromArray($process, $data);
+        $this->processHistoryService->restoreFromArray($process, $data, false);
         // The current state of a process is one state after the state of the last history entry.
         $process->setNextState();
         // Reset user from history otherwise the process is blocked by the last edited user

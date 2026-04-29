@@ -31,7 +31,7 @@ class ProcessCleanupService
 
         $data = $lastHistoryProcess->toArray();
 
-        $this->processHistoryService->restoreFromArray($process, $data);
+        $this->processHistoryService->restoreFromArray($process, $data, false);
         // The current state of a process is one state after the state of the last history entry.
         $process->setNextState();
         $process->resetFeUser();

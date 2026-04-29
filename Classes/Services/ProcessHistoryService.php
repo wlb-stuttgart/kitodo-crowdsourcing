@@ -18,7 +18,7 @@ class ProcessHistoryService
     {
     }
 
-    public function restoreFromArray(Process $process, array $data): void
+    public function restoreFromArray(Process $process, array $data, bool $restoreCampaign = true): void
     {
         if (isset($data['title'])) {
             $process->setTitle($data['title']);
@@ -44,7 +44,7 @@ class ProcessHistoryService
             $process->setMetadata($data['metadata']);
         }
 
-        if (isset($data['campaign']) && is_numeric($data['campaign'])) {
+        if ($restoreCampaign && isset($data['campaign']) && is_numeric($data['campaign'])) {
             $campaign = $this->campaignRepository->findByUid((int)$data['campaign']);
             if ($campaign) {
                 $process->setCampaign($campaign);
