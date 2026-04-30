@@ -725,6 +725,11 @@ class WorkflowController extends ActionController
      */
     public function abortAndEditNewProcessAction(Process $currentProcess, Process $newProcess): ResponseInterface
     {
+        $this->statisticService->logWorkflowAction(
+            'abort',
+            $currentProcess,
+            $this->request->getAttribute('originalRequest') ?? $this->request
+        );
         $this->resetProcessFromHistory($currentProcess);
         $this->solrIndexer->indexDocument($currentProcess);
         $this->processRepository->update($currentProcess);
