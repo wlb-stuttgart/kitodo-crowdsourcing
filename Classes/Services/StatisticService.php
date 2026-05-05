@@ -29,30 +29,7 @@ class StatisticService
         $statisticsArray = [];
 
         // Bestehende Prozess-Statistiken
-        $countAll = $this->processRepository->countAllActiveGroupedByCampaign();
-        $statisticsArray['countAll'] = $countAll;
-
-        $countNew = $this->processRepository->countAllActiveByStateGroupedByCampaign(Process::WORKFLOW_STATE_NEW);
-        $statisticsArray['countUnedited'] = $countNew;
-
-        $countCorrectionByCampaign = $this->processRepository->countAllActiveByStateGroupedByCampaign(Process::WORKFLOW_STATE_CORRECTION);
-        $countFinalCorrectionByCampaign = $this->processRepository->countAllActiveByStateGroupedByCampaign(Process::WORKFLOW_STATE_FINAL_CORRECTION);
-
-        $countInProgressByCampaign = [];
-
-        foreach ($countCorrectionByCampaign as $campaignUid => $countCorrection) {
-            $countInProgressByCampaign[$campaignUid] = $countCorrection;
-        }
-
-        foreach ($countFinalCorrectionByCampaign as $campaignUid => $countFinalCorrection) {
-            $countInProgressByCampaign[$campaignUid] = ($countInProgressByCampaign[$campaignUid] ?? 0)
-                + $countFinalCorrection;
-        }
-
-        $statisticsArray['countInProgress'] = $countInProgressByCampaign;
-
-        $countCompleted = $this->processRepository->countAllActiveByStateGroupedByCampaign(Process::WORKFLOW_STATE_COMPLETED);
-        $statisticsArray['countCompleted'] = $countCompleted;
+        $statisticsArray = $this->processRepository->countStatisticsGroupedByCampaign();
 
         // Neue Klick-Statistiken
         $statisticsArray['totalClicks'] = $this->clickStatisticRepository->countAll();

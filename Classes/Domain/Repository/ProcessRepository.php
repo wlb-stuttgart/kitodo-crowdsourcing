@@ -325,5 +325,71 @@ class ProcessRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         return $counts;
     }
+
+    /**
+     * Counts active processes grouped by campaign for statistic overview.
+     *
+     * The result contains:
+     * - countAll: all active processes assigned to a campaign
+     * - countUnedited: NEW processes without assigned fe_user
+     * - countInProgress: NEW processes with assigned fe_user, CORRECTION and FINAL_CORRECTION processes
+     * - countCompleted: COMPLETED processes
+     *
+     * @return array<int, array{countAll: int, countUnedited: int, countInProgress: int, countCompleted: int}>
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function countStatisticsGroupedByCampaign(): array
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_process');
+
+        $queryBuilder = $connection->createQueryBuilder();
+
+        $rows = $queryBuilder
+            ->select('campaign')
+            ->addSelectLiteral('COUNT(uid) AS count_all')
+            ->addSelectLiteral(
+                'SUM(CASE WHEN state = ' . $queryBuilder->quote(Process::WORKFLOW_STATE_NEW)
+                . ' AND (fe_user IS NULL OR fe_user = 0) THEN 1 ELSE 0 END) AS count_unedited'
+            )
+            ->addSelectLiteral(
+                'SUM(CASE WHEN (state = ' . $queryBuilder->quote(Process::WORKFLOW_STATE_NEW)
+                . ' AND fe_user IS NOT NULL AND fe_user > 0) OR state IN ('
+                . $queryBuilder->quote(Process::WORKFLOW_STATE_CORRECTION)
+                . ', '
+                . $queryBuilder->quote(Process::WORKFLOW_STATE_FINAL_CORRECTION)
+                . ') THEN 1 ELSE 0 END) AS count_in_progress'
+            )
+            ->addSelectLiteral(
+                'SUM(CASE WHEN state = ' . $queryBuilder->quote(Process::WORKFLOW_STATE_COMPLETED)
+                . ' THEN 1 ELSE 0 END) AS count_completed'
+            )
+            ->from('tx_crowdsourcing_domain_model_process')
+            ->where($queryBuilder->expr()->isNotNull('campaign'))
+            ->andWhere($queryBuilder->expr()->gt('campaign', 0))
+            ->andWhere($queryBuilder->expr()->eq('hidden', 0))
+            ->andWhere($queryBuilder->expr()->eq('deleted', 0))
+            ->groupBy('campaign')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $statistics = [
+            'countAll' => [],
+            'countUnedited' => [],
+            'countInProgress' => [],
+            'countCompleted' => [],
+        ];
+
+        foreach ($rows as $row) {
+            $campaignUid = (int)$row['campaign'];
+
+            $statistics['countAll'][$campaignUid] = (int)$row['count_all'];
+            $statistics['countUnedited'][$campaignUid] = (int)$row['count_unedited'];
+            $statistics['countInProgress'][$campaignUid] = (int)$row['count_in_progress'];
+            $statistics['countCompleted'][$campaignUid] = (int)$row['count_completed'];
+        }
+
+        return $statistics;
+    }
 }
 
