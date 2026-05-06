@@ -115,7 +115,6 @@ class StatisticService
 
         // Request-Informationen
         $clickStatistic->setUri((string)$request->getUri());
-        $clickStatistic->setIpAddress($this->getClientIpAddress($request));
         $clickStatistic->setUserAgent($request->getHeaderLine('User-Agent'));
         $clickStatistic->setReferrer($request->getHeaderLine('Referer'));
         
