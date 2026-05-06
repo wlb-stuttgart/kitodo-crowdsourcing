@@ -37,10 +37,11 @@ class StatisticService
         $statisticsArray['clicksByDate'] = $this->clickStatisticRepository->getClickSummaryByDate();
         $statisticsArray['topTenEditorsByCampaign'] = $this->getTopTenEditorsByCampaign();
         $statisticsArray['topTenEditorsByCampaignLastMonth'] = $this->getTopTenEditorsByCampaignLastMonth();
+        $statisticsArray['dwellTime'] = $this->clickStatisticRepository->getAverageDwellTime();
 
         return $statisticsArray;
     }
-
+    
     public function getPersonalStatistics(FrontendUser $feUser): array
     {
         $editedCountsByCampaign = $this->processHistoryRepository

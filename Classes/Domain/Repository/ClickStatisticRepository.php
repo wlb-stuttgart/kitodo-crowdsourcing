@@ -2,6 +2,7 @@
 
 namespace Wlb\Crowdsourcing\Domain\Repository;
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
@@ -133,6 +134,66 @@ class ClickStatisticRepository extends Repository
             ORDER BY date DESC
         ');
         return $query->execute(true);
+    }
+
+    /**
+     * Calculates the average dwell time per user in seconds using a direct SQL query.
+     *
+     * Dwell time logic:
+     * 1. Identify session boundaries (gap > inactivityLimit).
+     * 2. Calculate duration for each session.
+     * 3. Average session durations per user.
+     * 4. Average of those user averages.
+     *
+     * @param int $inactivityLimit Inactivity limit in seconds (default: 15 minutes).
+     * @return float Average dwell time in seconds.
+     */
+    public function getAverageDwellTime(int $inactivityLimit = 900): float
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_clickstatistic');
+
+        // SQL explanation:
+        // ClicksWithLag: Get the previous click's timestamp for each user.
+        // SessionFlags: Flag the start of a new session if gap > limit or it's the first click.
+        // SessionGroups: Use cumulative sum of flags to create unique session IDs per user.
+        // SessionDurations: Calculate duration (max - min crdate) for each session.
+        // UserAverages: Average those durations per user.
+        // Final: Average the user averages.
+
+        $sql = "
+            SELECT AVG(user_avg_duration) as overall_avg
+            FROM (
+                SELECT fe_user_uid, AVG(session_duration) as user_avg_duration
+                FROM (
+                    SELECT fe_user_uid, session_id, (MAX(crdate) - MIN(crdate)) as session_duration
+                    FROM (
+                        SELECT fe_user_uid, crdate,
+                               SUM(is_new_session) OVER (PARTITION BY fe_user_uid ORDER BY crdate) as session_id
+                        FROM (
+                            SELECT fe_user_uid, crdate,
+                                   CASE
+                                       WHEN crdate - LAG(crdate) OVER (PARTITION BY fe_user_uid ORDER BY crdate) > :limit
+                                       OR LAG(crdate) OVER (PARTITION BY fe_user_uid ORDER BY crdate) IS NULL
+                                       THEN 1
+                                       ELSE 0
+                                   END as is_new_session
+                            FROM tx_crowdsourcing_domain_model_clickstatistic
+                            WHERE fe_user_uid > 0 AND deleted = 0
+                        ) AS ClicksWithLag
+                    ) AS SessionGroups
+                    GROUP BY fe_user_uid, session_id
+                    HAVING MAX(crdate) - MIN(crdate) > 0
+                ) AS SessionDurations
+                GROUP BY fe_user_uid
+            ) AS UserAverages
+        ";
+
+        $result = $connection->executeQuery($sql, [
+            'limit' => $inactivityLimit
+        ])->fetchOne();
+
+        return (float)($result ?? 0.0);
     }
 
     /**
