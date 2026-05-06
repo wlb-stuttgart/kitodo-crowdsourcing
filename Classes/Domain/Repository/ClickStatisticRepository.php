@@ -153,7 +153,6 @@ class ClickStatisticRepository extends Repository
         }
 
         $data = [
-            'ip_address' => $object->getIpAddress(),
             'user_agent' => $object->getUserAgent(),
             'fe_user_uid' => $object->getFeUserUid(),
             'action_type' => $object->getActionType(),

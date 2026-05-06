@@ -16,18 +16,9 @@ return [
         'iconfile' => 'EXT:crowdsourcing/Resources/Public/Icons/tx_crowdsourcing_domain_model_clickstatistic.gif'
     ],
     'types' => [
-        '1' => ['showitem' => 'action_type,action_identifier,uri,ip_address,user_agent,fe_user_uid,process_uid,campaign_uid,session_id,additional_data'],
+        '1' => ['showitem' => 'action_type,action_identifier,uri,user_agent,fe_user_uid,process_uid,campaign_uid,session_id,additional_data'],
     ],
     'columns' => [
-        'ip_address' => [
-            'exclude' => true,
-            'label' => 'IP Address',
-            'config' => [
-                'type' => 'input',
-                'size' => 30,
-                'eval' => 'trim'
-            ],
-        ],
         'user_agent' => [
             'exclude' => true,
             'label' => 'User Agent',

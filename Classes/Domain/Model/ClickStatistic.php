@@ -9,11 +9,6 @@ class ClickStatistic extends AbstractEntity
     /**
      * @var string
      */
-    protected string $ipAddress = '';
-
-    /**
-     * @var string
-     */
     protected string $userAgent = '';
 
     /**
@@ -60,16 +55,6 @@ class ClickStatistic extends AbstractEntity
      * @var string
      */
     protected string $additionalData = '';
-
-    public function getIpAddress(): string
-    {
-        return $this->ipAddress;
-    }
-
-    public function setIpAddress(string $ipAddress): void
-    {
-        $this->ipAddress = $ipAddress;
-    }
 
     public function getUserAgent(): string
     {

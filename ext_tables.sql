@@ -52,7 +52,6 @@ CREATE TABLE tx_crowdsourcing_domain_model_clickstatistic (
     tstamp int(11) unsigned DEFAULT '0' NOT NULL,
     crdate int(11) unsigned DEFAULT '0' NOT NULL,
     
-    ip_address varchar(45) DEFAULT '' NOT NULL,
     user_agent text,
     fe_user_uid int(11) DEFAULT '0' NOT NULL,
     
