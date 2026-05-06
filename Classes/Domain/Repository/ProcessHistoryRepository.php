@@ -196,13 +196,15 @@ class ProcessHistoryRepository extends ProcessRepository
     public function findTopTenEditorsByCampaignLastMonth(): array
     {
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $startOfLastMonth = $now->modify('first day of last month')->setTime(0, 0, 0);
-        $startOfThisMonth = $now->modify('first day of this month')->setTime(0, 0, 0);
 
-        // Get the start of the last 30 days
-        //$now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        //$startOfLastMonth = $now->modify('-30 days');
-        //$startOfThisMonth   = $now;
+        // Time period: Previous month
+        //$startOfLastMonth = $now->modify('first day of last month')->setTime(0, 0, 0);
+        //$startOfThisMonth = $now->modify('first day of this month')->setTime(0, 0, 0);
+
+        // Time period: Last 30 days
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $startOfLastMonth = $now->modify('-30 days');
+        $startOfThisMonth   = $now;
 
         return $this->findTopTenEditorsByCampaignInternal($startOfLastMonth, $startOfThisMonth);
     }
@@ -364,14 +366,14 @@ class ProcessHistoryRepository extends ProcessRepository
      */
     public function countEditedProcessesByFeUserGroupedByCampaignLastMonth(int $feUserUid): array
     {
-        // Get the start and end of the previous month
-        $endOfPeriod = new \DateTimeImmutable('first day of this month 00:00:00');
-        $startOfPeriod = $endOfPeriod->modify('-1 month');
+        // Time period: Previous month
+        //$endOfPeriod = new \DateTimeImmutable('first day of this month 00:00:00');
+        //$startOfPeriod = $endOfPeriod->modify('-1 month');
 
-        // Get the start of the last 30 days
-        //$now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        //$startOfPeriod = $now->modify('-30 days');
-        //$endOfPeriod   = $now;
+        // Time Period: Last 30 days
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $startOfPeriod = $now->modify('-30 days');
+        $endOfPeriod   = $now;
 
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tx_crowdsourcing_domain_model_processhistory');

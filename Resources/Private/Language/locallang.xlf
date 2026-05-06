@@ -193,10 +193,10 @@
             <source>You have contributed to %s posters in this campaign.</source>
         </trans-unit>
         <trans-unit id="statistic.personal.editedLastMonth.singular">
-            <source>Last month you edited %s poster.</source>
+            <source>You have edited %s poster in the last 30 days.</source>
         </trans-unit>
         <trans-unit id="statistic.personal.editedLastMonth.plural">
-            <source>Last month you edited %s posters.</source>
+            <source>You have edited %s posters in the last 30 days.</source>
         </trans-unit>
         <trans-unit id="statistic.overall">
             <source>Statistics</source>

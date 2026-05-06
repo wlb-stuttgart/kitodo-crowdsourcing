@@ -252,12 +252,12 @@
             <target>Sie haben an %s Plakaten in dieser Kampagne mitgearbeitet.</target>
         </trans-unit>
         <trans-unit id="statistic.personal.editedLastMonth.singular">
-            <source>Last month you edited %s poster.</source>
-            <target>Im vergangenen Monat haben Sie %s Plakat bearbeitet.</target>
+            <source>You have edited %s poster in the last 30 days.</source>
+            <target>In den letzten 30 Tagen haben Sie %s Plakat bearbeitet.</target>
         </trans-unit>
         <trans-unit id="statistic.personal.editedLastMonth.plural">
-            <source>Last month you edited %s posters.</source>
-            <target>Im vergangenen Monat haben Sie %s Plakate bearbeitet.</target>
+            <source>You have edited %s posters in the last 30 days.</source>
+            <target>In den letzten 30 Tagen haben Sie %s Plakate bearbeitet.</target>
         </trans-unit>
         <trans-unit id="statistic.overall">
             <source>Statistics</source>
@@ -268,8 +268,8 @@
             <target>TOP 10 der Kampagne</target>
         </trans-unit>
         <trans-unit id="statistic.topTen.lastMonth">
-            <source>TOP 10 Last Month</source>
-            <target>TOP 10 des vergangenen Monats</target>
+            <source>TOP 10 Last 30 days</source>
+            <target>TOP 10 der letzten 30 Tage</target>
         </trans-unit>
         <trans-unit id="statistic.topTen.count.singular">
             <source>%s Poster</source>
