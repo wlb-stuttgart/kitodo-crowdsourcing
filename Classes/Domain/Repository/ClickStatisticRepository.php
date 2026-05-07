@@ -197,6 +197,147 @@ class ClickStatisticRepository extends Repository
     }
 
     /**
+     * Calculates the average processing time per fully completed process in seconds.
+     *
+     * Processing time logic:
+     * 1. Only processes with a 'save' in all 3 workflow states are considered:
+     *    NEW, CORRECTION, FINAL_CORRECTION.
+     * 2. A valid interval starts with 'edit_metadata' and ends with 'save' or 'cache'.
+     * 3. Only intervals from users who later complete the same process/status with 'save' are counted.
+     * 4. For 'save' as end point, the previous 'edit_metadata' must not be interrupted by 'cache', 'abort', 'admin_abort', or 'cleanup_abort'.
+     * 5. For 'cache' as end point, the previous 'edit_metadata' must not be interrupted by 'save', 'abort', 'admin_abort', or 'cleanup_abort'.
+     * 6. Sum durations per status and process.
+     * 7. Total process time is the sum of the 3 status durations.
+     * 8. Final result is the average of those fully completed total process times.
+     *
+     * @return float Average processing time in seconds.
+     */
+    public function getAverageProcessingTime(): float
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_clickstatistic');
+
+        $sql = "
+            SELECT AVG(total_process_time)
+            FROM (
+                SELECT process_uid, SUM(status_duration) AS total_process_time
+                FROM (
+                    SELECT process_uid, process_state, SUM(duration) AS status_duration
+                    FROM (
+                        SELECT
+                            e.process_uid,
+                            e.process_state,
+                            e.fe_user_uid,
+                            s.crdate - e.crdate AS duration
+                        FROM
+                            tx_crowdsourcing_domain_model_clickstatistic e
+                        JOIN
+                            tx_crowdsourcing_domain_model_clickstatistic s
+                        ON
+                            e.process_uid = s.process_uid
+                            AND e.fe_user_uid = s.fe_user_uid
+                            AND e.process_state = s.process_state
+                            AND s.crdate > e.crdate
+                        WHERE
+                            e.action_type = 'workflow_action'
+                            AND e.action_identifier = 'edit_metadata'
+                            AND s.action_type = 'workflow_action'
+                            AND s.action_identifier IN ('save', 'cache')
+                            AND e.deleted = 0
+                            AND s.deleted = 0
+                            AND e.process_state IN ('NEW', 'CORRECTION', 'FINAL_CORRECTION')
+                            -- Only consider fully completed processes:
+                            -- NEW, CORRECTION and FINAL_CORRECTION must each have a save.
+                            AND e.process_uid IN (
+                                SELECT completed_process.process_uid
+                                FROM tx_crowdsourcing_domain_model_clickstatistic completed_process
+                                WHERE completed_process.action_type = 'workflow_action'
+                                  AND completed_process.action_identifier = 'save'
+                                  AND completed_process.process_state IN ('NEW', 'CORRECTION', 'FINAL_CORRECTION')
+                                  AND completed_process.deleted = 0
+                                GROUP BY completed_process.process_uid
+                                HAVING COUNT(DISTINCT completed_process.process_state) = 3
+                            )
+                            -- Only count intervals from users who complete this exact process/status with a later save.
+                            AND EXISTS (
+                                SELECT 1
+                                FROM tx_crowdsourcing_domain_model_clickstatistic final_save
+                                WHERE final_save.process_uid = e.process_uid
+                                  AND final_save.fe_user_uid = e.fe_user_uid
+                                  AND final_save.process_state = e.process_state
+                                  AND final_save.action_type = 'workflow_action'
+                                  AND final_save.action_identifier = 'save'
+                                  AND final_save.crdate > e.crdate
+                                  AND final_save.deleted = 0
+                            )
+                            -- Ensure s is the next action after e for this user/process/state.
+                            AND NOT EXISTS (
+                                SELECT 1
+                                FROM tx_crowdsourcing_domain_model_clickstatistic m
+                                WHERE m.process_uid = e.process_uid
+                                  AND m.fe_user_uid = e.fe_user_uid
+                                  AND m.process_state = e.process_state
+                                  AND m.crdate > e.crdate
+                                  AND m.crdate < s.crdate
+                                  AND m.deleted = 0
+                            )
+                            -- Interruption checks.
+                            AND (
+                                (
+                                    s.action_identifier = 'save'
+                                    AND NOT EXISTS (
+                                        SELECT 1
+                                        FROM tx_crowdsourcing_domain_model_clickstatistic i
+                                        WHERE i.process_uid = e.process_uid
+                                          AND i.fe_user_uid = e.fe_user_uid
+                                          AND i.process_state = e.process_state
+                                          AND i.crdate > e.crdate
+                                          AND i.crdate < s.crdate
+                                          AND i.action_identifier IN ('cache', 'abort', 'admin_abort', 'cleanup_abort')
+                                          AND i.deleted = 0
+                                    )
+                                )
+                                OR
+                                (
+                                    s.action_identifier = 'cache'
+                                    AND NOT EXISTS (
+                                        SELECT 1
+                                        FROM tx_crowdsourcing_domain_model_clickstatistic i
+                                        WHERE i.process_uid = e.process_uid
+                                          AND i.fe_user_uid = e.fe_user_uid
+                                          AND i.process_state = e.process_state
+                                          AND i.crdate > e.crdate
+                                          AND i.crdate < s.crdate
+                                          AND i.action_identifier IN ('save', 'abort', 'admin_abort', 'cleanup_abort')
+                                          AND i.deleted = 0
+                                    )
+                                )
+                            )
+                    ) AS ValidIntervals
+                    GROUP BY process_uid, process_state
+                ) AS StatusDurations
+                GROUP BY process_uid
+                HAVING COUNT(DISTINCT process_state) = 3
+            ) AS ProcessDurations
+        ";
+
+        $result = $connection->executeQuery($sql)->fetchOne();
+
+        return (float)($result ?? 0.0);
+    }
+
+    /**
+     * Counts the total number of entries in the clickstatistic table.
+     *
+     * @return int The total count of entries.
+     */
+    public function countAll(): int
+    {
+        $query = $this->createQuery();
+        return $query->count();
+    }
+
+    /**
      * This function will insert the clickStatistic data into the database using the connection pool and the query builder.
      *
      * Since the add function is used by the LogPageHitMiddleware, we need to insert the data directly into the database
@@ -221,6 +362,7 @@ class ClickStatisticRepository extends Repository
             'uri' => $object->getUri(),
             'referrer' => $object->getReferrer(),
             'process_uid' => $object->getProcessUid(),
+            'process_state' => $object->getProcessState(),
             'campaign_uid' => $object->getCampaignUid(),
             'session_id' => $object->getSessionId(),
             'additional_data' => $object->getAdditionalData(),
@@ -236,4 +378,5 @@ class ClickStatisticRepository extends Repository
             ->values($data)
             ->executeStatement();
     }
+
 }

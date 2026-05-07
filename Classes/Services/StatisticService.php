@@ -38,6 +38,7 @@ class StatisticService
         $statisticsArray['topTenEditorsByCampaign'] = $this->getTopTenEditorsByCampaign();
         $statisticsArray['topTenEditorsByCampaignLastMonth'] = $this->getTopTenEditorsByCampaignLastMonth();
         $statisticsArray['dwellTime'] = $this->clickStatisticRepository->getAverageDwellTime();
+        $statisticsArray['averageProcessingTime'] = $this->clickStatisticRepository->getAverageProcessingTime();
 
         return $statisticsArray;
     }
@@ -106,13 +107,15 @@ class StatisticService
         ?ServerRequestInterface $request = null,
         int $processUid = 0,
         int $campaignUid = 0,
-        array $additionalData = []
+        array $additionalData = [],
+        string $processState = ''
     ): void {
         $clickStatistic = new ClickStatistic();
         
         // Basis-Informationen
         $clickStatistic->setActionType($actionType);
         $clickStatistic->setActionIdentifier($actionIdentifier);
+        $clickStatistic->setProcessState($processState);
 
         $feUserUid = 0;
 
@@ -129,7 +132,6 @@ class StatisticService
             }
         } else {
             $clickStatistic->setUri('CLI/Background');
-            $clickStatistic->setIpAddress('127.0.0.1');
             $clickStatistic->setUserAgent('CLI-Task');
             $clickStatistic->setReferrer('');
         }
@@ -182,7 +184,8 @@ class StatisticService
             $request,
             $process->getUid(),
             $campaignUid,
-            $additionalData
+            $additionalData,
+            $process->getState()
         );
     }
 

@@ -29,8 +29,10 @@ class ProcessCleanupService
      */
     public function cleanupSingleProcess(Process $process, string $abortType = 'cleanup_abort'): void
     {
-        // Log the abort
-        $this->statisticService->logWorkflowAction($abortType, $process, null, []);
+        // State will be changed in the next steps, for logging we need the current state, so we have to log here.
+        $this->statisticService->logWorkflowAction(
+            $abortType, $process,  null, ['process_type' => $process->getType()]
+        );
 
         $lastHistoryProcess = $this->processHistoryRepository->getLastHistory($process->getRecordIdentifier());
 

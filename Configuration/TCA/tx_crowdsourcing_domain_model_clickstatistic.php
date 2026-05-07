@@ -16,7 +16,7 @@ return [
         'iconfile' => 'EXT:crowdsourcing/Resources/Public/Icons/tx_crowdsourcing_domain_model_clickstatistic.gif'
     ],
     'types' => [
-        '1' => ['showitem' => 'action_type,action_identifier,uri,user_agent,fe_user_uid,process_uid,campaign_uid,session_id,additional_data'],
+        '1' => ['showitem' => 'action_type,action_identifier,uri,user_agent,fe_user_uid,process_uid,process_state,campaign_uid,session_id,additional_data'],
     ],
     'columns' => [
         'user_agent' => [
@@ -80,6 +80,15 @@ return [
                 'type' => 'input',
                 'size' => 10,
                 'eval' => 'int'
+            ],
+        ],
+        'process_state' => [
+            'exclude' => true,
+            'label' => 'Process State',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
             ],
         ],
         'campaign_uid' => [

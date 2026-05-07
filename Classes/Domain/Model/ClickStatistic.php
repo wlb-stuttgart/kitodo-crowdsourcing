@@ -42,6 +42,11 @@ class ClickStatistic extends AbstractEntity
     protected int $processUid = 0;
 
     /**
+     * @var string
+     */
+    protected string $processState = '';
+
+    /**
      * @var int
      */
     protected int $campaignUid = 0;
@@ -124,6 +129,16 @@ class ClickStatistic extends AbstractEntity
     public function setProcessUid(int $processUid): void
     {
         $this->processUid = $processUid;
+    }
+
+    public function getProcessState(): string
+    {
+        return $this->processState;
+    }
+
+    public function setProcessState(string $processState): void
+    {
+        $this->processState = $processState;
     }
 
     public function getCampaignUid(): int

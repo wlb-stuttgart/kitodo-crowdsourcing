@@ -62,6 +62,7 @@ CREATE TABLE tx_crowdsourcing_domain_model_clickstatistic (
     referrer text,
     
     process_uid int(11) DEFAULT '0' NOT NULL,
+    process_state varchar(255) DEFAULT '' NOT NULL,
     campaign_uid int(11) DEFAULT '0' NOT NULL,
     
     session_id varchar(255) DEFAULT '' NOT NULL,

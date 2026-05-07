@@ -591,7 +591,10 @@ class WorkflowController extends ActionController
         $process = $this->processRepository->findByUid($processId);
 
         $actionTaken = '';
-        
+
+        // State will be changed in the next steps, for logging we need the current state
+        $processForLog = clone $process;
+
         if ($this->request->hasArgument('abort')) {
             $actionTaken = 'abort';
             $this->resetProcessFromHistory($process);
@@ -619,6 +622,7 @@ class WorkflowController extends ActionController
 
             // Remove user
             $process->resetFeUser();
+
             // Set process to next state
             $process->setNextState();
 
@@ -670,9 +674,10 @@ class WorkflowController extends ActionController
         $this->processRepository->update($process);
 
         // log form save action
+
         $this->statisticService->logWorkflowAction(
             $actionTaken,
-            $process,
+            $processForLog,
             $this->request->getAttribute('originalRequest') ?? $this->request,
             ['metadata_fields' => count($trustedMetadata)]
         );
