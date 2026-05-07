@@ -85,14 +85,27 @@
                             min="1" />
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="meta-{metadataId}-tab" class="form-label">Tabname</label>
                     <f:form.textfield
                             id="meta-{metadataId}-tab"
-                            class="form-control"
+                            class="form-control field-tab-name"
                             name="metadata[{docType}][{metadataId}][tab]"
                             value="{metadata.tab}"
-                            placeholder="Name des Tabs für Sortierung"/>
+                            placeholder="Name des Tabs für Sortierung"
+                            additionalAttributes="{data-doc-type: docType, data-metadata-id: metadataId, data-is-meta-field: '1'}"/>
+                </div>
+
+                <div class="col-md-1">
+                    <label for="meta-{metadataId}-fieldTabPosition" class="form-label">Position</label>
+                    <f:form.textfield
+                            id="meta-{metadataId}-fieldTabPosition"
+                            class="form-control field-tab-position"
+                            name="metadata[{docType}][{metadataId}][fieldTabPosition]"
+                            value="{metadata.fieldTabPosition}"
+                            type="number"
+                            min="1"
+                            additionalAttributes="{data-doc-type: docType, data-metadata-id: metadataId}"/>
                 </div>
 
                 <div class="col-md-2">
@@ -177,7 +190,7 @@
                     <div id="collapse_{metadataChildId}" class="accordion-collapse collapse">
                         <div class="accordion-body">
                             <!-- Metadaten-Konfiguration -->
-                            <div id="metadataContainer">
+                            <div class="metadata-child-container">
                                 <f:render partial="Backend/Configuration/ChildForm" arguments="{_all}"></f:render>
                             </div>
                         </div>

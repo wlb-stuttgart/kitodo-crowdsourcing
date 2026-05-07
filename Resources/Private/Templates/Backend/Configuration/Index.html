@@ -57,9 +57,11 @@
                         <div id="collapse_{docType}" class="accordion-collapse collapse">
                             <div class="accordion-body">
                                 <!-- Metadaten-Konfiguration -->
-                                <div id="metadataContainer">
+                                <div class="metadata-container" data-doc-type="{docType}">
                                     <f:for each="{documentTypeConfig}" as="metadata" key="metadataId">
-                                        <f:render partial="Backend/Configuration/FieldForm" arguments="{_all}"></f:render>
+                                        <div class="metadata-field-wrapper" data-metadata-id="{metadataId}">
+                                            <f:render partial="Backend/Configuration/FieldForm" arguments="{_all}"></f:render>
+                                        </div>
                                     </f:for>
                                 </div>
                             </div>

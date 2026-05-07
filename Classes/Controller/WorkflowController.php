@@ -493,11 +493,23 @@ class WorkflowController extends ActionController
             $sorted[$tab][$fieldName] = $meta;
         }
 
+        // Sort fields within each tab by fieldTabPosition
+        foreach ($sorted as $tabName => $fields) {
+            uasort($sorted[$tabName], function($a, $b) {
+                $aPos = ($a['fieldTabPosition'] !== null && $a['fieldTabPosition'] !== '') ? (int)$a['fieldTabPosition'] : PHP_INT_MAX;
+                $bPos = ($b['fieldTabPosition'] !== null && $b['fieldTabPosition'] !== '') ? (int)$b['fieldTabPosition'] : PHP_INT_MAX;
+                return $aPos <=> $bPos;
+            });
+        }
+
+
         // set default at the end
         ksort($sorted);
         $defaultValues = $sorted['default'];
         unset($sorted['default']);
         $sorted['default'] = $defaultValues;
+
+        $dbConfigArraySorted = [];
         $dbConfigArraySorted[$processType] = $sorted;
 
         return $dbConfigArraySorted;
