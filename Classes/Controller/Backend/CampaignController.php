@@ -398,7 +398,7 @@ class CampaignController extends ActionController
         $query = $this->request->hasArgument('query')
             ? $this->request->getArgument('query') : "";
 
-        $this->processCleanupService->cleanupSingleProcess($process);
+        $this->processCleanupService->cleanupSingleProcess($process, 'admin_abort');
         return $this->redirect('editProcesses', null, null, [
             "campaign" => $campaign,
             "currentPage" => $currentPage,

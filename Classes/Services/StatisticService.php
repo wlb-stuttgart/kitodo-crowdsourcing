@@ -103,7 +103,7 @@ class StatisticService
     public function logClick(
         string $actionType,
         string $actionIdentifier,
-        ServerRequestInterface $request,
+        ?ServerRequestInterface $request = null,
         int $processUid = 0,
         int $campaignUid = 0,
         array $additionalData = []
@@ -114,18 +114,30 @@ class StatisticService
         $clickStatistic->setActionType($actionType);
         $clickStatistic->setActionIdentifier($actionIdentifier);
 
+        $feUserUid = 0;
+
         // Request-Informationen
-        $clickStatistic->setUri((string)$request->getUri());
-        $clickStatistic->setUserAgent($request->getHeaderLine('User-Agent'));
-        $clickStatistic->setReferrer($request->getHeaderLine('Referer'));
+        if ($request) {
+            $clickStatistic->setUri((string)$request->getUri());
+            $clickStatistic->setUserAgent($request->getHeaderLine('User-Agent'));
+            $clickStatistic->setReferrer($request->getHeaderLine('Referer'));
+            
+            // Frontend-User (falls eingeloggt) - Priorität für den aktuell angemeldeten User
+            $requestFeUser = $request->getAttribute('frontend.user');
+            if ($requestFeUser && $requestFeUser->user && isset($requestFeUser->user['uid'])) {
+                $feUserUid = (int)$requestFeUser->user['uid'];
+            }
+        } else {
+            $clickStatistic->setUri('CLI/Background');
+            $clickStatistic->setIpAddress('127.0.0.1');
+            $clickStatistic->setUserAgent('CLI-Task');
+            $clickStatistic->setReferrer('');
+        }
         
+        $clickStatistic->setFeUserUid($feUserUid);
+
         // Session-ID
         $clickStatistic->setSessionId(session_id());
-        
-        // Frontend-User (falls eingeloggt)
-        if ($request->getAttribute('frontend.user') && $request->getAttribute('frontend.user')->user) {
-            $clickStatistic->setFeUserUid($request->getAttribute('frontend.user')->user['uid']);
-        }
         
         // Kontext-Informationen
         $clickStatistic->setProcessUid($processUid);
@@ -144,7 +156,7 @@ class StatisticService
     /**
      * Vereinfachte Methode zum Protokollieren von Seitenaufrufen
      */
-    public function log(ServerRequestInterface $request): void
+    public function log(?ServerRequestInterface $request = null): void
     {
         $this->logClick(
             'page_view',
@@ -159,7 +171,7 @@ class StatisticService
     public function logWorkflowAction(
         string $action,
         Process $process,
-        ServerRequestInterface $request,
+        ?ServerRequestInterface $request = null,
         array $additionalData = []
     ): void {
         $campaignUid = $process->getCampaign() ? $process->getCampaign()->getUid() : 0;
@@ -179,7 +191,7 @@ class StatisticService
      */
     public function logButtonClick(
         string $buttonId,
-        ServerRequestInterface $request,
+        ?ServerRequestInterface $request = null,
         int $processUid = 0,
         int $campaignUid = 0,
         array $additionalData = []
@@ -197,8 +209,11 @@ class StatisticService
     /**
      * Ermittelt die Client-IP-Adresse
      */
-    private function getClientIpAddress(ServerRequestInterface $request): string
+    private function getClientIpAddress(?ServerRequestInterface $request): string
     {
+        if (!$request) {
+            return '127.0.0.1';
+        }
         $serverParams = $request->getServerParams();
         
         // Verschiedene Header prüfen (für Proxy-Setups)

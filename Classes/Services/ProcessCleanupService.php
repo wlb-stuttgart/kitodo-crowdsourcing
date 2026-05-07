@@ -16,6 +16,7 @@ class ProcessCleanupService
         private readonly ProcessRepository $processRepository,
         private readonly PersistenceManager $persistenceManager,
         private readonly SolrIndexer $solrIndexer,
+        private readonly StatisticService $statisticService,
     ) {
     }
 
@@ -23,10 +24,14 @@ class ProcessCleanupService
      * Cleans up a process by resetting the user, restoring the previous state,
      * and updating the repository accordingly.
      *
-     * @param array $process
+     * @param Process $process
+     * @param string $abortType
      */
-    public function cleanupSingleProcess(Process $process): void
+    public function cleanupSingleProcess(Process $process, string $abortType = 'cleanup_abort'): void
     {
+        // Log the abort
+        $this->statisticService->logWorkflowAction($abortType, $process, null, []);
+
         $lastHistoryProcess = $this->processHistoryRepository->getLastHistory($process->getRecordIdentifier());
 
         $data = $lastHistoryProcess->toArray();
