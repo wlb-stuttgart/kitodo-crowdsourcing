@@ -11,6 +11,7 @@ use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
 use TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException;
 use Wlb\Crowdsourcing\Domain\Model\MetadataConfiguration;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
+use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 class ConfigurationController extends ActionController
@@ -80,6 +81,7 @@ class ConfigurationController extends ActionController
         }
         $this->moduleTemplate->assign('rulesetConfig', $configurationRuleset);
         $this->moduleTemplate->assign('config', $config);
+        $this->moduleTemplate->assign('gndVerifyUrl', ExtensionConfigurationService::getInstance()->getConfigurationValue('gndVerifyUrl'));
 
         return $this->moduleTemplate->renderResponse('Backend/Configuration/Index');;
     }

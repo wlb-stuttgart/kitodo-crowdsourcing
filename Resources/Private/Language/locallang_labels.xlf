@@ -53,6 +53,9 @@
 			<trans-unit id="config.solr.core">
 				<source>Core</source>
 			</trans-unit>
+			<trans-unit id="config.gnd.verifyUrl">
+				<source>GND verify URL (use {value} as placeholder for the field value, e.g. https://explore.gnd.network/gnd/{value})</source>
+			</trans-unit>
 		</body>
   </file>
 </xliff>

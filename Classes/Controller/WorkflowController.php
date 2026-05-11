@@ -431,6 +431,7 @@ class WorkflowController extends ActionController
         $this->view->assign('stateReport', $this->getStateReport($process));
 
         $this->view->assign('reportMail', ExtensionConfigurationService::getInstance()->getConfigurationValue('reportMail'));
+        $this->view->assign('gndVerifyUrl', ExtensionConfigurationService::getInstance()->getConfigurationValue('gndVerifyUrl'));
 
         // log metadata edit action
         $this->statisticService->logWorkflowAction(
@@ -561,6 +562,7 @@ class WorkflowController extends ActionController
         $this->view->assign('stateReport', $this->getStateReport($process));
 
         $this->view->assign('reportMail', ExtensionConfigurationService::getInstance()->getConfigurationValue('reportMail'));
+        $this->view->assign('gndVerifyUrl', ExtensionConfigurationService::getInstance()->getConfigurationValue('gndVerifyUrl'));
 
         // log metadata edit action
         $this->statisticService->logWorkflowAction(

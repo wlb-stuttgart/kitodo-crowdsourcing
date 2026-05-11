@@ -33,6 +33,8 @@ $( document ).ready(function() {
 
     initLobidAutocomplete();
 
+    initVerifyLinks();
+
 });
 
 function validateTabs() {
@@ -776,7 +778,7 @@ function initLobidAutocomplete() {
                 var $active = $items.filter('.lobid-active');
                 if ($active.length) {
                     e.preventDefault();
-                    $input.val($active.data('lobid-value'));
+                    $input.val($active.data('lobid-value')).trigger('change');
                     lobidFillSiblingFields($active.data('lobid-entity'), $input);
                     $dropdown.hide().empty();
                     activeIndex = -1;
@@ -815,7 +817,7 @@ function lobidFillSiblingFields(entity, $input) {
 
         var siblingField = $siblingInput.data('lobid-field');
         if (siblingField) {
-            $siblingInput.val(lobidExtractField(entity, siblingField, ''));
+            $siblingInput.val(lobidExtractField(entity, siblingField, '')).trigger('change');
         }
     });
 }
@@ -846,7 +848,7 @@ function lobidSearch(query, lobidField, lobidFilter, $dropdown, $input) {
                     .data('lobid-entity', entity)
                     .on('mousedown', function (e) {
                         e.preventDefault();
-                        $input.val(fieldValue);
+                        $input.val(fieldValue).trigger('change');
                         lobidFillSiblingFields(entity, $input);
                         $dropdown.hide().empty();
                     });
@@ -901,6 +903,36 @@ function lobidExtractField(entity, fieldName, fallback) {
     }
 
     return String(current);
+}
+
+function initVerifyLinks() {
+    $('input[data-verify-url]').each(function () {
+        var $input = $(this);
+        var verifyUrl = $input.data('verify-url');
+        if (!verifyUrl) return;
+
+        var $btn = $('<a class="input-group-text verify-link" href="#" target="_blank" rel="noopener noreferrer" title="Im externen Dienst verifizieren" style="display: none;"><span class="fa-solid fa-arrow-up-right-from-square"></span></a>');
+
+        var $inputGroup = $input.closest('.input-group');
+        var $deleteBtn = $inputGroup.find('.deleteField, .deleteChildField').first();
+        if ($deleteBtn.length) {
+            $deleteBtn.before($btn);
+        } else {
+            $inputGroup.append($btn);
+        }
+
+        function updateVerifyLink() {
+            var val = $input.val().trim();
+            if (val) {
+                $btn.attr('href', verifyUrl.replace('{value}', encodeURIComponent(val))).show();
+            } else {
+                $btn.hide();
+            }
+        }
+
+        updateVerifyLink();
+        $input.on('input change', updateVerifyLink);
+    });
 }
 
 function lobidBuildSubline(entity) {

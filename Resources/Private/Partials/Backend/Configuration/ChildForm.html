@@ -103,6 +103,18 @@
                             placeholder="z.B. ^[A-Za-z]+$" />
                 </div>
 
+                <div class="col-xs-6">
+                    <div class="form-check form-switch mt-4">
+                        <f:form.checkbox
+                                id="meta-{metadataId}-{metadataChildId}-verifyLinkEnabled"
+                                class="form-check-input"
+                                name="metadata[{docType}][{metadataId}][children][{metadataChildId}][verifyLinkEnabled]"
+                                value="1"
+                                checked="{metadataChild.verifyLinkEnabled}" />
+                        <label class="form-check-label" for="meta-{metadataId}-{metadataChildId}-verifyLinkEnabled">Verifizierungs-Link aktivieren</label>
+                    </div>
+                </div>
+
                 <f:comment>Text to help user</f:comment>
                 <div class="col-xs-6">
                     <label for="meta-{metadataId}-{metadataChildId}-helptext" class="form-label">Hilfetext</label>
