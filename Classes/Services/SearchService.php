@@ -101,7 +101,7 @@ class SearchService
 
         $searchResult = new SearchResult();
         $searchResult->setProcesses($this->processRepository->findByIdentifierList($documentIdentifiers));
-        $searchResult->setFacets($results->getData()['facet_counts']['facet_fields']);
+        $searchResult->setFacets($results->getData()['facet_counts']['facet_fields'] ?? []);
         $searchResult->setQuery($query);
         $searchResult->setNumFound($numFound);
 
