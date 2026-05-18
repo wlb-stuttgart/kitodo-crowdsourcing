@@ -12,10 +12,9 @@
  *
  * The TYPO3 project - inspiring people to share!
  */
-
-
 use Wlb\Crowdsourcing\Controller\Backend\CampaignController;
 use Wlb\Crowdsourcing\Controller\Backend\ConfigurationController;
+use Wlb\Crowdsourcing\Controller\Backend\StatisticsController;
 
 /**
  * Definitions for modules provided by EXT:crowdsourcing
@@ -61,6 +60,20 @@ return [
         'controllerActions' => [
             ConfigurationController::class => 'index, save, saveDemoForm'
         ],
+    ],
+    'tx_crowdsourcing_statistics' => [
+        'parent' => 'tx_crowdsourcing',
+        'position' => ['after' => 'tx_crowdsourcing_configuration'],
+        'access' => 'user,group ',
+        'workspaces' => 'live',
+        //'path' => '/module/page/example',
+        'labels' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_mod_statistics.xlf',
+        'extensionName' => 'Crowdsourcing',
+        'iconIdentifier' => 'module-crowdsourcing-statistics',
+        'controllerActions' => [
+            StatisticsController::class =>
+                'index'
+        ]
     ]
 ];
 

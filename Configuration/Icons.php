@@ -19,6 +19,12 @@ return [
         'provider' => SvgIconProvider::class,
         // The source SVG for the SvgIconProvider
         'source' => 'EXT:crowdsourcing/Resources/Public/Icons/sitemap-solid.svg',
+    ],
+    // Icon identifier
+    'module-crowdsourcing-statistics' => [
+        // Icon provider class
+        'provider' => SvgIconProvider::class,
+        // The source SVG for the SvgIconProvider
+        'source' => 'EXT:crowdsourcing/Resources/Public/Icons/chart-pie.svg',
     ]
-
 ];
