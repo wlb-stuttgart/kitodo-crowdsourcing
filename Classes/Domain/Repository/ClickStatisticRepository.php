@@ -337,6 +337,52 @@ class ClickStatisticRepository extends Repository
         return $query->count();
     }
 
+
+    /**
+     * Calculates monthly page views for a given year, restricted to logged-in users.
+     *
+     * @param int $year
+     * @return array
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function getMonthlyPageViewsForYear(int $year): array
+    {
+        $connection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)
+            ->getConnectionForTable('tx_crowdsourcing_domain_model_clickstatistic');
+
+        // Year range.
+        $startTimestamp = (new \DateTime("$year-01-01 00:00:00"))->getTimestamp();
+        $endTimestamp = (new \DateTime(($year + 1) . "-01-01 00:00:00"))->getTimestamp();
+
+        $sql = "
+            SELECT      
+                YEAR(FROM_UNIXTIME(crdate)) as year, 
+                MONTH(FROM_UNIXTIME(crdate)) as month,
+                SUM(CASE WHEN action_type = 'page_view' AND action_identifier = 'page_hit' THEN 1 ELSE 0 END) AS page_views
+            FROM 
+                tx_crowdsourcing_domain_model_clickstatistic
+            WHERE 
+                crdate >= :start 
+                AND crdate < :end
+                AND deleted = 0            
+                AND fe_user_uid > 0
+            GROUP BY 
+                YEAR(FROM_UNIXTIME(crdate)), 
+                MONTH(FROM_UNIXTIME(crdate))
+            ORDER BY 
+                YEAR(FROM_UNIXTIME(crdate)), 
+                MONTH(FROM_UNIXTIME(crdate)) ASC
+        ";
+
+        return $connection->executeQuery($sql, [
+            'start' => $startTimestamp,
+            'end' => $endTimestamp
+        ], [
+            'start' => \Doctrine\DBAL\ParameterType::INTEGER,
+            'end' => \Doctrine\DBAL\ParameterType::INTEGER
+        ])->fetchAllAssociative();
+    }
+
     /**
      * This function will insert the clickStatistic data into the database using the connection pool and the query builder.
      *
