@@ -142,5 +142,35 @@ class FrontendUserRepository extends \Evoweb\SfRegister\Domain\Repository\Fronte
 
         return (int)date('Y');
     }
-}
 
+    /**
+     * Determines the number of active FE users (the active user group is set) without a 'processhistory' entry.
+     * Such users are considered metadata-only viewers.
+     *
+     * @param int $groupId Die ID der Frontend-Usergroup
+     * @return int Anzahl der gefundenen User
+     */
+    public function countUsersWithoutProcessHistory(int $groupId): int
+    {
+        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+        $queryBuilder = $connectionPool->getQueryBuilderForTable('fe_users');
+
+        $count = $queryBuilder
+            ->count('fe_users.uid')
+            ->from('fe_users')
+            ->leftJoin(
+                'fe_users',
+                'tx_crowdsourcing_domain_model_processhistory',
+                'ph',
+                'fe_users.uid = ph.fe_user'
+            )
+            ->where(
+                $queryBuilder->expr()->isNull('ph.uid'),
+                $queryBuilder->expr()->inSet('fe_users.usergroup', (string)$groupId)
+            )
+            ->executeQuery()
+            ->fetchOne();
+
+        return (int)$count;
+    }
+}
