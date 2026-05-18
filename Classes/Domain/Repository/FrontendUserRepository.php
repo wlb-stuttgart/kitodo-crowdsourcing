@@ -2,7 +2,142 @@
 
 namespace Wlb\Crowdsourcing\Domain\Repository;
 
+use Doctrine\DBAL\ParameterType;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 class FrontendUserRepository extends \Evoweb\SfRegister\Domain\Repository\FrontendUserRepository
 {
+    /**
+     * Get the cumulative number of frontend users per month for a specific year.
+     *
+     * @param int $year
+     * @return array
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function numberActiveUsersPerMonthForYear(int $year): array
+    {
+        $groupUid = 1;
 
+        $currentYear = (int)date('Y');
+        $currentMonth = (int)date('n'); // 1 bis 12
+
+        $startTimestamp = mktime(0, 0, 0, 1, 1, $year);
+        $endTimestamp   = mktime(23, 59, 59, 12, 31, $year);
+
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('fe_users');
+
+        // Baseline value (all users before year)
+        $sqlBase = "
+            SELECT COUNT(uid) 
+            FROM fe_users 
+            WHERE FIND_IN_SET(" . (int)$groupUid . ", usergroup) > 0
+                AND crdate < :startTimestamp
+                AND deleted = 0 AND disable = 0
+        ";
+
+        $existingUsersBeforeYear = (int)$connection->executeQuery($sqlBase, [
+            'startTimestamp' => $startTimestamp
+        ], [
+            'startTimestamp' => ParameterType::INTEGER
+        ])->fetchOne();
+
+
+        // Monthly new registrations in year
+        $sqlMonths = "
+        SELECT 
+            MONTH(FROM_UNIXTIME(crdate)) AS month, 
+            COUNT(uid) AS new_users
+        FROM fe_users
+        WHERE FIND_IN_SET(" . (int)$groupUid . ", usergroup) > 0
+            AND crdate >= :startTimestamp
+            AND crdate <= :endTimestamp
+            AND deleted = 0 AND disable = 0
+        GROUP BY MONTH(FROM_UNIXTIME(crdate))
+        ORDER BY month ASC
+        ";
+
+        $dbRows = $connection->executeQuery($sqlMonths, [
+            'startTimestamp' => $startTimestamp,
+            'endTimestamp' => $endTimestamp
+        ], [
+            'startTimestamp' => ParameterType::INTEGER,
+            'endTimestamp' => ParameterType::INTEGER
+        ])->fetchAllAssociative();
+
+        // Accumulate & fill all 12 months
+        $monthlyData = [];
+        foreach ($dbRows as $row) {
+            $monthlyData[(int)$row['month']] = (int)$row['new_users'];
+        }
+
+        $finalResult = [];
+        $currentRunningTotal = $existingUsersBeforeYear;
+
+        // Create exactly 12 months. Months without registrations are calculated as 0,
+        // but retain the cumulative value of the previous month.
+        for ($m = 1; $m <= 12; $m++) {
+
+            // Check if the month is in the future (only relevant if the queried year is the current year)
+            if ($year === $currentYear && $m > $currentMonth) {
+                $finalResult[$m] = [
+                    'month' => $m,
+                    'new_users' => null,
+                    'total_users' => null
+                ];
+                continue;
+            }
+
+            $newUsersInMonth = $monthlyData[$m] ?? 0;
+            $currentRunningTotal += $newUsersInMonth;
+
+            $finalResult[$m] = [
+                'month' => $m,
+                'new_users' => $newUsersInMonth,
+                'total_users' => $currentRunningTotal
+            ];
+        }
+
+        return $finalResult;
+    }
+
+
+    /**
+     * Determines the year of the very first user registration.
+     * Falls back to the current year if no users exist.
+     *
+     * @param $activeUserGroupUid
+     * @return int
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function getFirstRegistrationYear($activeUserGroupUid = 0): int
+    {
+        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+        $queryBuilder = $connectionPool->getQueryBuilderForTable('fe_users');
+
+        // Fetches the oldest timestamp (crdate) from the fe_users table
+        $row = $queryBuilder
+            ->select('crdate')
+            ->from('fe_users')
+            ->where(
+                $queryBuilder->expr()->gt('crdate', 0),
+                // Checks if the group ID exists in the comma-separated list
+                $queryBuilder->expr()->and(
+                    'FIND_IN_SET(' . $queryBuilder->createNamedParameter($activeUserGroupUid, ParameterType::INTEGER) . ', usergroup) > 0'
+                )
+            )
+            ->orderBy('crdate', 'ASC')
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchAssociative();
+
+        // If users exist, convert the timestamp into the year
+        if (!empty($row['crdate'])) {
+            return (int)date('Y', (int)$row['crdate']);
+        }
+
+        return (int)date('Y');
+    }
 }
+
