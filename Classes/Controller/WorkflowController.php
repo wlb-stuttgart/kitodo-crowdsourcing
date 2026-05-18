@@ -215,6 +215,12 @@ class WorkflowController extends ActionController
      */
     public function listProcessesAction(string $query = ''): ResponseInterface
     {
+        $this->statisticService->logClick(
+            'page_view',
+            'list_processes',
+            $this->request->getAttribute('originalRequest') ?? $this->request
+        );
+
         $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
         /** @var FrontendUser $user */
         $feUser = $this->frontendUserRepository->findByUid($userId);
@@ -371,6 +377,15 @@ class WorkflowController extends ActionController
      */
     public function editMetadataAction(Process $process): ResponseInterface
     {
+        $this->statisticService->logClick(
+            'page_view',
+            'edit_metadata',
+            $this->request->getAttribute('originalRequest') ?? $this->request,
+            $process->getUid(),
+            $process->getCampaign()->getUid(),
+            ['process_type' => $process->getType()]
+        );
+
         $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
         /** @var FrontendUser $user */
         $feUser = $this->frontendUserRepository->findByUid($userId);
@@ -526,6 +541,16 @@ class WorkflowController extends ActionController
      */
     public function showProcessDetailsAction(Process $process): ResponseInterface
     {
+        $this->statisticService->logClick(
+            'page_view',
+            'show_metadata',
+            $this->request->getAttribute('originalRequest') ?? $this->request,
+            $process->getUid(),
+            $process->getCampaign()->getUid(),
+            ['process_type' => $process->getType()]
+        );
+
+
         $userId = $this->context->getPropertyFromAspect('frontend.user', 'id');
         /** @var FrontendUser $user */
         $feUser = $this->frontendUserRepository->findByUid($userId);
