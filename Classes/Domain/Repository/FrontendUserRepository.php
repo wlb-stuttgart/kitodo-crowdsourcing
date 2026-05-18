@@ -12,13 +12,12 @@ class FrontendUserRepository extends \Evoweb\SfRegister\Domain\Repository\Fronte
      * Get the cumulative number of frontend users per month for a specific year.
      *
      * @param int $year
+     * @param int $activeUserGroupUid
      * @return array
      * @throws \Doctrine\DBAL\Exception
      */
-    public function numberActiveUsersPerMonthForYear(int $year): array
+    public function numberActiveUsersPerMonthForYear(int $year, $activeUserGroupUid = 0): array
     {
-        $groupUid = 1;
-
         $currentYear = (int)date('Y');
         $currentMonth = (int)date('n'); // 1 bis 12
 
@@ -32,14 +31,16 @@ class FrontendUserRepository extends \Evoweb\SfRegister\Domain\Repository\Fronte
         $sqlBase = "
             SELECT COUNT(uid) 
             FROM fe_users 
-            WHERE FIND_IN_SET(" . (int)$groupUid . ", usergroup) > 0
+            WHERE FIND_IN_SET(:groupUid, usergroup) > 0
                 AND crdate < :startTimestamp
                 AND deleted = 0 AND disable = 0
         ";
 
         $existingUsersBeforeYear = (int)$connection->executeQuery($sqlBase, [
+            'groupUid' => $activeUserGroupUid,
             'startTimestamp' => $startTimestamp
         ], [
+            'groupUid' => ParameterType::INTEGER,
             'startTimestamp' => ParameterType::INTEGER
         ])->fetchOne();
 
@@ -50,7 +51,7 @@ class FrontendUserRepository extends \Evoweb\SfRegister\Domain\Repository\Fronte
             MONTH(FROM_UNIXTIME(crdate)) AS month, 
             COUNT(uid) AS new_users
         FROM fe_users
-        WHERE FIND_IN_SET(" . (int)$groupUid . ", usergroup) > 0
+        WHERE FIND_IN_SET(:groupUid, usergroup) > 0
             AND crdate >= :startTimestamp
             AND crdate <= :endTimestamp
             AND deleted = 0 AND disable = 0
@@ -59,9 +60,11 @@ class FrontendUserRepository extends \Evoweb\SfRegister\Domain\Repository\Fronte
         ";
 
         $dbRows = $connection->executeQuery($sqlMonths, [
+            'groupUid' => $activeUserGroupUid,
             'startTimestamp' => $startTimestamp,
             'endTimestamp' => $endTimestamp
         ], [
+            'groupUid' => ParameterType::INTEGER,
             'startTimestamp' => ParameterType::INTEGER,
             'endTimestamp' => ParameterType::INTEGER
         ])->fetchAllAssociative();
