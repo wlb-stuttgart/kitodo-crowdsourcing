@@ -55,14 +55,14 @@ CREATE TABLE tx_crowdsourcing_domain_model_clickstatistic (
     user_agent text,
     fe_user_uid int(11) DEFAULT '0' NOT NULL,
     
-    action_type varchar(255) DEFAULT '' NOT NULL,
-    action_identifier varchar(255) DEFAULT '' NOT NULL,
+    action_type varchar(30) DEFAULT '' NOT NULL,
+    action_identifier varchar(30) DEFAULT '' NOT NULL,
     
     uri text,
     referrer text,
     
     process_uid int(11) DEFAULT '0' NOT NULL,
-    process_state varchar(255) DEFAULT '' NOT NULL,
+    process_state varchar(20) DEFAULT '' NOT NULL,
     campaign_uid int(11) DEFAULT '0' NOT NULL,
     
     session_id varchar(255) DEFAULT '' NOT NULL,
@@ -75,5 +75,12 @@ CREATE TABLE tx_crowdsourcing_domain_model_clickstatistic (
     KEY process_uid (process_uid),
     KEY campaign_uid (campaign_uid),
     KEY action_type (action_type),
-    KEY tstamp (tstamp)
+    KEY tstamp (tstamp),
+    -- Index for statistics calculation of the average processing time
+    KEY idx_cs_partition (deleted, action_type, process_uid, fe_user_uid, process_state, crdate, uid, action_identifier),
+    KEY idx_cs_save_lookup (action_identifier, action_type, deleted, process_uid, process_state, fe_user_uid),
+    -- Index for statistics calculation of the average dwell time
+    KEY idx_cs_user_sessions (deleted, fe_user_uid, crdate),
+    -- Index for statistics calculation of the monthly page views of a given year
+    KEY idx_cs_crdate_action (deleted, crdate, action_type, action_identifier, fe_user_uid)
 );

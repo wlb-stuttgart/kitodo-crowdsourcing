@@ -153,40 +153,41 @@ class ClickStatisticRepository extends Repository
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tx_crowdsourcing_domain_model_clickstatistic');
 
-        // SQL explanation:
-        // ClicksWithLag: Get the previous click's timestamp for each user.
-        // SessionFlags: Flag the start of a new session if gap > limit or it's the first click.
-        // SessionGroups: Use cumulative sum of flags to create unique session IDs per user.
-        // SessionDurations: Calculate duration (max - min crdate) for each session.
-        // UserAverages: Average those durations per user.
-        // Final: Average the user averages.
-
+        /*
+            Calculates the overall average session duration across all users.
+            1. Groups clicks into sessions if the time gap between clicks exceeds :limit.
+            2. Excludes single-click sessions (duration = 0).
+            3. Computes the average session duration per user first, then averages those results.
+        */
         $sql = "
-            SELECT AVG(user_avg_duration) as overall_avg
-            FROM (
-                SELECT fe_user_uid, AVG(session_duration) as user_avg_duration
-                FROM (
-                    SELECT fe_user_uid, session_id, (MAX(crdate) - MIN(crdate)) as session_duration
-                    FROM (
-                        SELECT fe_user_uid, crdate,
-                               SUM(is_new_session) OVER (PARTITION BY fe_user_uid ORDER BY crdate) as session_id
-                        FROM (
-                            SELECT fe_user_uid, crdate,
-                                   CASE
-                                       WHEN crdate - LAG(crdate) OVER (PARTITION BY fe_user_uid ORDER BY crdate) > :limit
-                                       OR LAG(crdate) OVER (PARTITION BY fe_user_uid ORDER BY crdate) IS NULL
-                                       THEN 1
-                                       ELSE 0
-                                   END as is_new_session
-                            FROM tx_crowdsourcing_domain_model_clickstatistic
-                            WHERE fe_user_uid > 0 AND deleted = 0
-                        ) AS ClicksWithLag
-                    ) AS SessionGroups
-                    GROUP BY fe_user_uid, session_id
-                    HAVING MAX(crdate) - MIN(crdate) > 0
-                ) AS SessionDurations
+            WITH click_lags AS (   
+                SELECT fe_user_uid, crdate,
+                       CASE 
+                           WHEN crdate - LAG(crdate) OVER (PARTITION BY fe_user_uid ORDER BY crdate) > :limit
+                                OR LAG(crdate) OVER (PARTITION BY fe_user_uid ORDER BY crdate) IS NULL 
+                           THEN 1 
+                           ELSE 0 
+                       END AS is_new_session
+                FROM tx_crowdsourcing_domain_model_clickstatistic
+                WHERE fe_user_uid > 0 AND deleted = 0
+            ),
+            clicks AS (    
+                SELECT fe_user_uid, crdate,
+                       SUM(is_new_session) OVER (PARTITION BY fe_user_uid ORDER BY crdate) AS session_id
+                FROM click_lags
+            ),
+            sessions AS (
+                SELECT fe_user_uid, MAX(crdate) - MIN(crdate) AS session_duration
+                FROM clicks
+                GROUP BY fe_user_uid, session_id
+                HAVING MAX(crdate) - MIN(crdate) > 0
+            ),
+            user_avgs AS (
+                SELECT fe_user_uid, AVG(session_duration) AS user_avg_duration
+                FROM sessions
                 GROUP BY fe_user_uid
-            ) AS UserAverages
+            )
+            SELECT AVG(user_avg_duration) AS overall_avg FROM user_avgs;
         ";
 
         $result = $connection->executeQuery($sql, [
@@ -218,107 +219,55 @@ class ClickStatisticRepository extends Repository
             ->getConnectionForTable('tx_crowdsourcing_domain_model_clickstatistic');
 
         $sql = "
-            SELECT AVG(total_process_time)
+            WITH pre_filtered AS (
+                -- We filter out all unknown actions NOW,
+                -- so that LEAD() automatically skips them and is not blocked.
+                SELECT uid, process_uid, fe_user_uid, process_state, action_identifier, crdate
+                FROM tx_crowdsourcing_domain_model_clickstatistic
+                WHERE deleted = 0
+                  AND action_type = 'workflow_action'
+                  AND process_state IN ('NEW', 'CORRECTION', 'FINAL_CORRECTION')
+                  AND action_identifier IN ('edit_metadata', 'save', 'cache', 'abort', 'admin_abort', 'cleanup_abort')
+            ),
+            actions AS (
+                -- LEAD() calculates the intervals on the cleaned data.
+                -- Thanks to 'ORDER BY crdate, uid', the order remains flawless                 
+                SELECT *,
+                       LEAD(action_identifier) OVER w AS next_action,
+                       LEAD(crdate)            OVER w AS next_crdate
+                FROM pre_filtered
+                WINDOW w AS (PARTITION BY process_uid, fe_user_uid, process_state ORDER BY crdate ASC, uid ASC)
+            ),
+            user_completed AS (                
+                -- Checks whether there has ever been a 'save' historically.
+                SELECT DISTINCT process_uid, fe_user_uid, process_state
+                FROM tx_crowdsourcing_domain_model_clickstatistic
+                WHERE deleted = 0
+                  AND action_type = 'workflow_action'
+                  AND action_identifier = 'save'
+                  AND process_state IN ('NEW', 'CORRECTION', 'FINAL_CORRECTION')
+            ),
+            status_durations AS (
+                -- Evaluation of the intervals.
+                SELECT a.process_uid, a.process_state,
+                       SUM(a.next_crdate - a.crdate) AS status_duration
+                FROM actions a
+                JOIN user_completed uc
+                  ON  uc.process_uid    = a.process_uid
+                  AND uc.fe_user_uid    = a.fe_user_uid
+                  AND uc.process_state  = a.process_state
+                WHERE a.action_identifier = 'edit_metadata'
+                  -- If an 'abort' followed the edit, the interval is excluded.
+                  AND a.next_action IN ('save', 'cache')   
+                GROUP BY a.process_uid, a.process_state
+            )
+            SELECT AVG(total_process_time) AS avg_total_process_time
             FROM (
                 SELECT process_uid, SUM(status_duration) AS total_process_time
-                FROM (
-                    SELECT process_uid, process_state, SUM(duration) AS status_duration
-                    FROM (
-                        SELECT
-                            e.process_uid,
-                            e.process_state,
-                            e.fe_user_uid,
-                            s.crdate - e.crdate AS duration
-                        FROM
-                            tx_crowdsourcing_domain_model_clickstatistic e
-                        JOIN
-                            tx_crowdsourcing_domain_model_clickstatistic s
-                        ON
-                            e.process_uid = s.process_uid
-                            AND e.fe_user_uid = s.fe_user_uid
-                            AND e.process_state = s.process_state
-                            AND s.crdate > e.crdate
-                        WHERE
-                            e.action_type = 'workflow_action'
-                            AND e.action_identifier = 'edit_metadata'
-                            AND s.action_type = 'workflow_action'
-                            AND s.action_identifier IN ('save', 'cache')
-                            AND e.deleted = 0
-                            AND s.deleted = 0
-                            AND e.process_state IN ('NEW', 'CORRECTION', 'FINAL_CORRECTION')
-                            -- Only consider fully completed processes:
-                            -- NEW, CORRECTION and FINAL_CORRECTION must each have a save.
-                            AND e.process_uid IN (
-                                SELECT completed_process.process_uid
-                                FROM tx_crowdsourcing_domain_model_clickstatistic completed_process
-                                WHERE completed_process.action_type = 'workflow_action'
-                                  AND completed_process.action_identifier = 'save'
-                                  AND completed_process.process_state IN ('NEW', 'CORRECTION', 'FINAL_CORRECTION')
-                                  AND completed_process.deleted = 0
-                                GROUP BY completed_process.process_uid
-                                HAVING COUNT(DISTINCT completed_process.process_state) = 3
-                            )
-                            -- Only count intervals from users who complete this exact process/status with a later save.
-                            AND EXISTS (
-                                SELECT 1
-                                FROM tx_crowdsourcing_domain_model_clickstatistic final_save
-                                WHERE final_save.process_uid = e.process_uid
-                                  AND final_save.fe_user_uid = e.fe_user_uid
-                                  AND final_save.process_state = e.process_state
-                                  AND final_save.action_type = 'workflow_action'
-                                  AND final_save.action_identifier = 'save'
-                                  AND final_save.crdate > e.crdate
-                                  AND final_save.deleted = 0
-                            )
-                            -- Ensure s is the next action after e for this user/process/state.
-                            AND NOT EXISTS (
-                                SELECT 1
-                                FROM tx_crowdsourcing_domain_model_clickstatistic m
-                                WHERE m.process_uid = e.process_uid
-                                  AND m.fe_user_uid = e.fe_user_uid
-                                  AND m.process_state = e.process_state
-                                  AND m.crdate > e.crdate
-                                  AND m.crdate < s.crdate
-                                  AND m.deleted = 0
-                            )
-                            -- Interruption checks.
-                            AND (
-                                (
-                                    s.action_identifier = 'save'
-                                    AND NOT EXISTS (
-                                        SELECT 1
-                                        FROM tx_crowdsourcing_domain_model_clickstatistic i
-                                        WHERE i.process_uid = e.process_uid
-                                          AND i.fe_user_uid = e.fe_user_uid
-                                          AND i.process_state = e.process_state
-                                          AND i.crdate > e.crdate
-                                          AND i.crdate < s.crdate
-                                          AND i.action_identifier IN ('cache', 'abort', 'admin_abort', 'cleanup_abort')
-                                          AND i.deleted = 0
-                                    )
-                                )
-                                OR
-                                (
-                                    s.action_identifier = 'cache'
-                                    AND NOT EXISTS (
-                                        SELECT 1
-                                        FROM tx_crowdsourcing_domain_model_clickstatistic i
-                                        WHERE i.process_uid = e.process_uid
-                                          AND i.fe_user_uid = e.fe_user_uid
-                                          AND i.process_state = e.process_state
-                                          AND i.crdate > e.crdate
-                                          AND i.crdate < s.crdate
-                                          AND i.action_identifier IN ('save', 'abort', 'admin_abort', 'cleanup_abort')
-                                          AND i.deleted = 0
-                                    )
-                                )
-                            )
-                    ) AS ValidIntervals
-                    GROUP BY process_uid, process_state
-                ) AS StatusDurations
+                FROM status_durations
                 GROUP BY process_uid
-                HAVING COUNT(DISTINCT process_state) = 3
-            ) AS ProcessDurations
+                HAVING COUNT(DISTINCT process_state) = 3   -- Only processes with all 3 states are considered.
+            ) ProcessDurations;
         ";
 
         $result = $connection->executeQuery($sql)->fetchOne();
