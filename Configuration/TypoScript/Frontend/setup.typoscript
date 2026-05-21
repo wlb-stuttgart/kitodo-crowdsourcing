@@ -42,6 +42,9 @@ plugin.tx_crowdsourcing_campaigns {
             faqs = {$plugin.tx_crowdsourcing.settings.infoBox.faqs}
         }
 
+        dashboardInfoBox = {$plugin.tx_crowdsourcing.settings.dashboardInfoBox}
+        landingPageTitleInfo = {$plugin.tx_crowdsourcing.settings.landingPageTitleInfo}
+
         searchPagination {
             itemsPerPage = {$plugin.tx_crowdsourcing.settings.searchPagination.itemsPerPage}
             maximumNumberOfLinks = {$plugin.tx_crowdsourcing.settings.searchPagination.maximumNumberOfLinks}

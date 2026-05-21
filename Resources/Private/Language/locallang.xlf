@@ -40,11 +40,9 @@
 		</trans-unit>
         <trans-unit id="landingpage.header">
             <source>Protest sichtbar machen</source>
-            <target>Protest sichtbar machen</target>
         </trans-unit>
         <trans-unit id="landingpage.subheader">
-            <source><![CDATA[Entdecken Sie die politische Gegenkultur seit den 1960er Jahren neu, teilen Sie Ihr Wissen mit der Bibliothek und Interessierten weltweit!<br />+++ Die erste Crowdsourcing-Kampagne startet im Oktober 2025 +++]]></source>
-            <target><![CDATA[Entdecken Sie die politische Gegenkultur seit den 1960er Jahren neu, teilen Sie Ihr Wissen mit der Bibliothek und Interessierten weltweit!<br />+++ Die erste Crowdsourcing-Kampagne startet im Oktober 2025 +++]]></target>
+            <source><![CDATA[Entdecken Sie die politische Gegenkultur seit den 1960er Jahren neu, teilen Sie Ihr Wissen mit der Bibliothek und Interessierten weltweit!]]></source>
         </trans-unit>
         <trans-unit id="dashboard.infoHeader">
             <source>Unterstützen Sie die WLB bei der Erschließung von Protestplakaten</source>

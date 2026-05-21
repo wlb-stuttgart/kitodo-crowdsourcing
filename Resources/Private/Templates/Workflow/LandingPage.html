@@ -9,8 +9,8 @@
 
     <main class="container-fluid my-5 landing-page-main">
         <div class="content-wrapper">
-            <h1><f:translate key="landingpage.header"/></h1>
-            <f:format.html><f:translate key="landingpage.subheader"/></f:format.html>
+            <h1>{landingPageTitleInfo.header}</h1>
+            <p><f:format.stripTags allowedTags="<a>,<span>">{landingPageTitleInfo.bodytext}</f:format.stripTags></p>
             <f:link.action action="dashboard" class="btn btn-lg btn-primary start-now-button">
                     Jetzt Starten
             </f:link.action>

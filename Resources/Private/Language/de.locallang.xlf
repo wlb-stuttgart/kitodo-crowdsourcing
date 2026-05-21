@@ -60,8 +60,8 @@
             <target>Protest sichtbar machen</target>
         </trans-unit>
         <trans-unit id="landingpage.subheader">
-            <source><![CDATA[Entdecken Sie die politische Gegenkultur seit den 1960er Jahren neu, teilen Sie Ihr Wissen mit der Bibliothek und Interessierten weltweit!<br />]]></source>
-            <target><![CDATA[Entdecken Sie die politische Gegenkultur seit den 1960er Jahren neu, teilen Sie Ihr Wissen mit der Bibliothek und Interessierten weltweit!<br />]]></target>
+            <source><![CDATA[Entdecken Sie die politische Gegenkultur seit den 1960er Jahren neu, teilen Sie Ihr Wissen mit der Bibliothek und Interessierten weltweit!]]></source>
+            <target><![CDATA[Entdecken Sie die politische Gegenkultur seit den 1960er Jahren neu, teilen Sie Ihr Wissen mit der Bibliothek und Interessierten weltweit!]]></target>
         </trans-unit>
         <trans-unit id="dashboard.infoHeader">
             <source>Unterstützen Sie die WLB bei der Erschließung von Protestplakaten</source>

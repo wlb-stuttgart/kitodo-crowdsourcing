@@ -139,8 +139,16 @@ class WorkflowController extends ActionController
                 }
             }
         }
-
         $this->view->assign('infoBoxes', $infoBoxes);
+
+        $landingPageTitleInfo = null;
+        if (isset($this->settings['landingPageTitleInfo'])) {
+            $contentUid = $this->settings['landingPageTitleInfo'];
+            if (is_numeric($contentUid)) {
+                $landingPageTitleInfo  = $this->getContentForInfoBox((int)$contentUid);
+            }
+        }
+        $this->view->assign('landingPageTitleInfo', $landingPageTitleInfo);
 
         return $this->htmlResponse();
     }
@@ -194,6 +202,15 @@ class WorkflowController extends ActionController
 
         /** @var Campaign[] $campaigns */
         $campaigns = $this->campaignRepository->findAllOrderedByCreationDate();
+
+        $infoBox = null;
+        if (isset($this->settings['dashboardInfoBox'])) {
+            $contentUid = $this->settings['dashboardInfoBox'];
+            if (is_numeric($contentUid)) {
+                $infoBox  = $this->getContentForInfoBox((int)$contentUid);
+            }
+        }
+        $this->view->assign('infoBox', $infoBox);
 
         $this->view->assign('statistic', $this->statisticService->getStatistics());
         $this->view->assign('userStatistic', $feUser ? $this->statisticService->getPersonalStatistics($feUser) : null);
