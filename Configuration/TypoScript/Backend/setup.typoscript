@@ -11,5 +11,7 @@ module.tx_crowdsourcing {
             itemsPerPage = {$module.tx_crowdsourcing.searchPagination.itemsPerPage}
             maximumNumberOfLinks = {$module.tx_crowdsourcing.searchPagination.maximumNumberOfLinks}
         }
+
+        activeUserGroup < plugin.tx_sfregister.settings.usergroupPostConfirm
     }
 }

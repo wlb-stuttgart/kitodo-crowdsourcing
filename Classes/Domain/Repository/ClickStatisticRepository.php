@@ -146,9 +146,9 @@ class ClickStatisticRepository extends Repository
      * 4. Average of those user averages.
      *
      * @param int $inactivityLimit Inactivity limit in seconds (default: 15 minutes).
-     * @return float Average dwell time in seconds.
+     * @return int Average dwell time in seconds.
      */
-    public function getAverageDwellTime(int $inactivityLimit = 900): float
+    public function getAverageDwellTime(int $inactivityLimit = 900): int
     {
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tx_crowdsourcing_domain_model_clickstatistic');
@@ -194,7 +194,7 @@ class ClickStatisticRepository extends Repository
             'limit' => $inactivityLimit
         ])->fetchOne();
 
-        return (float)($result ?? 0.0);
+        return (int) round($result ?? 0.0);
     }
 
     /**
@@ -211,9 +211,9 @@ class ClickStatisticRepository extends Repository
      * 7. Total process time is the sum of the 3 status durations.
      * 8. Final result is the average of those fully completed total process times.
      *
-     * @return float Average processing time in seconds.
+     * @return int Average processing time in seconds.
      */
-    public function getAverageProcessingTime(): float
+    public function getAverageProcessingTime(): int
     {
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tx_crowdsourcing_domain_model_clickstatistic');
@@ -272,7 +272,7 @@ class ClickStatisticRepository extends Repository
 
         $result = $connection->executeQuery($sql)->fetchOne();
 
-        return (float)($result ?? 0.0);
+        return (int) round($result ?? 0.0);
     }
 
     /**
@@ -374,4 +374,28 @@ class ClickStatisticRepository extends Repository
             ->executeStatement();
     }
 
+    /**
+     * Gets the minimum year in the click statistic table.
+     *
+     * @return int
+     */
+    public function getMinYear(): int
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_crowdsourcing_domain_model_clickstatistic');
+
+        $result = $queryBuilder
+            ->addSelectLiteral('MIN(' . $queryBuilder->quoteIdentifier('crdate') . ') AS min_timestamp')
+            ->from('tx_crowdsourcing_domain_model_clickstatistic')
+            ->executeQuery()
+            ->fetchAssociative();
+
+        $minYear = null;
+
+        if ($result && $result['min_timestamp'] > 0) {
+            $minYear = (int)date('Y', (int)$result['min_timestamp']);
+        }
+
+        return $minYear;
+    }
 }

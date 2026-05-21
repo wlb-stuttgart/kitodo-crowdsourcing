@@ -1,0 +1,18 @@
+<f:if condition="{seconds} >= 3600">
+    <f:then>
+        <!-- Mehr als 1 Stunde: Zeige Stunden und Minuten -->
+        {seconds -> f:format.date(format: 'G', base: '@0')}h {seconds -> f:format.date(format: 'i', base: '@0')}m {seconds -> f:format.date(format: 's', base: '@0')}s
+    </f:then>
+    <f:else>
+        <f:if condition="{seconds} >= 60">
+            <f:then>
+                <!-- Mehr als 1 Minute: Zeige Minuten und Sekunden -->
+                {seconds -> f:format.date(format: 'i', base: '@0')}m {seconds -> f:format.date(format: 's', base: '@0')}s
+            </f:then>
+            <f:else>
+                <!-- Weniger als 1 Minute: Zeige nur Sekunden -->
+                {seconds}s
+            </f:else>
+        </f:if>
+    </f:else>
+</f:if>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2026-04-28T11:20:00Z">
+		<header>
+			<generator>LFEditor</generator>
+		</header>
+		<body>
+		    <trans-unit id="mlang_tabs_tab">
+                <source>Statistics</source>
+                <target>Statistik</target>
+            </trans-unit>
+		</body>
+	</file>
+</xliff>

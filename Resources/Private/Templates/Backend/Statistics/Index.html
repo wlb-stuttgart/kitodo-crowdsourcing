@@ -1,0 +1,105 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+
+        <f:layout name="Module" />
+
+        <f:section name="Content">
+
+            <f:be.pageRenderer
+                    includeJavaScriptModules="{ 0: '@wlb/crowdsourcing/chart.js'}"
+                    includeCssFiles="{0: '{f:uri.resource(path: \'CSS/Backend/statisticsModule.css\')}'}"
+            />
+
+            <div class="module-body">
+
+                <h1 class="mb-4">
+                    {f:translate(key: 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_mod_statistics.xlf:mlang_tabs_tab')}
+                </h1>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card h-100 shadow-sm" style="background-color: var(--typo3-surface-container); border: 1px solid var(--typo3-component-border-color); color: var(--typo3-text-color-base);">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2" style="color: var(--typo3-text-color-variant);">
+                                    {f:translate(key: 'statisticsModule.averageProcessingTime')}
+                                </h6>
+                                <h2 class="card-title mb-0 fw-bold">
+                                    <f:render partial="Backend/Statistics/FormatTime" arguments="{seconds: averageProcessingTime}" />
+                                </h2>
+                                <f:comment><small class="text-success fw-semibold"><i class="fa fa-arrow-up"></i> +12%</small></f:comment>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card h-100 shadow-sm" style="background-color: var(--typo3-surface-container); border: 1px solid var(--typo3-component-border-color); color: var(--typo3-text-color-base);">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2" style="color: var(--typo3-text-color-variant);">
+                                    {f:translate(key: 'statisticsModule.averageDwellTime')}
+                                </h6>
+                                <h2 class="card-title mb-0 fw-bold">
+                                    <f:render partial="Backend/Statistics/FormatTime" arguments="{seconds: averageDwellTime}" />
+                                </h2>
+                                <f:comment><small class="text-success fw-semibold"><i class="fa fa-arrow-up"></i> +0.5%</small></f:comment>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card h-100 shadow-sm" style="background-color: var(--typo3-surface-container); border: 1px solid var(--typo3-component-border-color); color: var(--typo3-text-color-base);">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2" style="color: var(--typo3-text-color-variant);">
+                                    {f:translate(key: 'statisticsModule.viewOnlyUsers')}
+                                </h6>
+                                <h2 class="card-title mb-0 fw-bold">{viewOnlyUsers}</h2>
+                                <f:comment><small style="color: var(--typo3-text-color-variant);"></small></f:comment>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-12 col-xl-6">
+                        <div class="card h-100 shadow-sm" style="background-color: var(--typo3-surface-container); border: 1px solid var(--typo3-component-border-color); color: var(--typo3-text-color-base);">
+                            <div class="card-header bg-transparent pb-3 d-flex justify-content-between align-items-center" style="border-bottom: 1px solid var(--typo3-component-border-color);">
+                                <h5 class="card-title mb-0" style="color: var(--typo3-text-color-base);"><f:translate key="statisticsModule.trafficChart.label"/></h5>
+                                <select id="trafficYearSelect" class="form-select form-select-sm w-auto" style="background-color: var(--typo3-surface-container-highest); color: var(--typo3-text-color-base); border-color: var(--typo3-component-border-color);">
+                                    <f:for each="{clickStatisticYears}" as="year">
+                                        <option value="{year}" {f:if(condition: '{year} == {currentYear}', then: 'selected', else: '')}> {year}</option>
+                                    </f:for>
+                                </select>
+                            </div>
+                            <div class="card-body">
+                                <div style="position: relative; height: 300px; width: 100%;">
+                                    <canvas data-label="{f:translate(key: 'statisticsModule.trafficChart.label')}"
+                                            data-months="{monthsArray->f:format.htmlentities()}"
+                                            id="trafficChart">
+                                    </canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-xl-6">
+                        <div class="card h-100 shadow-sm" style="background-color: var(--typo3-surface-container); border: 1px solid var(--typo3-component-border-color); color: var(--typo3-text-color-base);">
+                            <div class="card-header bg-transparent pb-3 d-flex justify-content-between align-items-center" style="border-bottom: 1px solid var(--typo3-component-border-color);">
+                                <h5 class="card-title mb-0" style="color: var(--typo3-text-color-base);">{f:translate(key: 'statisticsModule.userChart.label')}</h5>
+                                <select id="userYearSelect" class="form-select form-select-sm w-auto" style="background-color: var(--typo3-surface-container-highest); color: var(--typo3-text-color-base); border-color: var(--typo3-component-border-color);">
+                                    <f:for each="{registrationYears}" as="year">
+                                        <option value="{year}" {f:if(condition: '{year} == {currentYear}', then: 'selected', else: '')}> {year}</option>
+                                    </f:for>
+                                </select>
+                            </div>
+                            <div class="card-body d-flex align-items-center justify-content-center">
+                                <div style="position: relative; height: 250px; width: 100%;">
+                                    <canvas data-label="{f:translate(key: 'statisticsModule.userChart.label')}"
+                                            data-months="{monthsArray->f:format.htmlentities()}"
+                                            id="userChart">
+                                    </canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </f:section>
+</html>

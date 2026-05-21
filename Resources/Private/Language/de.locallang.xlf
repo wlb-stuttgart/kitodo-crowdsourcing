@@ -191,6 +191,74 @@
             <source>Remove</source>
             <target>Entfernen</target>
         </trans-unit>
+        <trans-unit id="statisticsModule.month.1">
+            <source>Jan</source>
+            <target>Jan</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.2">
+            <source>Feb</source>
+            <target>Feb</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.3">
+            <source>Mar</source>
+            <target>Mär</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.4">
+            <source>Apr</source>
+            <target>Apr</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.5">
+            <source>May</source>
+            <target>Mai</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.6">
+            <source>Jun</source>
+            <target>Jun</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.7">
+            <source>Jul</source>
+            <target>Jul</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.8">
+            <source>Aug</source>
+            <target>Aug</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.9">
+            <source>Sep</source>
+            <target>Sep</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.10">
+            <source>Oct</source>
+            <target>Okt</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.11">
+            <source>Nov</source>
+            <target>Nov</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.12">
+            <source>Dec</source>
+            <target>Dez</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.averageProcessingTime">
+            <source>Average processing time</source>
+            <target>Durchschnittliche Bearbeitungszeit</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.averageDwellTime">
+            <source>Average dwell time</source>
+            <target>Durchschnittliche Verweildauer</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.viewOnlyUsers">
+            <source>View-only users</source>
+            <target>Nur-Betrachter</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.userChart.label">
+            <source>Active registrations</source>
+            <target>Aktive Registrierungen</target>
+        </trans-unit>
+        <trans-unit id="statisticsModule.trafficChart.label">
+            <source>Page views</source>
+            <target>Seitenaufrufe</target>
+        </trans-unit>
         <trans-unit id="process.state.NEW">
             <source>New</source>
             <target>Neu</target>

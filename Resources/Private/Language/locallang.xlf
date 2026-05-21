@@ -145,6 +145,60 @@
         <trans-unit id="campaignModule.processList.button.revokeEditing">
             <source>Revoke editing</source>
         </trans-unit>
+        <trans-unit id="statisticsModule.month.1">
+            <source>Jan</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.2">
+            <source>Feb</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.3">
+            <source>Mar</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.4">
+            <source>Apr</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.5">
+            <source>May</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.6">
+            <source>Jun</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.7">
+            <source>Jul</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.8">
+            <source>Aug</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.9">
+            <source>Sep</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.10">
+            <source>Oct</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.11">
+            <source>Nov</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.month.12">
+            <source>Dec</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.userChart.label">
+            <source>Active registrations</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.trafficChart.label">
+            <source>Page views</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.title">
+            <source>Page views</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.averageProcessingTime">
+            <source>Average processing time</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.averageDwellTime">
+            <source>Average dwell time</source>
+        </trans-unit>
+        <trans-unit id="statisticsModule.viewOnlyUsers">
+            <source>View-only users</source>
+        </trans-unit>
         <trans-unit id="process.state.NEW">
             <source>New</source>
         </trans-unit>
