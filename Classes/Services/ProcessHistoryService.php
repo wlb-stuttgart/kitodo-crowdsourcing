@@ -21,7 +21,7 @@ class ProcessHistoryService
     public function restoreFromArray(Process $process, array $data, bool $restoreCampaign = true): void
     {
         if (isset($data['title'])) {
-            $process->setTitle($data['title']);
+            $process->setTitleFromMetadata();
         }
 
         if (isset($data['identifier'])) {

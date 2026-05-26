@@ -227,7 +227,7 @@ class Process extends AbstractEntity
      * Sets the title based on metadata extracted from an XML structure.
      *
      * This method parses the metadata field, interprets the XML to extract the
-     * title or signature, and sets the title accordingly. If the title is not
+     * signature, and sets the title accordingly. If the title is not
      * found, the signature is used as the title.
      *
      * @return void
@@ -236,7 +236,7 @@ class Process extends AbstractEntity
     {
         $xml = simplexml_load_string($this->metadata);
         $xml->registerXPathNamespace('kitodo', 'http://meta.kitodo.org/v1/');
-        // Get title and signature
+        // Get signature
         $signature = (string) $xml->xpath('*[@name="Signatur"]')[0];
         $this->setTitle($signature);
     }
