@@ -327,7 +327,7 @@ class Process extends AbstractEntity
                                 // No avaiable element ?? create it inside group
                                 $j = 0;
                                 foreach ($subMetadata as $subMetadataField) {
-                                    if (!empty($subMetadata[$j])) {
+                                    if ($subMetadata[$j] !== '') {
                                         $availableGroups[$metadataGroupCount]->addChild('kitodo:metadata', $subMetadata[$j])->addAttribute('name', $subMetadataKey);
                                     }
                                     $j++;
@@ -341,10 +341,10 @@ class Process extends AbstractEntity
                         $createGroup = false;
                         $i = 0;
                         foreach ($metadataGroupFields as $subMetadataKey => $subMetadata) {
-                            if (!empty($subMetadata)) {
+                            if ($subMetadata !== '') {
                                 $j = 0;
                                 foreach ($subMetadata as $subMetadataField) {
-                                    if (!empty($subMetadata[$j])) {
+                                    if ($subMetadata[$j] !== '') {
                                         $createGroup = true;
                                         $createNodeArray[$i.$j]['name'] = $subMetadataKey;
                                         $createNodeArray[$i.$j]['value'] = $subMetadata[$j];
@@ -370,7 +370,7 @@ class Process extends AbstractEntity
                 $availableElements = $sxe->xpath('*[@name="' . $metadataKey . '"]');
                 $i = 0;
                 foreach ($metadata as $subMetadata) {
-                    if (!empty($subMetadata)) {
+                    if ($subMetadata !== '') {
                         if (array_key_exists($i, $availableElements)) {
                             $availableElements[$i][0] = $subMetadata;
                         } else {

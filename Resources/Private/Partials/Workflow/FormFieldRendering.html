@@ -15,7 +15,7 @@
             </f:else>
         </f:if>
 
-        <f:if condition="{formValues.{metadataId}.{i}.{metadataChildId}.{j}}">
+        <f:if condition="{formValues.{metadataId}.{i}.{metadataChildId}.{j}} !== ''">
             <f:then>
                 <f:variable name="value">{formValues.{metadataId}.{i}.{metadataChildId}.{j}}</f:variable>
             </f:then>
@@ -26,7 +26,7 @@
         <f:variable name="inputType">{metadata.inputtype}</f:variable>
         <f:variable name="verifyUrl"></f:variable>
 
-        <f:if condition="{formValues.{metadataId}.{i}}">
+        <f:if condition="{formValues.{metadataId}.{i}} !== ''">
             <f:then>
                 <f:variable name="value">{formValues.{metadataId}.{i}}</f:variable>
             </f:then>
