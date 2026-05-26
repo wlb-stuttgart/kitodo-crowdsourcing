@@ -281,7 +281,7 @@
         </trans-unit>
         <trans-unit id="dashboard.action.continueProcess">
             <source>Continue editing</source>
-            <target>Bearbeitung fortsetze</target>
+            <target>Bearbeitung fortsetzen</target>
         </trans-unit>
         <trans-unit id="dashboard.action.newProcess">
             <source>Edit new poster</source>
