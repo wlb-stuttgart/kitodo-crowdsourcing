@@ -230,7 +230,8 @@
                                    value="{f:translate(key='process.button.finishEditing')}" />
                     <f:form.submit class="btn btn-secondary edit-submit-btn"
                                    name="cache"
-                                   value="{f:translate(key='process.button.saveDraft')}" />
+                                   value="{f:translate(key='process.button.saveDraft')}"
+                                   additionalAttributes="{formnovalidate: 'formnovalidate'}" />
                     <f:form.submit class="btn btn-warning abortEdit edit-submit-btn"
                                    name="abort"
                                    value="{f:translate(key='process.button.discardChanges')}"
