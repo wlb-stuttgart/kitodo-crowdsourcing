@@ -6,6 +6,7 @@
     <f:then>
         <f:variable name="fieldMaxOccurs">{metadataChild.maxOccurs}</f:variable>
         <f:variable name="inputType">{metadataChild.inputtype}</f:variable>
+        <f:variable name="validation">{metadataChild.validation}</f:variable>
         <f:if condition="{metadataChild.verifyLinkEnabled}">
             <f:then>
                 <f:variable name="verifyUrl">{gndVerifyUrl}</f:variable>
@@ -24,6 +25,7 @@
     <f:else>
         <f:variable name="fieldMaxOccurs">{metadata.maxOccurs}</f:variable>
         <f:variable name="inputType">{metadata.inputtype}</f:variable>
+        <f:variable name="validation">{metadata.validation}</f:variable>
         <f:variable name="verifyUrl"></f:variable>
 
         <f:if condition="{formValues.{metadataId}.{i}} !== ''">
@@ -51,7 +53,7 @@
                 value="{value}"
                 placeholder=""
                 required="{fieldRequired}"
-                pattern="{metadata.validation}"
+                pattern="{validation}"
                 data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"
                 data-max="{fieldMaxOccurs}"
                 data-lobid-field="{metadataChild.lobidField}"
@@ -67,7 +69,7 @@
                 value="{value}"
                 placeholder=""
                 required="{fieldRequired}"
-                pattern="{metadata.validation}"
+                pattern="{validation}"
                 data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"
                 data-max="{fieldMaxOccurs}"/>
     </f:case>
@@ -79,7 +81,7 @@
                 value="{value}"
                 placeholder=""
                 required="{fieldRequired}"
-                pattern="{metadata.validation}"
+                pattern="{validation}"
                 data-required="{f:if(condition: '{required} == 1 && {child} == 1', then: '1', else: '0')}"
                 data-max="{fieldMaxOccurs}"/>
     </f:case>
