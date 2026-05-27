@@ -12,12 +12,12 @@
 				<source>Path to the import failed directory</source>
 			</trans-unit>
 			<trans-unit id="config.import.toImportDirectoryPath">
-				<source>Path to the import toindex directory</source>
+				<source>Path to the import directory</source>
 			</trans-unit>
 			<trans-unit id="config.import.processDirectoryPath">
 				<source>Path to the import process directory</source>
 			</trans-unit>
-			<trans-unit id="config.import.exportedDirectoryPath">
+			<trans-unit id="config.import.exportDirectoryPath">
 				<source>Path to the exported data directory</source>
 			</trans-unit>
 			<trans-unit id="config.import.archiveDirectoryPath">
@@ -38,7 +38,7 @@
 			<trans-unit id="config.storage.reportMail">
 				<source>Mail adress for reporting messages</source>
 			</trans-unit>
-			<trans-unit id="config.storage.rulesetPath">
+			<trans-unit id="config.ruleset.rulesetPath">
 				<source>Absolute path to the ruleset file</source>
 			</trans-unit>
 			<trans-unit id="config.solr.host">
