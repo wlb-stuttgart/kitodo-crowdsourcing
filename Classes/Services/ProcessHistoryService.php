@@ -20,10 +20,6 @@ class ProcessHistoryService
 
     public function restoreFromArray(Process $process, array $data, bool $restoreCampaign = true): void
     {
-        if (isset($data['title'])) {
-            $process->setTitleFromMetadata();
-        }
-
         if (isset($data['identifier'])) {
             $process->setRecordIdentifier($data['identifier']);
         }
@@ -42,6 +38,7 @@ class ProcessHistoryService
 
         if (isset($data['metadata'])) {
             $process->setMetadata($data['metadata']);
+            $process->setTitleFromMetadata();
         }
 
         if ($restoreCampaign && isset($data['campaign']) && is_numeric($data['campaign'])) {
