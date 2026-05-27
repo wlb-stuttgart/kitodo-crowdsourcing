@@ -1,9 +1,4 @@
 module.tx_crowdsourcing {
-    persistence {
-        # cat=plugin.tx_crowdsourcing//a; type=string; label=Default storage PID
-        storagePid =
-    }
-
     # cat=module.tx_crowdsourcing//a; type=integer; label=Backend: Number of items per processes page.
     searchPagination.itemsPerPage = 500
 

@@ -1,7 +1,7 @@
 
 module.tx_crowdsourcing {
     persistence {
-        storagePid = {$module.tx_crowdsourcing.persistence.storagePid}
+        storagePid < plugin.tx_crowdsourcing.persistence.storagePid
     }
     settings {
         # Add the remote CSS file
