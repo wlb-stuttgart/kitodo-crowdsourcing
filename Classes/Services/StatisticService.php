@@ -135,6 +135,11 @@ class StatisticService
             $clickStatistic->setUserAgent('CLI-Task');
             $clickStatistic->setReferrer('');
         }
+
+        if (empty($feUserUid)) {
+            // If no FE user is available, skip the click statistic
+            return;
+        }
         
         $clickStatistic->setFeUserUid($feUserUid);
 
