@@ -276,13 +276,13 @@
             <source>Show less</source>
         </trans-unit>
         <trans-unit id="process.editor.state.NEW">
-        	<source>1. Editor</source>
+        	<source>1. Edit</source>
         </trans-unit>
         <trans-unit id="process.editor.state.CORRECTION">
-        	<source>2. Editor</source>
+        	<source>2. Edit</source>
         </trans-unit>
         <trans-unit id="process.editor.state.FINAL_CORRECTION">
-        	<source>3. Editor</source>
+        	<source>3. Edit</source>
         </trans-unit>
         <trans-unit id="process.editor.anonymous">
         	<source>Anonymous</source>

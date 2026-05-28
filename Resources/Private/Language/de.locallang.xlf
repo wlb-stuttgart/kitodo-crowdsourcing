@@ -356,16 +356,16 @@
             <target>weniger anzeigen</target>
         </trans-unit>
         <trans-unit id="process.editor.state.NEW">
-        	<source>1. Editor</source>
-            <target>1. Erfasser</target>
+        	<source>1. Edit</source>
+            <target>1. Bearbeitung</target>
         </trans-unit>
         <trans-unit id="process.editor.state.CORRECTION">
-        	<source>2. Editor</source>
-        	<target>2. Erfasser</target>
+        	<source>2. Edit</source>
+        	<target>2. Bearbeitung</target>
         </trans-unit>
         <trans-unit id="process.editor.state.FINAL_CORRECTION">
-        	<source>3. Editor</source>
-        	<target>3. Erfasser</target>
+        	<source>3. Edit</source>
+        	<target>3. Bearbeitung</target>
         </trans-unit>
         <trans-unit id="process.editor.anonymous">
         	<source>Anonymous</source>
