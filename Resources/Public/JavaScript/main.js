@@ -273,6 +273,10 @@ function clickEvents() {
 
         if (!hasValue && groupRequired.length === 0) {
             $(this).hide();
+        } else {
+            $(this).find('input[data-required="1"]').each(function() {
+                $(this).attr('required', 'true');
+            });
         }
     });
 

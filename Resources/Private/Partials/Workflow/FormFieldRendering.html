@@ -37,7 +37,7 @@
 </f:if>
 
 <f:variable name="conditionFieldRequired">
-    <f:if condition="{required} == 1 && ({child} != 1 || ({metadata.minOccurs} >= 1) && {i} < {metadata.minOccurs})">
+    <f:if condition="{required} == 1 && {child} != 1">
         <f:then>true</f:then>
         <f:else>false</f:else>
     </f:if>
