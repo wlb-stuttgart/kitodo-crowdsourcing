@@ -10,24 +10,14 @@
             </div>
         </div>
 
-        <div>
+        <div xmlns:wlb="http://typo3.org/ns/Wlb/Crowdsourcing/ViewHelpers">
             <ol class="breadcrumb">
                 <f:for each="{stateReport}" as="stateReportEntry" key="state" iteration="index">
                     <f:if condition="{index.cycle} < 4">
                         <f:if condition="{stateReportEntry.progress} != 'current' && {stateReportEntry.progress} != 'upcoming'">
                             <li class="breadcrumb-item">
                                 <span class="editor-label"><f:translate key="process.editor.state.{state}" />:</span>
-                                <f:switch expression="{stateReportEntry.userState}">
-                                    <f:case value="named">{stateReportEntry.username}</f:case>
-                                    <f:case value="anonymous"><f:translate key="process.editor.anonymous" /></f:case>
-                                    <f:case value="deleted"><f:translate key="process.editor.deleted" /></f:case>
-                                    <f:defaultCase>
-                                        <f:if condition="{stateReportEntry.username}">
-                                            <f:then>{stateReportEntry.username}</f:then>
-                                            <f:else><f:translate key="process.editor.anonymous" /></f:else>
-                                        </f:if>
-                                    </f:defaultCase>
-                                </f:switch>
+                                <wlb:userName feUserUid="{stateReportEntry.feUserUid}" type="edits" />
                             </li>
                         </f:if>
                     </f:if>

@@ -857,35 +857,27 @@ class WorkflowController extends ActionController
 
     private function getStateReport($process): array
     {
-        $stateReport[Process::WORKFLOW_STATE_NEW] = ['username' => '', 'progress' => 'upcoming'];
-        $stateReport[Process::WORKFLOW_STATE_CORRECTION] = ['username' => '', 'progress' => 'upcoming'];
-        $stateReport[Process::WORKFLOW_STATE_FINAL_CORRECTION] = ['username' => '', 'progress' => 'upcoming'];
+        $stateReport[Process::WORKFLOW_STATE_NEW] = ['feUserUid' => 0, 'progress' => 'upcoming'];
+        $stateReport[Process::WORKFLOW_STATE_CORRECTION] = ['feUserUid' => 0, 'progress' => 'upcoming'];
+        $stateReport[Process::WORKFLOW_STATE_FINAL_CORRECTION] = ['feUserUid' => 0, 'progress' => 'upcoming'];
 
         $history = $this->processHistoryRepository->getProcessHistory($process->getRecordIdentifier());
 
         foreach ($history as $historyEntry) {
+            $feUserUid = 0;
             $feUser = $historyEntry->getFeUser();
-            $username = '';
-            $userState = 'deleted';
             if ($feUser instanceof FrontendUser) {
-                if ($feUser->isConsentPublishUsernameEdits()) {
-                    $username = $feUser->getUsername();
-                    $userState = 'named';
-                } else {
-                    $userState = 'anonymous';
-                }
+                $feUserUid = $feUser->getUid();
             }
 
             $index = array_search($historyEntry->getState(), Process::WORKFLOW_STATES);
             if ($index !== false && $index > 0) {
                 $state = Process::WORKFLOW_STATES[$index];
                 $stateReport[$state] = [
-                    'username' => $username,
-                    'userState' => $userState,
+                    'feUserUid' => $feUserUid,
                     'progress' => 'finished'
                 ];
             }
-
         }
 
         $stateReport[$process->getState()]['progress'] = 'current';
