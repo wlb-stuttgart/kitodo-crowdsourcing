@@ -865,21 +865,27 @@ class WorkflowController extends ActionController
 
         foreach ($history as $historyEntry) {
             $feUser = $historyEntry->getFeUser();
+            $username = '';
+            $userState = 'deleted';
             if ($feUser instanceof FrontendUser) {
-                $username = '';
                 if ($feUser->isConsentPublishUsernameEdits()) {
                     $username = $feUser->getUsername();
-                }
-
-                $index = array_search($historyEntry->getState(), Process::WORKFLOW_STATES);
-                if ($index !== false && $index > 0) {
-                    $state = Process::WORKFLOW_STATES[$index];
-                    $stateReport[$state] = [
-                        'username' => $username,
-                        'progress' => 'finished'
-                    ];
+                    $userState = 'named';
+                } else {
+                    $userState = 'anonymous';
                 }
             }
+
+            $index = array_search($historyEntry->getState(), Process::WORKFLOW_STATES);
+            if ($index !== false && $index > 0) {
+                $state = Process::WORKFLOW_STATES[$index];
+                $stateReport[$state] = [
+                    'username' => $username,
+                    'userState' => $userState,
+                    'progress' => 'finished'
+                ];
+            }
+
         }
 
         $stateReport[$process->getState()]['progress'] = 'current';

@@ -287,6 +287,9 @@
         <trans-unit id="process.editor.anonymous">
         	<source>Anonymous</source>
         </trans-unit>
+        <trans-unit id="process.editor.deleted">
+        	<source>Anonymous</source>
+        </trans-unit>
         <trans-unit id="search.input.placeHolder">
             <source>Enter search term</source>
         </trans-unit>
