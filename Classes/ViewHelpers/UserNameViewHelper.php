@@ -37,10 +37,13 @@ class UserNameViewHelper extends AbstractViewHelper
         /** @var FrontendUser $feUser */
         $feUser = $this->frontendUserRepository->findByUid($feUserUid);
 
-        if ($feUser && $feUser->isConsentPublishUsernameStats()) {
-            return $feUser->getUsername();
+        if ($feUser instanceof FrontendUser) {
+            if ($feUser->isConsentPublishUsernameStats()) {
+                return $feUser->getUsername();
+            }
+            return LocalizationUtility::translate('process.editor.anonymous', 'Crowdsourcing') ?? 'Anonymous';
         }
 
-        return LocalizationUtility::translate('process.editor.anonymous', 'Crowdsourcing') ?? 'Anonymous';
+        return LocalizationUtility::translate('process.editor.deleted', 'Crowdsourcing') ?? 'Anonymous';
     }
 }
