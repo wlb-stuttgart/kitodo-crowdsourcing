@@ -221,9 +221,12 @@ $tca = [
             'config' => [
                 'type' => 'inline',
                 'foreign_table' => 'tx_crowdsourcing_domain_model_process',
-                'foreign_field' => 'campaign'
+                'foreign_field' => 'campaign',
+                'foreign_match_fields' => [],
+                'behaviour' => [
+                    'enableCascadingDelete' => false,
+                ],
             ],
-
         ],
     ],
 ];
