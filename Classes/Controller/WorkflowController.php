@@ -201,7 +201,7 @@ class WorkflowController extends ActionController
         }
 
         /** @var Campaign[] $campaigns */
-        $campaigns = $this->campaignRepository->findAllOrderedByCreationDate();
+        $campaigns = $this->campaignRepository->findAllActiveOrderedByCreationDate();
 
         $infoBox = null;
         if (isset($this->settings['dashboardInfoBox'])) {

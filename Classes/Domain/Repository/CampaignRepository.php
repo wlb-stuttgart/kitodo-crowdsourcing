@@ -47,13 +47,21 @@ class CampaignRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     /**
      * @return \mixed[][]|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
-    public function findAllOrderedByCreationDate()
+    public function findAllActiveOrderedByCreationDate()
     {
         $query = $this->createQuery();
 
         $query->setOrderings([
             'crdate' => QueryInterface::ORDER_DESCENDING,
         ]);
+
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('hidden', 0),
+                $query->equals('deleted', 0),
+                $query->equals('workflow_state', Campaign::WORKFLOW_STATE_PUBLISHED)
+            )
+        );
 
         return $query->execute();
     }
