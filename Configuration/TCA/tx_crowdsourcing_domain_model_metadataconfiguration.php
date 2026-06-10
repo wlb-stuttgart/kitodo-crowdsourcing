@@ -1,5 +1,9 @@
 <?php
 
+// SPDX-FileCopyrightText: 2026 Württembergische Landesbibliothek
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 $tca = [
     'ctrl' => [
         'title' => 'LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_db.xlf:tx_crowdsourcing_domain_model_metadataconfiguration',

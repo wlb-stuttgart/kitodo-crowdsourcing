@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Württembergische Landesbibliothek
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 (function () {
     function renderChart(el) {
         if (!el) return;

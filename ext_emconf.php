@@ -1,5 +1,9 @@
 <?php
 
+// SPDX-FileCopyrightText: 2026 Württembergische Landesbibliothek
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 $EM_CONF[$_EXTKEY] = [
     'title' => 'crowdsourcing',
     'description' => 'Extension for the WLB crowdsourcing digitization project',

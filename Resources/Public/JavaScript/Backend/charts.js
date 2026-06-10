@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Württembergische Landesbibliothek
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import DocumentService from '@typo3/core/document-service.js';
 import AjaxRequest from "@typo3/core/ajax/ajax-request.js";
 import {

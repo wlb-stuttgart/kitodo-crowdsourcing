@@ -1,3 +1,7 @@
+-- SPDX-FileCopyrightText: 2026 Württembergische Landesbibliothek
+--
+-- SPDX-License-Identifier: GPL-3.0-or-later
+
 CREATE TABLE tx_crowdsourcing_domain_model_campaign (
     title             varchar(255)  DEFAULT ''  NOT NULL,
     subtitle          varchar(255)  DEFAULT ''  NOT NULL,

@@ -1,5 +1,9 @@
 <?php
 
+// SPDX-FileCopyrightText: 2026 Württembergische Landesbibliothek
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 /*
  * This file is part of the TYPO3 CMS project.
  *

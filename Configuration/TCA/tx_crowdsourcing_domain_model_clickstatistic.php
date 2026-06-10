@@ -1,4 +1,9 @@
 <?php
+
+// SPDX-FileCopyrightText: 2026 Württembergische Landesbibliothek
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 defined('TYPO3') or die();
 
 return [

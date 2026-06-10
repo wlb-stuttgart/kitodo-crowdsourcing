@@ -1,5 +1,9 @@
 <?php
 
+// SPDX-FileCopyrightText: 2026 Württembergische Landesbibliothek
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 $temporaryColumns = array(
     'consent_publish_username_stats' => array(
         'exclude' => 1,
