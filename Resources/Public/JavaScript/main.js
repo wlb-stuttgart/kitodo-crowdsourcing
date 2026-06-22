@@ -326,15 +326,21 @@ function clickEvents() {
 
     // Click event for hiding form field and empty this field
     $('.deleteChildField').on('click', function (evt) {
-        $(this).closest('.input-group').hide();
-        $(this).siblings('input').val('');
+        var $inputGroup = $(this).closest('.input-group');
+        $inputGroup.hide();
+        $inputGroup.find('input, textarea').val('');
+        $inputGroup.find('select option').removeAttr('selected');
+        $inputGroup.find('select option:first').prop('selected', true);
         $(this).closest('.child-metadata-field').find('button.addFormGroupField').show();
     });
 
     // Click event for hiding form field and empty this field
     $('.deleteField').on('click', function (evt) {
-        $(this).closest('.input-group').hide();
-        $(this).siblings('input').val('');
+        var $inputGroup = $(this).closest('.input-group');
+        $inputGroup.hide();
+        $inputGroup.find('input, textarea').val('');
+        $inputGroup.find('select option').removeAttr('selected');
+        $inputGroup.find('select option:first').prop('selected', true);
         $(this).closest('.metadata-group').find('button.addFormField').show();
     });
 
