@@ -758,6 +758,12 @@ function initLobidAutocomplete() {
         var $dropdown = $('<ul class="lobid-autocomplete"></ul>').hide();
         $wrapper.append($dropdown);
 
+        // Prevent the input from losing focus when clicking inside the
+        // dropdown (e.g. on the scrollbar), which would otherwise hide it.
+        $dropdown.on('mousedown', function (e) {
+            e.preventDefault();
+        });
+
         var debounceTimer = null;
         var activeIndex = -1;
 
