@@ -129,7 +129,9 @@ class SolrIndexer
             $indexConfig = [];
             foreach ($dbConfigArray[$process->getType()] as $metadataKey => $metadata) {
                 if ($metadata['active'] === '1') {
-                    if (isset($metadata['children']) && is_array($metadata['children'])) {
+                    $hasChildren = isset($metadata['children']) && is_array($metadata['children']);
+
+                    if ($hasChildren) {
                         $childNames = [];
                         $childFields = [];
                         foreach ($metadata['children'] as $metadataChildKey => $metdataChild) {
@@ -137,38 +139,45 @@ class SolrIndexer
                         }
                         $childFields['_fields'][$metadataKey]['_fields'] = $childNames;
                         $indexConfig[$metadataKey . '_tsi'] = $childFields;
-
-
-                        // prepare facet config
-                        $childNames = [];
-                        $childFields = [];
-                        if (!empty($metadata['facet'])) {
-                            $facets = explode('###', $metadata['facet']);
-
-                            $i = 0;
-                            foreach ($facets as $facet) {
-                                $fieldRepresentation = explode('$', $facet);
-                                foreach ($fieldRepresentation as $field) {
-                                    if (!empty($field)) {
-                                        if ($field === 'this') {
-                                            if (isset($metadata['children']) && is_array($metadata['children'])) {
-                                                foreach ($metadata['children'] as $metadataChildKey => $metdataChild) {
-                                                    $childNames[$metadataChildKey] = true;
-                                                }
-                                            }
-                                        } else {
-                                            $childNames[trim($field)] = true;
-                                        }
-                                    }
-                                }
-                                $childFields['_fields'][$metadataKey]['_fields'] = $childNames;
-                                $indexConfig[$metadataKey . '_' . $i .  '_faceting'] = $childFields;
-                                $i++;
-                            }
-                        }
-
                     } else {
                         $indexConfig[$metadataKey . '_tsi'] = ['_fields' => [$metadataKey => true]];
+                    }
+
+                    // prepare facet config
+                    if (!empty($metadata['facet'])) {
+                        $facets = explode('###', $metadata['facet']);
+                        $i = 0;
+                        foreach ($facets as $facet) {
+                            $facetFieldNames = [];
+                            $fieldRepresentation = explode('$', $facet);
+                            foreach ($fieldRepresentation as $field) {
+                                $field = trim($field);
+                                if ($field === '') {
+                                    continue;
+                                }
+
+                                if ($field === 'this') {
+                                    if ($hasChildren) {
+                                        foreach ($metadata['children'] as $metadataChildKey => $metdataChild) {
+                                            $facetFieldNames[$metadataChildKey] = true;
+                                        }
+                                    } else {
+                                        // this as facet without children: the metadata holds the
+                                        // facet value itself
+                                        $facetFieldNames[$metadataKey] = true;
+                                    }
+                                } else {
+                                    $facetFieldNames[$field] = true;
+                                }
+                            }
+
+                            // without children the metadata is a plain field, so its names must not
+                            // be wrapped into a metadata group
+                            $indexConfig[$metadataKey . '_' . $i .  '_faceting'] = $hasChildren
+                                ? ['_fields' => [$metadataKey => ['_fields' => $facetFieldNames]]]
+                                : ['_fields' => $facetFieldNames];
+                            $i++;
+                        }
                     }
                 }
             }
