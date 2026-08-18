@@ -13,6 +13,7 @@ use Wlb\Crowdsourcing\Domain\Model\FrontendUser;
 use Wlb\Crowdsourcing\Domain\Model\Process;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
+use Wlb\Crowdsourcing\Services\FacetConfigurationService;
 use Wlb\Crowdsourcing\Services\IndexFieldConfigReader;
 
 class SolrIndexer
@@ -31,7 +32,8 @@ class SolrIndexer
         private readonly IndexFieldConfigReader $indexFieldConfigReader,
         private readonly XMLExtractor $xmlExtractor,
         private readonly MetadataConfigurationRepository $metadataConfigurationRepository,
-        private readonly ProcessHistoryRepository $processHistoryRepository
+        private readonly ProcessHistoryRepository $processHistoryRepository,
+        private readonly FacetConfigurationService $facetConfigurationService
     )
     {
         $this->config = $this->indexFieldConfigReader->getConfig();
@@ -129,46 +131,30 @@ class SolrIndexer
             $indexConfig = [];
             foreach ($dbConfigArray[$process->getType()] as $metadataKey => $metadata) {
                 if ($metadata['active'] === '1') {
-                    if (isset($metadata['children']) && is_array($metadata['children'])) {
+                    $hasChildren = isset($metadata['children']) && is_array($metadata['children']);
+
+                    if ($hasChildren) {
                         $childNames = [];
-                        $childFields = [];
                         foreach ($metadata['children'] as $metadataChildKey => $metdataChild) {
                             $childNames[$metadataChildKey] = true;
                         }
-                        $childFields['_fields'][$metadataKey]['_fields'] = $childNames;
-                        $indexConfig[$metadataKey . '_tsi'] = $childFields;
-
-
-                        // prepare facet config
-                        $childNames = [];
-                        $childFields = [];
-                        if (!empty($metadata['facet'])) {
-                            $facets = explode('###', $metadata['facet']);
-
-                            $i = 0;
-                            foreach ($facets as $facet) {
-                                $fieldRepresentation = explode('$', $facet);
-                                foreach ($fieldRepresentation as $field) {
-                                    if (!empty($field)) {
-                                        if ($field === 'this') {
-                                            if (isset($metadata['children']) && is_array($metadata['children'])) {
-                                                foreach ($metadata['children'] as $metadataChildKey => $metdataChild) {
-                                                    $childNames[$metadataChildKey] = true;
-                                                }
-                                            }
-                                        } else {
-                                            $childNames[trim($field)] = true;
-                                        }
-                                    }
-                                }
-                                $childFields['_fields'][$metadataKey]['_fields'] = $childNames;
-                                $indexConfig[$metadataKey . '_' . $i .  '_faceting'] = $childFields;
-                                $i++;
-                            }
-                        }
-
+                        $indexConfig[$metadataKey . '_tsi'] = ['_fields' => [$metadataKey => ['_fields' => $childNames]]];
                     } else {
                         $indexConfig[$metadataKey . '_tsi'] = ['_fields' => [$metadataKey => true]];
+                    }
+
+                    $facetDefinitions = $this->facetConfigurationService->getFacetDefinitionsForField($metadataKey, $metadata);
+                    foreach ($facetDefinitions as $facetField => $facetDefinition) {
+                        if ($hasChildren) {
+                            $indexConfig[$facetField] = [
+                                '_fields' => [$metadataKey => ['_fields' => $facetDefinition['sourceFields']]]
+                            ];
+                        } else {
+                            $indexConfig[$facetField] = [
+                                '_fields' => $facetDefinition['sourceFields'],
+                                '_splitValues' => true
+                            ];
+                        }
                     }
                 }
             }

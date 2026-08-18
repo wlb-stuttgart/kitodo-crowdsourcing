@@ -54,9 +54,17 @@ class XMLExtractor
                 }
 
                 if (!empty($fieldValues)) {
-                    $test = implode($this->getDelimiter($config), $fieldValues);
-                    if (!empty($test)) {
-                        $data[] = $test;
+                    if (!empty($config['_splitValues'])) {
+                        foreach ($fieldValues as $fieldValue) {
+                            if (!empty($fieldValue)) {
+                                $data[] = $fieldValue;
+                            }
+                        }
+                    } else {
+                        $test = implode($this->getDelimiter($config), $fieldValues);
+                        if (!empty($test)) {
+                            $data[] = $test;
+                        }
                     }
                 }
             }

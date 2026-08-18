@@ -145,7 +145,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
                                                                                 <wlb:campaignTitle uid="{value}" fallback="{f:translate(key: 'search.campaign.noTitle')}" />
                                                                             </f:then>
                                                                             <f:else>
-                                                                                {value}
+                                                                                <wlb:facetValueLabel facetField="{facetField}" value="{value}" />
                                                                             </f:else>
                                                                         </f:if>
                                                                     </f:else>
