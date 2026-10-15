@@ -33,6 +33,7 @@ use Wlb\Crowdsourcing\Domain\Repository\FrontendUserRepository;
 use Wlb\Crowdsourcing\Domain\Repository\MetadataConfigurationRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessHistoryRepository;
 use Wlb\Crowdsourcing\Domain\Repository\ProcessRepository;
+use Wlb\Crowdsourcing\Middleware\LobidSearchMiddleware;
 use Wlb\Crowdsourcing\Pagination\SearchResultPaginator;
 use Wlb\Crowdsourcing\Services\AccessControlService;
 use Wlb\Crowdsourcing\Services\ExtensionConfigurationService;
@@ -468,6 +469,7 @@ class WorkflowController extends ActionController
 
         $this->view->assign('reportMail', ExtensionConfigurationService::getInstance()->getConfigurationValue('reportMail'));
         $this->view->assign('gndVerifyUrl', ExtensionConfigurationService::getInstance()->getConfigurationValue('gndVerifyUrl'));
+        $this->view->assign('lobidSearchUrl', LobidSearchMiddleware::getEndpointPath($this->request->getAttribute('site')));
 
         // log metadata edit action
         $this->statisticService->logWorkflowAction(

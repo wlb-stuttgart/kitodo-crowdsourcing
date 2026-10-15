@@ -745,9 +745,13 @@ function initLobidAutocomplete() {
         var $input = $(this);
         var lobidField = $input.data('lobid-field');
         var lobidEnabled = $input.data('lobid-enabled');
-        var lobidFilter = $input.data('lobid-filter') || '';
+        var lobidSource = {
+            url: $input.data('lobid-url') || '',
+            type: $input.data('lobid-type') || '',
+            field: $input.data('lobid-metadata') || ''
+        };
 
-        if (!lobidField || !lobidEnabled) {
+        if (!lobidField || !lobidEnabled || !lobidSource.url) {
             return;
         }
 
@@ -778,7 +782,7 @@ function initLobidAutocomplete() {
             }
 
             debounceTimer = setTimeout(function () {
-                lobidSearch(query, lobidField, lobidFilter, $dropdown, $input);
+                lobidSearch(query, lobidField, lobidSource, $dropdown, $input);
             }, 300);
         });
 
@@ -842,14 +846,11 @@ function lobidFillSiblingFields(entity, $input) {
     });
 }
 
-function lobidSearch(query, lobidField, lobidFilter, $dropdown, $input) {
-    var url = 'https://lobid.org/gnd/search?q=' + encodeURIComponent(query) + '&format=json&size=10';
-    if (lobidFilter) {
-        url += '&filter=' + lobidFilter;
-    }
-
+// The search is proxied by the server (LobidSearchMiddleware), which applies the configured lobid filter.
+function lobidSearch(query, lobidField, lobidSource, $dropdown, $input) {
     $.getJSON(
-        url,
+        lobidSource.url,
+        {q: query, type: lobidSource.type, field: lobidSource.field},
         function (data) {
             $dropdown.empty();
 

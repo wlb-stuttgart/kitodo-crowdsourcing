@@ -48,3 +48,6 @@ solrCore=
 
 # cat=GND/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.gnd.verifyUrl
 gndVerifyUrl = https://explore.gnd.network/gnd/{value}
+
+# cat=GND/; type=string; label=LLL:EXT:crowdsourcing/Resources/Private/Language/locallang_labels.xlf:config.gnd.lobidUserAgent
+lobidUserAgent = Mitmachen-gnd
